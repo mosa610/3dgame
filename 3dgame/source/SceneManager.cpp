@@ -32,6 +32,14 @@ void SceneManager::Render(float elapsedTime)
     }
 }
 
+void SceneManager::DrawGUI()
+{
+    if (currentScene != nullptr)
+    {
+        currentScene->DrawGUI();
+    }
+}
+
 void SceneManager::Clear()
 {
     if (currentScene != nullptr)

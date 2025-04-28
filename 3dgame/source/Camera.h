@@ -20,6 +20,9 @@ public:
     void SetLookAt(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& focus,
         const DirectX::XMFLOAT3& up);
 
+    void SetLookAt(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& focus,
+        const DirectX::XMFLOAT3& up, const DirectX::XMFLOAT3& position);
+
     //パースペクティブ設定
     void SetPerspectiveFov(float fovY, float aspect, float nearZ, float farZ);
 
@@ -44,6 +47,14 @@ public:
     //右方向取得
     const DirectX::XMFLOAT3& GetRight() const { return right; }
 
+    const void SetPosition(const DirectX::XMFLOAT3& position) { this->position = position; }
+
+    const DirectX::XMFLOAT3& GetPosition() const { return position; }
+
+    const float& GetNearClipDistance() const { return near_clip_distance; }
+
+    const float& GetFarClipDistance() const { return far_clip_distance; }
+
 
 private:
     DirectX::XMFLOAT4X4     view;
@@ -55,4 +66,9 @@ private:
     DirectX::XMFLOAT3       up;
     DirectX::XMFLOAT3       front;
     DirectX::XMFLOAT3       right;
+
+    DirectX::XMFLOAT3       position;
+
+    float near_clip_distance;
+    float far_clip_distance;
 };

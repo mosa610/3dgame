@@ -54,7 +54,7 @@ sprite_batch::sprite_batch(
         };
 
         hr = create_vs_from_cso(
-            device, "Shader\\Sprite_vs.cso",
+            device, "Data\\Shader\\Sprite_vs.cso",
             vertex_shader.GetAddressOf(), input_layout.GetAddressOf(),
             input_element_desc, _countof(input_element_desc)
         );
@@ -64,7 +64,7 @@ sprite_batch::sprite_batch(
     //ピクセルシェーダー
     {
         hr = create_ps_from_cso(
-            device, "Shader\\Sprite_ps.cso",
+            device, "Data\\Shader\\Sprite_ps.cso",
             pixel_shader[0].GetAddressOf()
         );
     }
@@ -136,7 +136,15 @@ sprite_batch::sprite_batch(
         sampler_desc.BorderColor[3] = 1.0f;
         sampler_desc.MinLOD = 0;
         sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;
-        hr = device->CreateSamplerState(&sampler_desc, &sampler_state);
+        hr = device->CreateSamplerState(&sampler_desc, &sampler_states[0]);
+        _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+        sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+        hr = device->CreateSamplerState(&sampler_desc, &sampler_states[1]);
+        _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+        sampler_desc.Filter = D3D11_FILTER_ANISOTROPIC;
+        hr = device->CreateSamplerState(&sampler_desc, &sampler_states[2]);
         _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
     }
 
@@ -262,7 +270,9 @@ void sprite_batch::end(ID3D11DeviceContext* immediate_context)
 
     immediate_context->OMSetBlendState(blend_state.Get(), nullptr, 0xFFFFFFFF);
     immediate_context->OMSetDepthStencilState(depth_stencil_state.Get(), 1);
-    immediate_context->PSSetSamplers(0, 1, sampler_state.GetAddressOf());
+    immediate_context->PSSetSamplers(0, 1, sampler_states[0].GetAddressOf());
+    immediate_context->PSSetSamplers(1, 1, sampler_states[1].GetAddressOf());
+    immediate_context->PSSetSamplers(2, 1, sampler_states[1].GetAddressOf());
     immediate_context->RSSetState(rasterizer_state.Get());
 
 

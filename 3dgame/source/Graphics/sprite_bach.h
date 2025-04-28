@@ -19,7 +19,7 @@ private:
 
     ComPtr<ID3D11BlendState>    blend_state;
     ComPtr<ID3D11RasterizerState>   rasterizer_state;
-    ComPtr<ID3D11SamplerState>	sampler_state;
+    ComPtr<ID3D11SamplerState>	sampler_states[3];
     ComPtr<ID3D11DepthStencilState> depth_stencil_state;
 
     D3D11_TEXTURE2D_DESC texture2d_desc;
@@ -28,7 +28,18 @@ private:
 
 public:
     sprite_batch(const wchar_t* filename, size_t max_sprites);
-    ~sprite_batch() {};
+    ~sprite_batch()
+    {
+        shader_resource_view.Reset();
+        blend_state.Reset();
+        rasterizer_state.Reset();
+        depth_stencil_state.Reset();
+
+        vertex_shader.Reset();
+        pixel_shader[0].Reset();
+        input_layout.Reset();
+        vertex_buffer.Reset();
+    };
 
     void render(ID3D11DeviceContext* immediate_context,
         float dx, float dy,

@@ -7,7 +7,11 @@ class SceneManager
 {
 private:
     SceneManager() {}
-    ~SceneManager() {}
+    ~SceneManager() 
+    {
+        currentScene = nullptr;
+        nextScene = nullptr;
+    }
 public:
     //唯一のインスタンス
     static SceneManager& Instance()
@@ -22,11 +26,29 @@ public:
     //描画処理
     void Render(float elapsedTime);
 
+    void DrawGUI();
+
     //シーンクリア
     void Clear();
 
     //シーン切り替え
     void ChangeScene(Scene* scene);
+
+    void ResetShaderResource()
+    {
+        if (currentScene != nullptr)
+        {
+            currentScene->ResetShaderResource();
+        }
+    }
+
+    void RemakeShaderResource(float width, float height)
+    {
+        if (currentScene != nullptr)
+        {
+            currentScene->RemakeShaderResource(width, height);
+        }
+    }
 
 private:
     Scene* currentScene = nullptr;

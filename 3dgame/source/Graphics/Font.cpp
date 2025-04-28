@@ -9,7 +9,7 @@ Font::Font(ID3D11Device* device, const char* filename, int maxSpriteCount)
 	{
 		// ファイルを開く
 		FILE* fp = nullptr;
-		fopen_s(&fp, "Shader\\Font_VS.cso", "rb");
+		fopen_s(&fp, "Data\\Shader\\Font_VS.cso", "rb");
 		_ASSERT_EXPR_A(fp, "CSO File not found");
 
 		// ファイルのサイズを求める
@@ -41,7 +41,7 @@ Font::Font(ID3D11Device* device, const char* filename, int maxSpriteCount)
 	{
 		// ファイルを開く
 		FILE* fp = nullptr;
-		fopen_s(&fp, "Shader\\Font_PS.cso", "rb");
+		fopen_s(&fp, "Data\\Shader\\Font_PS.cso", "rb");
 		_ASSERT_EXPR_A(fp, "CSO File not found");
 
 		// ファイルのサイズを求める

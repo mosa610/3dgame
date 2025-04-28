@@ -22,6 +22,51 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="Source\Graphics\Graphics">
+      <UniqueIdentifier>{bce8e45f-ad5f-4618-8da6-77db88cefa69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Model">
+      <UniqueIdentifier>{38addbaf-f17d-40ad-8b2e-cc4d43d6dbb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\GltfModel">
+      <UniqueIdentifier>{8b1c9c3a-8794-4419-b80b-4a596b9eeeed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Fbx">
+      <UniqueIdentifier>{b94d4d8d-be97-4b90-acc9-8ff8945ace92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Sprite">
+      <UniqueIdentifier>{089e3533-2709-4450-a2b9-17d5d8a2fff8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\Font">
+      <UniqueIdentifier>{e369b918-94c8-4b75-9020-1c6cf4ae94d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\Fbx">
+      <UniqueIdentifier>{3fc87710-74f8-4316-b63c-854dcd45f2ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\Gltf">
+      <UniqueIdentifier>{c396a007-ee3f-46cf-aefe-bc5e38c0d17c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\FullScreenQuad">
+      <UniqueIdentifier>{d259d843-9acf-4e39-ae67-171813cad176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\Sprite">
+      <UniqueIdentifier>{8093e6ad-52a2-48b7-bd80-da0c13edf1f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\Ibl">
+      <UniqueIdentifier>{3e065dda-5978-4b2b-9dce-5da912007f49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\DeferredRendering">
+      <UniqueIdentifier>{0a160e25-ef67-4a73-b048-a5666e7a3553}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\Common">
+      <UniqueIdentifier>{ba1521b0-bee2-4c42-92db-706619f0dcdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\Gltf\旧">
+      <UniqueIdentifier>{45269ea1-1b26-4dbf-b036-d04f71e3e28d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\Skymap">
+      <UniqueIdentifier>{58b79dcc-2d76-4267-906c-7619a07cd1b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\framework.cpp">
@@ -48,20 +93,11 @@
     <ClCompile Include="source\imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="source\Graphics\Graphics.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="source\Graphics\ImguiRenderer.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="source\SceneManager.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\SceneTest.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Graphics\sprite_bach.cpp">
-      <Filter>Source\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="source\Graphics\shader.cpp">
       <Filter>Source\Graphics</Filter>
@@ -69,26 +105,71 @@
     <ClCompile Include="source\Graphics\texture.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="source\Graphics\model_resource.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Graphics\model.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Graphics\lambert_shader.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="source\Camera.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Graphics\skinned_mesh.cpp">
-      <Filter>Source\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="source\Logger.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="source\Graphics\Font.cpp">
       <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\framebuffer.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\fullscreen_quad.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\GpuResourceUtils.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Graphics.cpp">
+      <Filter>Source\Graphics\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\GraphicsState.cpp">
+      <Filter>Source\Graphics\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Model.cpp">
+      <Filter>Source\Graphics\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\ModelRenderer.cpp">
+      <Filter>Source\Graphics\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\ModelResource.cpp">
+      <Filter>Source\Graphics\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\GLTFImporter.cpp">
+      <Filter>Source\Graphics\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\gltf_model.cpp">
+      <Filter>Source\Graphics\GltfModel</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\skinned_mesh.cpp">
+      <Filter>Source\Graphics\Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\sprite_bach.cpp">
+      <Filter>Source\Graphics\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CameraController.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Sprite.cpp">
+      <Filter>Source\Graphics\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\GBuffer.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\bloom.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Skymap.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\KBloom.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneTest.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -122,9 +203,6 @@
     <ClInclude Include="source\high_resolution_timer.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="source\Graphics\Graphics.h">
-      <Filter>Source\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="source\Graphics\ImguiRenderer.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
@@ -140,28 +218,13 @@
     <ClInclude Include="source\SceneTest.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="source\Graphics\sprite_bach.h">
-      <Filter>Source\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="source\Graphics\shader.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="source\Graphics\texture.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="source\Graphics\model_resource.h">
-      <Filter>Source\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Graphics\model.h">
-      <Filter>Source\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="source\Graphics\render_context.h">
-      <Filter>Source\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Graphics\lambert_shader.h">
-      <Filter>Source\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Graphics\skinned_mesh.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="source\Logger.h">
@@ -173,36 +236,276 @@
     <ClInclude Include="source\Graphics\Font.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="source\Graphics\framebuffer.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\fullscreen_quad.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\GpuResourceUtils.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\SerializeTemplate.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\ConstantBuffer.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\Graphics.h">
+      <Filter>Source\Graphics\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\GraphicsState.h">
+      <Filter>Source\Graphics\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\Model.h">
+      <Filter>Source\Graphics\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\ModelRenderer.h">
+      <Filter>Source\Graphics\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\ModelResource.h">
+      <Filter>Source\Graphics\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\GLTFImporter.h">
+      <Filter>Source\Graphics\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\gltf_model.h">
+      <Filter>Source\Graphics\GltfModel</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\skinned_mesh.h">
+      <Filter>Source\Graphics\Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\sprite_bach.h">
+      <Filter>Source\Graphics\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\PipeLineState.h">
+      <Filter>Source\Graphics\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\CameraController.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Mouse.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\LightData.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\Sprite.h">
+      <Filter>Source\Graphics\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\GBuffer.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\bloom.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\Skymap.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\KBloom.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="HLSL\Sprite.hlsli">
-      <Filter>HLSL</Filter>
-    </None>
     <None Include="HLSL\lambert.hlsli">
       <Filter>HLSL</Filter>
     </None>
-    <None Include="HLSL\Font.hlsli">
+    <None Include="HLSL\bidirectional_reflectance_distribution.hlsli">
       <Filter>HLSL</Filter>
+    </None>
+    <None Include="HLSL\Line.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="HLSL\BidirectionalReflectanceDistributionFunction.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="HLSL\Font.hlsli">
+      <Filter>HLSL\Font</Filter>
+    </None>
+    <None Include="HLSL\skinned_mesh.hlsli">
+      <Filter>HLSL\Fbx</Filter>
+    </None>
+    <None Include="HLSL\fullscreen_quad.hlsli">
+      <Filter>HLSL\FullScreenQuad</Filter>
+    </None>
+    <None Include="HLSL\Sprite.hlsli">
+      <Filter>HLSL\Sprite</Filter>
+    </None>
+    <None Include="HLSL\image_based_lighting.hlsli">
+      <Filter>HLSL\Ibl</Filter>
+    </None>
+    <None Include="HLSL\ImageBasedLighting.hlsli">
+      <Filter>HLSL\Ibl</Filter>
+    </None>
+    <None Include="HLSL\deferred\deferred_primitive_lighting.hlsli">
+      <Filter>HLSL\DeferredRendering</Filter>
+    </None>
+    <None Include="HLSL\deferred\deferred_rendering.hlsli">
+      <Filter>HLSL\DeferredRendering</Filter>
+    </None>
+    <None Include="HLSL\deferred\gbuffer.hlsli">
+      <Filter>HLSL\DeferredRendering</Filter>
+    </None>
+    <None Include="HLSL\deferred\shading_models.hlsli">
+      <Filter>HLSL\DeferredRendering</Filter>
+    </None>
+    <None Include="HLSL\common.hlsli">
+      <Filter>HLSL\Common</Filter>
+    </None>
+    <None Include="HLSL\filter_functions.hlsli">
+      <Filter>HLSL\Common</Filter>
+    </None>
+    <None Include="HLSL\lights.hlsli">
+      <Filter>HLSL\Common</Filter>
+    </None>
+    <None Include="HLSL\scene_constant_buffer.hlsli">
+      <Filter>HLSL\Common</Filter>
+    </None>
+    <None Include="HLSL\shading_functions.hlsli">
+      <Filter>HLSL\Common</Filter>
+    </None>
+    <None Include="HLSL\gltf_model.hlsli">
+      <Filter>HLSL\Gltf\旧</Filter>
+    </None>
+    <None Include="HLSL\GltfModel.hlsli">
+      <Filter>HLSL\Gltf\旧</Filter>
+    </None>
+    <None Include="HLSL\gltf\gltf_model.hlsli">
+      <Filter>HLSL\Gltf</Filter>
+    </None>
+    <None Include="HLSL\gltf\gltf_model_forward.hlsli">
+      <Filter>HLSL\Gltf</Filter>
+    </None>
+    <None Include="HLSL\gltf\gltf_model_object_data.hlsli">
+      <Filter>HLSL\Gltf</Filter>
+    </None>
+    <None Include="HLSL\gltf\gltf_model_shadow_caster.hlsli">
+      <Filter>HLSL\Gltf</Filter>
+    </None>
+    <None Include="HLSL\sky_box.hlsli">
+      <Filter>HLSL\Skymap</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="HLSL\Sprite_ps.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="HLSL\Sprite_vs.hlsl">
-      <Filter>HLSL</Filter>
-    </FxCompile>
     <FxCompile Include="HLSL\lambert_vs.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
     <FxCompile Include="HLSL\lambert_ps.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="HLSL\Font_PS.hlsl">
+    <FxCompile Include="HLSL\luminance_extraction_ps.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="HLSL\Font_VS.hlsl">
+    <FxCompile Include="HLSL\blur_ps.hlsl">
       <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\LineVS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\LinePS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\Font_PS.hlsl">
+      <Filter>HLSL\Font</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\Font_VS.hlsl">
+      <Filter>HLSL\Font</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\skinned_mesh_ps.hlsl">
+      <Filter>HLSL\Fbx</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\skinned_mesh_vs.hlsl">
+      <Filter>HLSL\Fbx</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\fullscreen_quad_ps.hlsl">
+      <Filter>HLSL\FullScreenQuad</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\fullscreen_quad_vs.hlsl">
+      <Filter>HLSL\FullScreenQuad</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\Sprite_ps.hlsl">
+      <Filter>HLSL\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\Sprite_vs.hlsl">
+      <Filter>HLSL\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\deferred\deferred_primitive_lighting_indirect_inner_ps.hlsl">
+      <Filter>HLSL\DeferredRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\deferred\deferred_primitive_lighting_indirect_ps.hlsl">
+      <Filter>HLSL\DeferredRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\deferred\deferred_primitive_lighting_point_ps.hlsl">
+      <Filter>HLSL\DeferredRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\deferred\deferred_primitive_lighting_spot_ps.hlsl">
+      <Filter>HLSL\DeferredRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\deferred\deferred_primitive_lighting_vs.hlsl">
+      <Filter>HLSL\DeferredRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\deferred\deferred_rendering_directional_ps.hlsl">
+      <Filter>HLSL\DeferredRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\deferred\deferred_rendering_emissive_ps.hlsl">
+      <Filter>HLSL\DeferredRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\deferred\deferred_rendering_indirect_ps.hlsl">
+      <Filter>HLSL\DeferredRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\deferred\deferred_rendering_point_ps.hlsl">
+      <Filter>HLSL\DeferredRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\deferred\deferred_rendering_spot_ps.hlsl">
+      <Filter>HLSL\DeferredRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\deferred\final_pass_ps.hlsl">
+      <Filter>HLSL\DeferredRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\gltf_model_ps.hlsl">
+      <Filter>HLSL\Gltf\旧</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\gltf_model_vs.hlsl">
+      <Filter>HLSL\Gltf\旧</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\GltfModelPS.hlsl">
+      <Filter>HLSL\Gltf\旧</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\GltfModelVS.hlsl">
+      <Filter>HLSL\Gltf\旧</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\gltf\gltf_model_forward_instancing_vs.hlsl">
+      <Filter>HLSL\Gltf</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\gltf\gltf_model_forward_ps.hlsl">
+      <Filter>HLSL\Gltf</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\gltf\gltf_model_forward_vs.hlsl">
+      <Filter>HLSL\Gltf</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\gltf\gltf_model_gbuffer_instancing_vs.hlsl">
+      <Filter>HLSL\Gltf</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\gltf\gltf_model_gbuffer_ps.hlsl">
+      <Filter>HLSL\Gltf</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\gltf\gltf_model_gbuffer_vs.hlsl">
+      <Filter>HLSL\Gltf</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\gltf\gltf_model_shadow_caster_instancing_vs.hlsl">
+      <Filter>HLSL\Gltf</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\gltf\gltf_model_shadow_caster_vs.hlsl">
+      <Filter>HLSL\Gltf</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\sky_box_forward_ps.hlsl">
+      <Filter>HLSL\Skymap</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\sky_box_gbuffer_ps.hlsl">
+      <Filter>HLSL\Skymap</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\sky_box_vs.hlsl">
+      <Filter>HLSL\Skymap</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
