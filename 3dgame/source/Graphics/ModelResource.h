@@ -146,6 +146,7 @@ public:
         std::vector<Vertex>		vertices;
         std::vector<uint32_t>	indices;
         std::vector<Bone>		bones;
+        int         index = 0;
         int			nodeIndex = 0;
         int			materialIndex = 0;
         Material* material = nullptr;

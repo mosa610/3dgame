@@ -213,14 +213,14 @@ Graphics::~Graphics()
 
     immediate_context.Reset(); // デバイスコンテキストを解放
 
-    if (device)
+    /*if (device)
     {
         Microsoft::WRL::ComPtr<ID3D11Debug> debugDevice;
         if (SUCCEEDED(device.As(&debugDevice)))
         {
             debugDevice->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
         }
-    }
+    }*/
     //device.Reset();
 }
 

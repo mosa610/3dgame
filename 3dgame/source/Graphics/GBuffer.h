@@ -31,6 +31,10 @@ public:
 
 	void DrawGUI();
 
+	void ResizeRenderTarget(float width = 1280.0f, float height = 720.0f);
+
+	void ResetShaderResourceView();
+
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetShaderResourceView(GBufferId id) { return g_buffer_shader_resource_view[id]; }
 private:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> g_buffer_render_target_view[GB_Max];

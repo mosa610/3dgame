@@ -7,8 +7,8 @@ framebuffer::framebuffer(ID3D11Device* device, uint32_t width, uint32_t height)
 
     Microsoft::WRL::ComPtr<ID3D11Texture2D> render_target_buffer;
     D3D11_TEXTURE2D_DESC texture2d_desc{};
-    texture2d_desc.Width = width;
-    texture2d_desc.Height = height;
+    texture2d_desc.Width = 1280.0f;
+    texture2d_desc.Height = 720.0f;
     texture2d_desc.MipLevels = 1;
     texture2d_desc.ArraySize = 1;
     texture2d_desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;

@@ -78,12 +78,9 @@ PSGBufferOut main(VS_OUT pin, bool is_front_face : SV_IsFrontFace)
         sampled.rgb = pow(sampled.rgb, GammaFactor);
         base_color *= sampled;
     }
-    
-    //  透明度調整
-    //clip(base_color.a - 0.5f);
 
     //	ディザリング対応
-    base_color.a = saturate(base_color.a + adjustalpha);
+    base_color.a = saturate(base_color.a * adjustalpha);
     {
         //  ディザパターン
         static const int dither_pattern[16] =
@@ -99,6 +96,9 @@ PSGBufferOut main(VS_OUT pin, bool is_front_face : SV_IsFrontFace)
         clip(base_color.a - dither);
     }
 
+    //  透明度調整
+    clip(base_color.a - 0.1f);
+    
 	//	自己発光色を取得
     float3 emisive_color = m.emissive_factor;
     if (m.emissive_texture.index > -1)
@@ -158,7 +158,7 @@ PSGBufferOut main(VS_OUT pin, bool is_front_face : SV_IsFrontFace)
     GBufferData data;
     data.base_color = base_color.rgb;
     data.shading_model = shading_model_pbr;
-    //data.emissive_color = emisive_color;
+    data.emissive_color = emisive_color;
     data.w_normal = N;
     data.w_position = pin.w_position.xyz;
     data.velocity = calculate_uvspace_velocity(pin.current_clip_position, pin.previous_clip_position);

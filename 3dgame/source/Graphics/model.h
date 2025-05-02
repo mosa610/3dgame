@@ -129,7 +129,7 @@ public:
 
     PipeLineState                                       state;
 
-    std::unordered_map<const ModelResource::Mesh*, std::vector<Bone>>      _bones;
+    std::unordered_map<int, std::vector<Bone>>      _bones;
 
     static constexpr const char* DefaultShaderName = "gltf_default_shader";
     static constexpr const char* DefaultInstancingShaderName = "gltf_instancing_default_shader";

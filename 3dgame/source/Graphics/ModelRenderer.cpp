@@ -128,7 +128,7 @@ void ModelRenderer::Draw(ID3D11DeviceContext* dc, Model* model, float alpha)
 
         // スケルトン用定数バッファ更新
         SkeletonCB skeletonCB{};
-        auto& bones = model->_bones.at(&mesh);
+        auto& bones = model->_bones.at(mesh.index);
         if (bones.size() > 0)
         {
             for (size_t i = 0; i < bones.size(); ++i)

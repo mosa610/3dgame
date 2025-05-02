@@ -51,8 +51,11 @@ Model::Model(ID3D11Device* device, const char* filename, float sampleRate)
         {
             auto&& src = mesh.bones.at(boneIndex);
             auto&& dst = bones.at(boneIndex);
-           
-            dst.node->name = src.node->name;
+
+            dst.node = &_nodes[src.nodeIndex];
+            dst.nodeIndex = src.nodeIndex;
+            dst.offsetTransform = src.offsetTransform;
+            /*dst.node->name = src.node->name;
             dst.node->parent = src.node->parentIndex >= 0 ? bones.at(src.node->parentIndex).node : nullptr;
             dst.node->myIndex = src.node->myIndex;
             dst.node->parentIndex = src.node->parentIndex;
@@ -63,14 +66,14 @@ Model::Model(ID3D11Device* device, const char* filename, float sampleRate)
 
             dst.node->localTransform = src.node->localTransform;
             dst.node->globalTransform = src.node->globalTransform;
-            dst.node->worldTransform = src.node->worldTransform;
+            dst.node->worldTransform = src.node->worldTransform;*/
 
-            if (dst.node->parent != nullptr)
+            /*if (dst.node->parent != nullptr)
             {
                 dst.node->parent->children.emplace_back(&dst);
-            }
+            }*/
         }
-        _bones.emplace(mesh, bones);
+        _bones.emplace(mesh.index, bones);
     }
 
     // çsóÒèâä˙âª
@@ -82,8 +85,8 @@ Model::Model(ID3D11Device* device, const char* filename, float sampleRate)
     {
         PipelineStateDesc desc;
         desc.name = DefaultShaderName;
-        desc.vs_path = ".//Data//Shader//gltf_model_gbuffer_vs.cso";
-        desc.ps_path = ".//Data//Shader//gltf_model_gbuffer_ps.cso";
+        desc.vs_path = ".//Data//Shader//gltf_model_forward_vs.cso";
+        desc.ps_path = ".//Data//Shader//gltf_model_forward_ps.cso";
         AddPipelineState(device, desc);
     }
 

@@ -39,16 +39,17 @@ VS_OUT main(VS_IN vin)
         //vin.normal = normalize(mul(float4(vin.normal.xyz, 0), skin_matrix));
         //vin.tangent = normalize(mul(float4(vin.tangent.xyz, 0), skin_matrix));
         
-        position = SkinningPosition(vin.position, vin.weights, vin.joints);
         //vin.position = mul(SkinningPosition(vin.position, vin.weights, vin.joints), world);
-        //vin.normal = SkinningVector(vin.normal, vin.weights, vin.joints);
-        //vin.tangent = SkinningVector(vin.tangent, vin.weights, vin.joints);
     }
+    position = SkinningPosition(vin.position, vin.weights, vin.joints);
+    vin.normal = SkinningVector(vin.normal, vin.weights, vin.joints);
+    vin.tangent = SkinningVector(vin.tangent, vin.weights, vin.joints);
 
     VS_OUT vout = (VS_OUT)0;
 
     //vin.position.w = 1;
-    vout.position = mul(position, mul(world, view_projection_transform));
+    row_major float4x4 vpt = view_transform * projection_transform;
+    vout.position = mul(position, /*mul(world, view_projection_transform)*/view_projection_transform);
     vout.w_position = position;//mul(vin.position, world);
 
     vout.current_clip_position = vout.position;

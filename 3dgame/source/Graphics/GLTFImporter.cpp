@@ -109,6 +109,7 @@ void GLTFImporter::LoadNodes(NodeList& nodes)
 // メッシュデータを読み込み
 void GLTFImporter::LoadMeshes(MeshList& meshes, const NodeList& nodes)
 {
+    int meshIndex = 0;
     for (int gltfNodeIndex = 0; gltfNodeIndex < gltfModel.nodes.size(); ++gltfNodeIndex)
     {
         const tinygltf::Node& gltfNode = gltfModel.nodes.at(gltfNodeIndex);
@@ -119,6 +120,7 @@ void GLTFImporter::LoadMeshes(MeshList& meshes, const NodeList& nodes)
         for (const tinygltf::Primitive& gltfPrimitive : gltfMesh.primitives)
         {
             ModelResource::Mesh& mesh = meshes.emplace_back();
+            mesh.index = meshIndex++;
             mesh.nodeIndex = gltfNodeIndex;
             mesh.materialIndex = gltfPrimitive.material;
 
