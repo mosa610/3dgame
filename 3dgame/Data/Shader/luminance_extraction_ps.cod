@@ -55,7 +55,7 @@ dcl_temps 2
 //   v1.x <- pin.texcoord.x; v1.y <- pin.texcoord.y; 
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
-#line 22 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\luminance_extraction_ps.hlsl"
+#line 22 "D:\ライブラリ\3dgame\HLSL\luminance_extraction_ps.hlsl"
 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v1.xyxx, t0.xyzw, s4  // r0.x <- color.x; r0.y <- color.y; r0.z <- color.z; r0.w <- color.w
 
 #line 23

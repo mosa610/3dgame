@@ -58,6 +58,7 @@ void Framework::Update(float elapsedTime)
 	ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_Once);
 	if (ImGui::TreeNode("test01")) {
 		ImGui::Text("framed.x : %d, framed.y : %d",framebuffer_dimensions.cx, framebuffer_dimensions.cy);
+		ImGui::Text("Screen.x : %f, Screen.y : %f", graphics.Get_screen_width(), graphics.Get_screen_height());
 		ImGui::TreePop();
 	}
 	ImGui::End();

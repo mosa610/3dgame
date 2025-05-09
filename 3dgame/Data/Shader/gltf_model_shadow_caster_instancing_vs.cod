@@ -114,7 +114,7 @@ dcl_temps 8
 //   o7.x <- <main return value>.previous_clip_position.x; o7.y <- <main return value>.previous_clip_position.y; o7.z <- <main return value>.previous_clip_position.z; o7.w <- <main return value>.previous_clip_position.w; 
 //   o0.x <- <main return value>.position.x; o0.y <- <main return value>.position.y; o0.z <- <main return value>.position.z; o0.w <- <main return value>.position.w
 //
-#line 10 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\gltf\gltf_model_shadow_caster_instancing_vs.hlsl"
+#line 10 "D:\ライブラリ\3dgame\HLSL\gltf\gltf_model_shadow_caster_instancing_vs.hlsl"
 mov r0.xyzw, v6.xyzw  // r0.x <- world_matrix._m00; r0.y <- world_matrix._m01; r0.z <- world_matrix._m02; r0.w <- world_matrix._m03
 
 #line 11

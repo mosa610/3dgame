@@ -192,10 +192,10 @@ dcl_indexableTemp x0[16], 4
 //   o0.x <- <main return value>.base_color.x; o0.y <- <main return value>.base_color.y; o0.z <- <main return value>.base_color.z; o0.w <- <main return value>.base_color.w; 
 //   x0 <- dither_pattern
 //
-#line 6 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\deferred\gbuffer.hlsli"
+#line 6 "D:\ライブラリ\3dgame\HLSL\deferred\gbuffer.hlsli"
 mov r0.x, l(1)  // r0.x <- shading_model_pbr
 
-#line 86 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\gltf\gltf_model_gbuffer_ps.hlsl"
+#line 86 "D:\ライブラリ\3dgame\HLSL\gltf\gltf_model_gbuffer_ps.hlsl"
 mov x0[0].x, l(0)
 mov x0[1].x, l(8)
 mov x0[2].x, l(2)
@@ -470,7 +470,7 @@ nop
 mov r0.yzw, v6.xxyw
 mov r7.xyz, v7.xywx
 
-#line 50 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\deferred\gbuffer.hlsli"
+#line 50 "D:\ライブラリ\3dgame\HLSL\deferred\gbuffer.hlsli"
 div r0.yz, r0.yyzy, r0.wwww
 
 #line 51
@@ -488,7 +488,7 @@ add r3.zw, r3.zzzw, l(0.000000, 0.000000, 0.500000, 0.500000)  // r3.z <- previo
 mov r3.zw, -r3.zzzw
 add r7.xy, r0.yzyy, r3.zwzz  // r7.x <- <calculate_uvspace_velocity return value>.x; r7.y <- <calculate_uvspace_velocity return value>.y
 
-#line 164 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\gltf\gltf_model_gbuffer_ps.hlsl"
+#line 164 "D:\ライブラリ\3dgame\HLSL\gltf\gltf_model_gbuffer_ps.hlsl"
 mov r7.xy, r7.xyxx  // r7.x <- data.velocity.x; r7.y <- data.velocity.y
 
 #line 167
@@ -523,7 +523,7 @@ mov r9.xy, cb1[16].zwzz
 mov r9.zw, cb1[17].zzzw
 mov r0.yz, cb1[1].xxyx
 
-#line 73 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\deferred\gbuffer.hlsli"
+#line 73 "D:\ライブラリ\3dgame\HLSL\deferred\gbuffer.hlsli"
 mov r2.xyz, r2.xyzx  // r2.x <- ret.base_color.x; r2.y <- ret.base_color.y; r2.z <- ret.base_color.z
 
 #line 74
@@ -603,7 +603,7 @@ mov r7.z, r7.z  // r7.z <- <EncodeGBuffer return value>.velocity.z
 mov r7.w, r7.w  // r7.w <- <EncodeGBuffer return value>.velocity.w
 mov r0.x, r0.x  // r0.x <- <EncodeGBuffer return value>.depth
 
-#line 171 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\gltf\gltf_model_gbuffer_ps.hlsl"
+#line 171 "D:\ライブラリ\3dgame\HLSL\gltf\gltf_model_gbuffer_ps.hlsl"
 mov o0.xyzw, r2.xyzw
 mov o1.xyzw, r1.xyzw
 mov o2.xyzw, r6.xyzw

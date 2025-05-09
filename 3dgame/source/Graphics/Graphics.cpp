@@ -50,6 +50,9 @@ Graphics::Graphics(HWND hwnd)
     this->screen_width = static_cast<float>(screen_width);
     this->screen_height = static_cast<float>(screen_height);
 
+    this->current_window_width = this->screen_width;
+    this->current_window_height = this->screen_height;
+
     RECT client_rect;
     GetClientRect(hwnd, &client_rect);
     framebuffer_dimensions.cx = client_rect.right - client_rect.left;

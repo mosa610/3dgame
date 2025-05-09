@@ -179,9 +179,9 @@ void SceneTest::Render(float elapsedTime)
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	dc->OMSetRenderTargets(1, scene_render_target_view.GetAddressOf(), dsv);*/
 
-	dc->ClearRenderTargetView(rtv, color);
+	dc->ClearRenderTargetView(scene_render_target_view.Get(), color);
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	dc->OMSetRenderTargets(1, &rtv, dsv);
+	dc->OMSetRenderTargets(1, scene_render_target_view.GetAddressOf(), dsv);
 
 
 	// 描画処理
@@ -259,7 +259,7 @@ void SceneTest::Render(float elapsedTime)
 		}
 		dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 		dc->OMSetRenderTargets(GB_Max, render_targets, dsv);*/
-		//g_buffer->Begin(dsv);
+		g_buffer->Begin(dsv);
 	}
 	
 
@@ -352,20 +352,6 @@ void SceneTest::Render(float elapsedTime)
 	//gltf_models->render_bounding_box(graphics.Get_device_context(), world4, rc.view, rc.projection, { 1,0,0,1 });
 
 
-
-
-	//	出力先をシーンに変更
-	{
-		/*dc->ClearRenderTargetView(rtv, color);
-		dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-		dc->OMSetRenderTargets(1, &rtv, dsv);*/
-
-		//g_buffer->End(dsv, scene_render_target_view.Get(), color);
-	}
-
-	framebuffers[0]->clear(dc, 0.4f, 0.4f, 0.4f);
-	framebuffers[0]->activate(dc);
-
 	{
 		skymap->Render(dc, rc);
 	}
@@ -377,10 +363,24 @@ void SceneTest::Render(float elapsedTime)
 	shader->Draw(dc, model.get(), modelAlpha);
     shader->End(dc);
 
+	//	出力先をシーンに変更
+	{
+		/*dc->ClearRenderTargetView(rtv, color);
+		dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		dc->OMSetRenderTargets(1, &rtv, dsv);*/
+
+		g_buffer->End(dsv, scene_render_target_view.Get(), color);
+	}
+
+	framebuffers[0]->clear(dc, 0.4f, 0.4f, 0.4f);
+	framebuffers[0]->activate(dc);
+
+
+
 	{
 		/*dc->PSSetShader(deferred_rendering_indirect_pixel_shader.Get(), nullptr, 0);
 		deferred_rendering_sprite->render(dc, 0, 0, graphics.Get_screen_width(), graphics.Get_screen_height());*/
-		//g_buffer->Render();
+		g_buffer->Render();
 	}
 
 
@@ -420,7 +420,7 @@ void SceneTest::Render(float elapsedTime)
 	font->Draw(0, 100, L"あああ");
 	font->End(graphics.Get_device_context());
 
-	//g_buffer->FinalDraw();
+	g_buffer->FinalDraw();
 }
 
 void SceneTest::DrawGUI()
@@ -470,19 +470,19 @@ void SceneTest::ResetShaderResource()
 	framebuffers[0]->ResetShaderResourceView();
 	framebuffers[1]->ResetShaderResourceView();
 	g_buffer->ResetShaderResourceView();
-	scene_shader_resource_view.Reset();
-	scene_render_target_view.Reset();
+	//scene_shader_resource_view.Reset();
+	//scene_render_target_view.Reset();
 }
 
 void SceneTest::RemakeShaderResource(float width, float height)
 {
 
 	ID3D11Device* device = Graphics::Instance().Get_device();
-	if(1)
+	if(0)
 	{
 		D3D11_TEXTURE2D_DESC texture2d_desc{};
-		texture2d_desc.Width = width;
-		texture2d_desc.Height = height;
+		texture2d_desc.Width = 1280.0f;
+		texture2d_desc.Height = 720.0f;
 		texture2d_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		texture2d_desc.MipLevels = 1;
 		texture2d_desc.ArraySize = 1;
@@ -505,7 +505,7 @@ void SceneTest::RemakeShaderResource(float width, float height)
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	}
 
-	{
+	/*{
 		Camera& camera = Camera::Instance();
 		camera.SetLookAt(
 			DirectX::XMFLOAT3(0, 10, -10),
@@ -521,7 +521,7 @@ void SceneTest::RemakeShaderResource(float width, float height)
 		camera.SetPosition(camera_position);
 
 		camera_controller.SyncCameraToController(camera);
-	}
+	}*/
 
 	framebuffers[0]->UpdateWindowSize(device, width, height);
 	framebuffers[1]->UpdateWindowSize(device, width / 2.0f, height / 2.0f);

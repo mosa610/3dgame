@@ -85,8 +85,8 @@ Model::Model(ID3D11Device* device, const char* filename, float sampleRate)
     {
         PipelineStateDesc desc;
         desc.name = DefaultShaderName;
-        desc.vs_path = ".//Data//Shader//gltf_model_forward_vs.cso";
-        desc.ps_path = ".//Data//Shader//gltf_model_forward_ps.cso";
+        desc.vs_path = ".//Data//Shader//gltf_model_gbuffer_vs.cso";
+        desc.ps_path = ".//Data//Shader//gltf_model_gbuffer_ps.cso";
         AddPipelineState(device, desc);
     }
 

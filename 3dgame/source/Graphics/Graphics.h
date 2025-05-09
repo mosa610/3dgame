@@ -59,6 +59,10 @@ public:
 	//ƒXƒNƒŠ[ƒ“‚‚³æ“¾
 	float Get_screen_height() const { return screen_height; }
 
+	float GetCurrentWindowWidth() const { return current_window_width; }
+
+    float GetCurrentWindowHeight() const { return current_window_height; }
+
 	void UpdateScreenSize(HWND hwnd)
 	{
 		GetClientRect(hwnd, &rc);
@@ -92,6 +96,9 @@ private:
 
 	float	screen_width;
 	float	screen_height;
+
+	float	current_window_width;
+	float	current_window_height;
 
 	BOOL tearing_supported{ FALSE };
 

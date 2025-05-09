@@ -73,7 +73,7 @@ dcl_temps 5
 //   o1.x <- <main return value>.color.x; o1.y <- <main return value>.color.y; o1.z <- <main return value>.color.z; o1.w <- <main return value>.color.w; 
 //   o0.x <- <main return value>.position.x; o0.y <- <main return value>.position.y; o0.z <- <main return value>.position.z; o0.w <- <main return value>.position.w
 //
-#line 6 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\sky_box_vs.hlsl"
+#line 6 "D:\ライブラリ\3dgame\HLSL\sky_box_vs.hlsl"
 mov r0.z, l(1.000000)  // r0.z <- position.z
 
 #line 7

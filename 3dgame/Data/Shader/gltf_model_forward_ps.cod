@@ -233,10 +233,10 @@ dcl_temps 18
 //   v8.x <- is_front_face; 
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
-#line 123 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\shading_functions.hlsli"
+#line 123 "D:\ライブラリ\3dgame\HLSL\shading_functions.hlsli"
 mov r0.x, l(3.141593)  // r0.x <- PI
 
-#line 70 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\gltf\gltf_model_forward_ps.hlsl"
+#line 70 "D:\ライブラリ\3dgame\HLSL\gltf\gltf_model_forward_ps.hlsl"
 ftou r0.y, cb0[8].x
 ld_structured_indexable(structured_buffer, stride=96)(mixed,mixed,mixed,mixed) r1.x, r0.y, l(0), t0.xxxx  // r1.x <- m.emissive_factor.x
 ld_structured_indexable(structured_buffer, stride=96)(mixed,mixed,mixed,mixed) r1.y, r0.y, l(4), t0.xxxx  // r1.y <- m.emissive_factor.y
@@ -471,7 +471,7 @@ mov r9.xyz, r9.xyzx
 mul r10.xyz, cb4[1].wwww, cb4[1].xyzx
 mov r3.x, r3.x
 
-#line 209 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\shading_functions.hlsli"
+#line 209 "D:\ライブラリ\3dgame\HLSL\shading_functions.hlsli"
 mov r5.xyz, r5.xyzx  // r5.x <- N.x; r5.y <- N.y; r5.z <- N.z
 
 #line 210
@@ -611,7 +611,7 @@ div r10.xyz, r10.xyzx, r0.zzzz  // r10.x <- <SpecularBRDF return value>.x; r10.y
 #line 228
 mul r9.xyz, r9.xyzx, r10.xyzx  // r9.x <- outSpecular.x; r9.y <- outSpecular.y; r9.z <- outSpecular.z
 
-#line 155 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\gltf\gltf_model_forward_ps.hlsl"
+#line 155 "D:\ライブラリ\3dgame\HLSL\gltf\gltf_model_forward_ps.hlsl"
 mov r11.xyz, r11.xyzx  // r11.x <- diffuse.x; r11.y <- diffuse.y; r11.z <- diffuse.z
 mov r9.xyz, r9.xyzx  // r9.x <- specular.x; r9.y <- specular.y; r9.z <- specular.z
 
@@ -694,7 +694,7 @@ loop
   mul r16.xyz, cb4[r3.w + 3].wwww, cb4[r1.w + 3].xyzx
   mov r1.w, r3.x
 
-#line 209 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\shading_functions.hlsli"
+#line 209 "D:\ライブラリ\3dgame\HLSL\shading_functions.hlsli"
   mov r14.xyz, r14.xyzx  // r14.x <- N.x; r14.y <- N.y; r14.z <- N.z
 
 #line 210
@@ -834,7 +834,7 @@ loop
 #line 228
   mul r11.xyz, r11.xyzx, r13.xyzx  // r11.x <- outSpecular.x; r11.y <- outSpecular.y; r11.z <- outSpecular.z
 
-#line 183 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\gltf\gltf_model_forward_ps.hlsl"
+#line 183 "D:\ライブラリ\3dgame\HLSL\gltf\gltf_model_forward_ps.hlsl"
   mov r12.xyz, r12.xyzx  // r12.x <- diffuse.x; r12.y <- diffuse.y; r12.z <- diffuse.z
   mov r11.xyz, r11.xyzx  // r11.x <- specular.x; r11.y <- specular.y; r11.z <- specular.z
 
@@ -937,7 +937,7 @@ loop
   mul r16.xyz, cb4[r3.w + 28].wwww, cb4[r3.z + 28].xyzx
   mov r3.z, r3.x
 
-#line 209 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\shading_functions.hlsli"
+#line 209 "D:\ライブラリ\3dgame\HLSL\shading_functions.hlsli"
   mov r14.xyz, r14.xyzx  // r14.x <- N.x; r14.y <- N.y; r14.z <- N.z
 
 #line 210
@@ -1077,7 +1077,7 @@ loop
 #line 228
   mul r11.xyz, r11.xyzx, r13.xyzx  // r11.x <- outSpecular.x; r11.y <- outSpecular.y; r11.z <- outSpecular.z
 
-#line 208 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\gltf\gltf_model_forward_ps.hlsl"
+#line 208 "D:\ライブラリ\3dgame\HLSL\gltf\gltf_model_forward_ps.hlsl"
   mov r12.xyz, r12.xyzx  // r12.x <- diffuse.x; r12.y <- diffuse.y; r12.z <- diffuse.z
   mov r11.xyz, r11.xyzx  // r11.x <- specular.x; r11.y <- specular.y; r11.z <- specular.z
 
@@ -1105,7 +1105,7 @@ mov r9.xyz, r2.xyzx
 nop 
 nop 
 
-#line 292 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\shading_functions.hlsli"
+#line 292 "D:\ライブラリ\3dgame\HLSL\shading_functions.hlsli"
 mov r0.xzw, r0.xxzw  // r0.x <- N.x; r0.z <- N.y; r0.w <- N.z
 
 #line 293
@@ -1158,7 +1158,7 @@ mov r0.xzw, r0.xxzw  // r0.x <- irradiance.x; r0.z <- irradiance.y; r0.w <- irra
 mul r0.xzw, r0.xxzw, r4.yyzw
 mul r0.xzw, r9.xxyz, r0.xxzw  // r0.x <- <DiffuseIBL return value>.x; r0.z <- <DiffuseIBL return value>.y; r0.w <- <DiffuseIBL return value>.z
 
-#line 217 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\gltf\gltf_model_forward_ps.hlsl"
+#line 217 "D:\ライブラリ\3dgame\HLSL\gltf\gltf_model_forward_ps.hlsl"
 add r0.xzw, r0.xxzw, r7.xxyz  // r0.x <- total_diffuse.x; r0.z <- total_diffuse.y; r0.w <- total_diffuse.z
 
 #line 218
@@ -1171,7 +1171,7 @@ nop
 nop 
 nop 
 
-#line 315 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\shading_functions.hlsli"
+#line 315 "D:\ライブラリ\3dgame\HLSL\shading_functions.hlsli"
 mov r5.xyz, r5.xyzx  // r5.x <- N.x; r5.y <- N.y; r5.z <- N.z
 
 #line 316
@@ -1235,7 +1235,7 @@ mul r2.xyz, r2.xyzx, r3.xxxx
 add r2.xyz, r3.yyyy, r2.xyzx
 mul r2.xyz, r2.xyzx, r4.yzwy  // r2.x <- <SpecularIBL return value>.x; r2.y <- <SpecularIBL return value>.y; r2.z <- <SpecularIBL return value>.z
 
-#line 218 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\gltf\gltf_model_forward_ps.hlsl"
+#line 218 "D:\ライブラリ\3dgame\HLSL\gltf\gltf_model_forward_ps.hlsl"
 add r2.xyz, r2.xyzx, r8.xyzx  // r2.x <- total_specular.x; r2.y <- total_specular.y; r2.z <- total_specular.z
 
 #line 221

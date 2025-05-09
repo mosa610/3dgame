@@ -69,7 +69,7 @@ dcl_temps 1
 //   v4.x <- pin.previous_clip_position.x; v4.y <- pin.previous_clip_position.y; v4.z <- pin.previous_clip_position.z; v4.w <- pin.previous_clip_position.w; 
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
-#line 9 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\sky_box_forward_ps.hlsl"
+#line 9 "D:\ライブラリ\3dgame\HLSL\sky_box_forward_ps.hlsl"
 mov r0.xyz, -cb1[2].xyzx
 add r0.xyz, r0.xyzx, v2.xyzx
 dp3 r0.w, r0.xyzx, r0.xyzx

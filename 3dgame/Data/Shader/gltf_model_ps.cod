@@ -160,7 +160,7 @@ dcl_temps 15
 //   v4.x <- pin.texcoord.x; v4.y <- pin.texcoord.y; 
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
-#line 58 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\gltf_model_ps.hlsl"
+#line 58 "D:\ライブラリ\3dgame\HLSL\gltf_model_ps.hlsl"
 mov r0.x, l(2.200000)  // r0.x <- GAMMA
 
 #line 60
@@ -428,7 +428,7 @@ if_nz r1.w
   mov r2.xyz, r2.xyzx
   mov r3.z, r3.z
 
-#line 28 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\bidirectional_reflectance_distribution.hlsli"
+#line 28 "D:\ライブラリ\3dgame\HLSL\bidirectional_reflectance_distribution.hlsli"
   mov r3.w, l(3.141593)  // r3.w <- PI
 
 #line 29
@@ -458,7 +458,7 @@ if_nz r1.w
   div r13.xyz, r2.xyzx, r3.wwww
   mul r12.xyz, r12.xyzx, r13.xyzx  // r12.x <- <brdf_lambertian return value>.x; r12.y <- <brdf_lambertian return value>.y; r12.z <- <brdf_lambertian return value>.z
 
-#line 141 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\gltf_model_ps.hlsl"
+#line 141 "D:\ライブラリ\3dgame\HLSL\gltf_model_ps.hlsl"
   mul r10.xyz, r10.xyzx, r12.xyzx
   add r4.yzw, r4.yyzw, r10.xxyz
 
@@ -473,7 +473,7 @@ if_nz r1.w
   mov r0.w, r0.w
   mov r1.w, r1.w
 
-#line 34 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\bidirectional_reflectance_distribution.hlsli"
+#line 34 "D:\ライブラリ\3dgame\HLSL\bidirectional_reflectance_distribution.hlsli"
   nop 
   mov r11.xyz, r11.xyzx
   mov r6.xyz, r6.xyzx
@@ -565,7 +565,7 @@ if_nz r1.w
   mul r6.xyz, r0.zzzz, r6.xyzx
   mul r0.yzw, r0.yyyy, r6.xxyz  // r0.y <- <brdf_specular_ggx return value>.x; r0.z <- <brdf_specular_ggx return value>.y; r0.w <- <brdf_specular_ggx return value>.z
 
-#line 142 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\gltf_model_ps.hlsl"
+#line 142 "D:\ライブラリ\3dgame\HLSL\gltf_model_ps.hlsl"
   mul r0.yzw, r0.yyzw, r10.xxyz
   add r9.xyz, r0.yzwy, r9.xyzx
 
@@ -580,7 +580,7 @@ mov r3.y, r3.y
 mov r2.xyz, r2.xyzx
 mov r5.xyz, r5.xyzx
 
-#line 42 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\bidirectional_reflectance_distribution.hlsli"
+#line 42 "D:\ライブラリ\3dgame\HLSL\bidirectional_reflectance_distribution.hlsli"
 dp3 r0.y, r8.xyzx, r7.xyzx
 max r0.y, r0.y, l(0.000000)
 min r3.x, r0.y, l(1.000000)  // r3.x <- NoV
@@ -593,22 +593,22 @@ min r0.yz, r0.yyzy, l(0.000000, 1.000000, 1.000000, 0.000000)  // r0.y <- brdf_s
 nop 
 mov r0.yz, r0.yyzy
 
-#line 16 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\image_based_lighting.hlsli"
+#line 16 "D:\ライブラリ\3dgame\HLSL\image_based_lighting.hlsli"
 sample_indexable(texture2d)(float,float,float,float) r0.yz, r0.yzyy, t35.zxyw, s1
 mov r0.yz, r0.yyzy  // r0.y <- <sample_lut_ggx return value>.x; r0.z <- <sample_lut_ggx return value>.y
 
-#line 45 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\bidirectional_reflectance_distribution.hlsli"
+#line 45 "D:\ライブラリ\3dgame\HLSL\bidirectional_reflectance_distribution.hlsli"
 mov r0.yz, r0.yyzy  // r0.y <- f_ab.x; r0.z <- f_ab.y
 
 #line 47
 nop 
 mov r8.xyz, r8.xyzx
 
-#line 35 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\image_based_lighting.hlsli"
+#line 35 "D:\ライブラリ\3dgame\HLSL\image_based_lighting.hlsli"
 sample_indexable(texturecube)(float,float,float,float) r6.xyz, r8.xyzx, t33.xyzw, s1
 mov r6.xyz, r6.xyzx  // r6.x <- <sample_diffuse_iem return value>.x; r6.y <- <sample_diffuse_iem return value>.y; r6.z <- <sample_diffuse_iem return value>.z
 
-#line 47 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\bidirectional_reflectance_distribution.hlsli"
+#line 47 "D:\ライブラリ\3dgame\HLSL\bidirectional_reflectance_distribution.hlsli"
 mov r6.xyz, r6.xyzx  // r6.x <- irradiance.x; r6.y <- irradiance.y; r6.z <- irradiance.z
 
 #line 49
@@ -662,7 +662,7 @@ mul r2.xyz, r2.xyzx, r10.xyzx  // r2.x <- k_d.x; r2.y <- k_d.y; r2.z <- k_d.z
 add r0.yzw, r0.yyzw, r2.xxyz
 mul r0.yzw, r6.xxyz, r0.yyzw  // r0.y <- <ibl_radiance_lambertian return value>.x; r0.z <- <ibl_radiance_lambertian return value>.y; r0.w <- <ibl_radiance_lambertian return value>.z
 
-#line 145 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\gltf_model_ps.hlsl"
+#line 145 "D:\ライブラリ\3dgame\HLSL\gltf_model_ps.hlsl"
 add r0.yzw, r0.yyzw, r4.yyzw  // r0.y <- diffuse.x; r0.z <- diffuse.y; r0.w <- diffuse.z
 
 #line 146
@@ -672,7 +672,7 @@ mov r7.xyz, r7.xyzx
 mov r3.y, r3.y
 mov r5.xyz, r5.xyzx
 
-#line 62 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\bidirectional_reflectance_distribution.hlsli"
+#line 62 "D:\ライブラリ\3dgame\HLSL\bidirectional_reflectance_distribution.hlsli"
 dp3 r1.w, r8.xyzx, r7.xyzx
 max r1.w, r1.w, l(0.000000)
 min r3.x, r1.w, l(1.000000)  // r3.x <- NoV
@@ -685,11 +685,11 @@ min r2.xy, r2.xyxx, l(1.000000, 1.000000, 0.000000, 0.000000)  // r2.x <- brdf_s
 nop 
 mov r2.xy, r2.xyxx
 
-#line 16 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\image_based_lighting.hlsli"
+#line 16 "D:\ライブラリ\3dgame\HLSL\image_based_lighting.hlsli"
 sample_indexable(texture2d)(float,float,float,float) r2.xy, r2.xyxx, t35.xyzw, s1
 mov r2.xy, r2.xyxx  // r2.x <- <sample_lut_ggx return value>.x; r2.y <- <sample_lut_ggx return value>.y
 
-#line 65 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\bidirectional_reflectance_distribution.hlsli"
+#line 65 "D:\ライブラリ\3dgame\HLSL\bidirectional_reflectance_distribution.hlsli"
 mov r2.xy, r2.xyxx  // r2.x <- f_ab.x; r2.y <- f_ab.y
 
 #line 67
@@ -708,7 +708,7 @@ nop
 mov r4.yzw, r4.yyzw
 mov r3.y, r3.y
 
-#line 40 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\image_based_lighting.hlsli"
+#line 40 "D:\ライブラリ\3dgame\HLSL\image_based_lighting.hlsli"
 resinfo_indexable(texturecube)(float,float,float,float)_uint r1.w, l(0), t34.xyzw
 mov r1.w, r1.w  // r1.w <- number_of_levels
 
@@ -723,7 +723,7 @@ mul r1.w, r1.w, r3.y  // r1.w <- lod
 sample_l_indexable(texturecube)(float,float,float,float) r4.yzw, r4.yzwy, t34.wxyz, s1, r1.w
 mov r4.yzw, r4.yyzw  // r4.y <- <sample_specular_pmrem return value>.x; r4.z <- <sample_specular_pmrem return value>.y; r4.w <- <sample_specular_pmrem return value>.z
 
-#line 68 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\bidirectional_reflectance_distribution.hlsli"
+#line 68 "D:\ライブラリ\3dgame\HLSL\bidirectional_reflectance_distribution.hlsli"
 mov r4.yzw, r4.yyzw  // r4.y <- specular_light.x; r4.z <- specular_light.y; r4.w <- specular_light.z
 
 #line 70
@@ -751,7 +751,7 @@ add r2.xyz, r2.yyyy, r3.xyzx  // r2.x <- fss_ess.x; r2.y <- fss_ess.y; r2.z <- f
 #line 74
 mul r2.xyz, r2.xyzx, r4.yzwy  // r2.x <- <ibl_radiance_ggx return value>.x; r2.y <- <ibl_radiance_ggx return value>.y; r2.z <- <ibl_radiance_ggx return value>.z
 
-#line 146 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\gltf_model_ps.hlsl"
+#line 146 "D:\ライブラリ\3dgame\HLSL\gltf_model_ps.hlsl"
 add r2.xyz, r2.xyzx, r9.xyzx  // r2.x <- specular.x; r2.y <- specular.y; r2.z <- specular.z
 
 #line 149
