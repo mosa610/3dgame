@@ -12,8 +12,8 @@ GBuffer::GBuffer(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> scene_shader_r
 	// makeGBuffer
 	{
 		D3D11_TEXTURE2D_DESC texture2d_desc{};
-		texture2d_desc.Width = /*Graphics::Instance().Get_screen_width()*/1280.0f;
-		texture2d_desc.Height = /*Graphics::Instance().Get_screen_height()*/720.0f;
+		texture2d_desc.Width = /*Graphics::Instance().Get_screen_width()*/1920.0f;
+		texture2d_desc.Height = /*Graphics::Instance().Get_screen_height()*/1080.0f;
 		texture2d_desc.MipLevels = 1;
 		texture2d_desc.ArraySize = 1;
 		texture2d_desc.SampleDesc.Count = 1;
@@ -261,8 +261,8 @@ void GBuffer::ResizeRenderTarget(float width, float height)
 	// makeGBuffer
 	{
 		D3D11_TEXTURE2D_DESC texture2d_desc{};
-		texture2d_desc.Width = 1280.0f;
-		texture2d_desc.Height = 720.0f;
+		texture2d_desc.Width = 1920.0f;
+		texture2d_desc.Height = 1080.0f;
 		texture2d_desc.MipLevels = 1;
 		texture2d_desc.ArraySize = 1;
 		texture2d_desc.SampleDesc.Count = 1;
