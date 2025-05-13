@@ -141,20 +141,20 @@ void SceneTest::Update(float elapsedTime)
 	camera_controller.Update();
 	camera_controller.SyncControllerToCamera(camera);
 	
-	model->ComputeAnimation(0, animeTimer, model->_nodePoses);
+	//model->ComputeAnimation(0, animeTimer, model->_nodePoses);
 
 	// アニメーション更新
-	const ModelResource::Animation& animation = model->_resource->GetAnimations().at(0);
+	/*const ModelResource::Animation& animation = model->_resource->GetAnimations().at(0);
 	animeTimer += elapsedTime;
 	if (animeTimer > animation.secondsLength)
 	{
 		animeTimer -= animation.secondsLength;
 	}
 	model->SetNodePoses(model->_nodePoses);
-	model->Update(elapsedTime);
+	model->Update(elapsedTime);*/
 
 	skymap->update();
-
+	model->Update(elapsedTime);
 }
 
 

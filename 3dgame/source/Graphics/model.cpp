@@ -169,8 +169,8 @@ void Model::UpdateStructedBuffer(ID3D11DeviceContext* dc,const ModelResource::Me
 
 void Model::Update(float elapsedTime)
 {
-    _materialDates[0].pbrMetallicRoughness.baseColor = { 1,0,1,1 };
-    _materialDates[0].emissiveColor = { 0,1,0.5f };
+    //_materialDates[0].pbrMetallicRoughness.baseColor = { 1,0,1,1 };
+    _materialDates[0].emissiveColor = { 0,0,0 };
 }
 
 void Model::DrawGUI()
