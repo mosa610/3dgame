@@ -56,8 +56,8 @@ void SceneTest::Initialize()
 		".\\glTF-Sample-Models-main\\2.0\\BrainStem\\glTF\\BrainStem.gltf");
 
 	model = std::make_unique<Model>(graphics.Get_device(),
-		".\\glTF-Sample-Models-main\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf"
-		/*".\\resources\\gltfobject\\set costume_02 sd unity-chan wgs.gltf"*/
+		/*".\\glTF-Sample-Models-main\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf"*/
+		".\\resources\\gltfobject\\set costume_02 sd unity-chan wgs.gltf"
 		/*".\\glTF-Sample-Models-main\\2.0\\BrainStem\\glTF\\BrainStem.gltf"*/
 		/*".\\glTF-Sample-Models-main\\2.0\\Duck\\glTF\\Duck.gltf"*/);
 	model->GetNodePoses(model->_nodePoses);
