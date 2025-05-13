@@ -56,8 +56,8 @@ void SceneTest::Initialize()
 		".\\glTF-Sample-Models-main\\2.0\\BrainStem\\glTF\\BrainStem.gltf");
 
 	model = std::make_unique<Model>(graphics.Get_device(),
-		/*".\\glTF-Sample-Models-main\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf"*/
-		".\\resources\\gltfobject\\set costume_02 sd unity-chan wgs.gltf"
+		".\\glTF-Sample-Models-main\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf"
+		/*".\\resources\\gltfobject\\set costume_02 sd unity-chan wgs.gltf"*/
 		/*".\\glTF-Sample-Models-main\\2.0\\BrainStem\\glTF\\BrainStem.gltf"*/
 		/*".\\glTF-Sample-Models-main\\2.0\\Duck\\glTF\\Duck.gltf"*/);
 	model->GetNodePoses(model->_nodePoses);
@@ -141,20 +141,20 @@ void SceneTest::Update(float elapsedTime)
 	camera_controller.Update();
 	camera_controller.SyncControllerToCamera(camera);
 	
-	model->ComputeAnimation(0, animeTimer, model->_nodePoses);
+	//model->ComputeAnimation(0, animeTimer, model->_nodePoses);
 
 	// アニメーション更新
-	const ModelResource::Animation& animation = model->_resource->GetAnimations().at(0);
+	/*const ModelResource::Animation& animation = model->_resource->GetAnimations().at(0);
 	animeTimer += elapsedTime;
 	if (animeTimer > animation.secondsLength)
 	{
 		animeTimer -= animation.secondsLength;
 	}
 	model->SetNodePoses(model->_nodePoses);
-	model->Update(elapsedTime);
+	model->Update(elapsedTime);*/
 
 	skymap->update();
-
+	model->Update(elapsedTime);
 }
 
 
