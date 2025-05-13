@@ -337,8 +337,8 @@ LRESULT Framework::Handle_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpa
 #if 1
 		RECT client_rect{};
 		GetClientRect(hwnd, &client_rect);
-		on_size_changed(static_cast<UINT64>(client_rect.right - client_rect.left), client_rect.bottom - client_rect.top);
 		graphics.UpdateScreenSize(hwnd);
+		on_size_changed(static_cast<UINT64>(client_rect.right - client_rect.left), client_rect.bottom - client_rect.top);
 #endif
 		break;
 	}

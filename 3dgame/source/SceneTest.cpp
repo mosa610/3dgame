@@ -420,7 +420,7 @@ void SceneTest::Render(float elapsedTime)
 	font->Draw(0, 100, L"あああ");
 	font->End(graphics.Get_device_context());
 
-	g_buffer->FinalDraw();
+	g_buffer->FinalDraw(scene_shader_resource_view);
 }
 
 void SceneTest::DrawGUI()
@@ -467,22 +467,32 @@ void SceneTest::DrawGUI()
 
 void SceneTest::ResetShaderResource()
 {
+	// デバイスコンテキストからSRVへの参照をクリア
+	ID3D11DeviceContext* dc = Graphics::Instance().Get_device_context();
+	ID3D11ShaderResourceView* null_views[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = { nullptr };
+	dc->PSSetShaderResources(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT, null_views);
+	dc->VSSetShaderResources(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT, null_views);
+
+	// デバイスコンテキストでレンダーターゲットをリセット
+	ID3D11RenderTargetView* null_targets[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = { nullptr };
+	dc->OMSetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, null_targets, nullptr);
+
 	framebuffers[0]->ResetShaderResourceView();
 	framebuffers[1]->ResetShaderResourceView();
 	g_buffer->ResetShaderResourceView();
-	//scene_shader_resource_view.Reset();
-	//scene_render_target_view.Reset();
+	scene_shader_resource_view.Reset();
+	scene_render_target_view.Reset();
 }
 
 void SceneTest::RemakeShaderResource(float width, float height)
 {
 
 	ID3D11Device* device = Graphics::Instance().Get_device();
-	if(0)
+	if(1)
 	{
 		D3D11_TEXTURE2D_DESC texture2d_desc{};
-		texture2d_desc.Width = 1280.0f;
-		texture2d_desc.Height = 720.0f;
+		texture2d_desc.Width = static_cast<UINT>(width);
+		texture2d_desc.Height = static_cast<UINT>(height);
 		texture2d_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		texture2d_desc.MipLevels = 1;
 		texture2d_desc.ArraySize = 1;

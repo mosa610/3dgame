@@ -12,8 +12,8 @@ GBuffer::GBuffer(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> scene_shader_r
 	// makeGBuffer
 	{
 		D3D11_TEXTURE2D_DESC texture2d_desc{};
-		texture2d_desc.Width = /*Graphics::Instance().Get_screen_width()*/1920.0f;
-		texture2d_desc.Height = /*Graphics::Instance().Get_screen_height()*/1080.0f;
+		texture2d_desc.Width = Graphics::Instance().Get_screen_width();
+		texture2d_desc.Height = Graphics::Instance().Get_screen_height();
 		texture2d_desc.MipLevels = 1;
 		texture2d_desc.ArraySize = 1;
 		texture2d_desc.SampleDesc.Count = 1;
@@ -204,10 +204,16 @@ void GBuffer::Render()
 
 }
 
-void GBuffer::FinalDraw()
+void GBuffer::FinalDraw(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> scene_shader_resource_view)
 {
 	ID3D11DeviceContext* dc = Graphics::Instance().Get_device_context();
 	ID3D11RenderTargetView* rtv = Graphics::Instance().Get_render_target_view();
+
+	if (scene_shader_resource_view != nullptr)
+	{
+		final_render_sprite.reset();
+		final_render_sprite = std::make_unique<Sprite>(Graphics::Instance().Get_device(), scene_shader_resource_view);
+	}
 
 	// èoóÕêÊÇbackbufferÇ…ïœçX
 	{
@@ -261,8 +267,8 @@ void GBuffer::ResizeRenderTarget(float width, float height)
 	// makeGBuffer
 	{
 		D3D11_TEXTURE2D_DESC texture2d_desc{};
-		texture2d_desc.Width = 1920.0f;
-		texture2d_desc.Height = 1080.0f;
+		texture2d_desc.Width = width;
+		texture2d_desc.Height = height;
 		texture2d_desc.MipLevels = 1;
 		texture2d_desc.ArraySize = 1;
 		texture2d_desc.SampleDesc.Count = 1;

@@ -27,7 +27,7 @@ public:
 
 	void Render();
 
-	void FinalDraw();
+	void FinalDraw(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> scene_shader_resource_view = nullptr);
 
 	void DrawGUI();
 
