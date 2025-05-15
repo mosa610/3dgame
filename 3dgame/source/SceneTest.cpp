@@ -595,3 +595,10 @@ void Scene::SetSceneConstant(int start_slot, DirectX::XMFLOAT2 viewport_size, bo
 	Graphics::Instance().Get_device_context()->PSSetConstantBuffers(start_slot, 1, scene_constant_buffer.GetAddressOf());
 
 }
+
+
+// TODO　引継ぎタスク一覧（タスクは確認、完了次第消すこと。　[]内は優先度１～５）
+// Blurの実装（モデルのテクスチャが白くならないかを確認）[5]
+// Gbufferのライティング描画[4]
+// IBLの適応するかしないかの変更[4]
+// ステージの描画[3]

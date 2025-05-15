@@ -48,6 +48,7 @@ void Framework::Update(float elapsedTime)
 	}
 #endif
 
+
 #ifdef USE_IMGUI
 	graphics.Get_ImGui_renderer()->NewFrame();
 #endif
@@ -59,6 +60,7 @@ void Framework::Update(float elapsedTime)
 	if (ImGui::TreeNode("test01")) {
 		ImGui::Text("framed.x : %d, framed.y : %d",framebuffer_dimensions.cx, framebuffer_dimensions.cy);
 		ImGui::Text("Screen.x : %f, Screen.y : %f", graphics.Get_screen_width(), graphics.Get_screen_height());
+
 		ImGui::TreePop();
 	}
 	ImGui::End();
