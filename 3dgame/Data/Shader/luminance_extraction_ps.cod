@@ -11,7 +11,7 @@
 //   float gaussian_sigma;              // Offset:    4 Size:     4 [unused]
 //   float bloom_intensity;             // Offset:    8 Size:     4 [unused]
 //   float exposure;                    // Offset:   12 Size:     4 [unused]
-//   float extraction_end;              // Offset:   16 Size:     4 [unused]
+//   float extraction_end;              // Offset:   16 Size:     4
 //   float3 pad;                        // Offset:   20 Size:    12 [unused]
 //
 // }
@@ -21,7 +21,7 @@
 //
 // Name                                 Type  Format         Dim      HLSL Bind  Count
 // ------------------------------ ---------- ------- ----------- -------------- ------
-// sampler_states[4]                 sampler      NA          NA             s4      1 
+// sampler_states[3]                 sampler      NA          NA             s3      1 
 // texture_maps[0]                   texture  float4          2d             t0      1 
 // PARAMETRIC_CONSTANT_BUFFER        cbuffer      NA          NA            cb3      1 
 //
@@ -43,8 +43,8 @@
 //
 ps_5_0
 dcl_globalFlags refactoringAllowed | skipOptimization
-dcl_constantbuffer CB3[1], immediateIndexed
-dcl_sampler s4, mode_default
+dcl_constantbuffer CB3[2], immediateIndexed
+dcl_sampler s3, mode_default
 dcl_resource_texture2d (float,float,float,float) t0
 dcl_input_ps linear v1.xy
 dcl_output o0.xyzw
@@ -55,20 +55,33 @@ dcl_temps 2
 //   v1.x <- pin.texcoord.x; v1.y <- pin.texcoord.y; 
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
-#line 22 "D:\ライブラリ\3dgame\HLSL\luminance_extraction_ps.hlsl"
-sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v1.xyxx, t0.xyzw, s4  // r0.x <- color.x; r0.y <- color.y; r0.z <- color.z; r0.w <- color.w
+#line 35 "D:\ライブラリ\3dgame\HLSL\luminance_extraction_ps.hlsl"
+sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v1.xyxx, t0.xyzw, s3  // r0.x <- color.x; r0.y <- color.y; r0.z <- color.z; r0.w <- color.w
 
-#line 23
+#line 36
 mov r0.w, r0.w  // r0.w <- alpha
 
-#line 26
-dp3 r1.x, r0.xyzx, l(0.299000, 0.587000, 0.114000, 0.000000)
-ge r1.x, r1.x, cb3[0].x
-movc r1.x, r1.x, l(1.000000), l(0)
-mul r0.xyz, r0.xyzx, r1.xxxx
+#line 39
+dp3 r1.x, r0.xyzx, l(0.299000, 0.587000, 0.114000, 0.000000)  // r1.x <- luminance
 
-#line 32
+#line 42
+mov r1.y, -cb3[0].x
+add r1.z, r1.y, cb3[1].x
+add r1.x, r1.y, r1.x
+div r1.y, l(1.000000, 1.000000, 1.000000, 1.000000), r1.z
+mul r1.x, r1.y, r1.x
+max r1.x, r1.x, l(0.000000)
+min r1.x, r1.x, l(1.000000)
+mul r1.y, r1.x, l(-2.000000)
+add r1.y, r1.y, l(3.000000)
+mul r1.x, r1.x, r1.x
+mul r1.x, r1.x, r1.y  // r1.x <- contribution
+
+#line 45
+mul r0.xyz, r0.xyzx, r1.xxxx  // r0.x <- bright_color.x; r0.y <- bright_color.y; r0.z <- bright_color.z
+
+#line 47
 mov o0.xyz, r0.xyzx
 mov o0.w, r0.w
 ret 
-// Approximately 9 instruction slots used
+// Approximately 18 instruction slots used

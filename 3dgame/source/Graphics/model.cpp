@@ -145,6 +145,8 @@ void Model::UpdateStructedBuffer(ID3D11DeviceContext* dc,const ModelResource::Me
     if (mesh != nullptr)
     {
         _materialDates[0].pbrMetallicRoughness.baseColor = mesh->material->data.pbrMetallicRoughness.baseColor;
+        _materialDates[0].pbrMetallicRoughness.metallicFactor = mesh->material->data.pbrMetallicRoughness.metallicFactor;
+        _materialDates[0].pbrMetallicRoughness.roughnessFactor = mesh->material->data.pbrMetallicRoughness.roughnessFactor;
         _materialDates[0].emissiveColor = mesh->material->data.emissiveColor;
         _materialDates[0].alphaMode = mesh->material->data.alphaMode;
         _materialDates[0].alphaCutOff = mesh->material->data.alphaCutOff;
