@@ -6,7 +6,7 @@
 class framebuffer
 {
 public:
-    framebuffer(ID3D11Device* device, uint32_t width, uint32_t height);
+    framebuffer(ID3D11Device* device, uint32_t width, uint32_t height, bool depth_stencil = true);
     virtual ~framebuffer()
     {
         render_target_view.Reset();

@@ -1,7 +1,7 @@
 #include "framebuffer.h"
 #include "..//misc.h"
 
-framebuffer::framebuffer(ID3D11Device* device, uint32_t width, uint32_t height)
+framebuffer::framebuffer(ID3D11Device* device, uint32_t width, uint32_t height, bool depth_stencil)
 {
     HRESULT hr{ S_OK };
 
@@ -36,25 +36,28 @@ framebuffer::framebuffer(ID3D11Device* device, uint32_t width, uint32_t height)
         shader_resource_view[0].GetAddressOf());
     _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> depth_stencil_buffer;
-    texture2d_desc.Format = DXGI_FORMAT_R24G8_TYPELESS;
-    texture2d_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
-    hr = device->CreateTexture2D(&texture2d_desc, 0, depth_stencil_buffer.GetAddressOf());
-    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+    if (depth_stencil)
+    {
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> depth_stencil_buffer;
+        texture2d_desc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+        texture2d_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+        hr = device->CreateTexture2D(&texture2d_desc, 0, depth_stencil_buffer.GetAddressOf());
+        _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
-    D3D11_DEPTH_STENCIL_VIEW_DESC depth_stencil_view_desc{};
-    depth_stencil_view_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depth_stencil_view_desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    depth_stencil_view_desc.Flags = 0;
-    hr = device->CreateDepthStencilView(depth_stencil_buffer.Get(), &depth_stencil_view_desc,
-        depth_stencil_view.GetAddressOf());
-    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+        D3D11_DEPTH_STENCIL_VIEW_DESC depth_stencil_view_desc{};
+        depth_stencil_view_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+        depth_stencil_view_desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+        depth_stencil_view_desc.Flags = 0;
+        hr = device->CreateDepthStencilView(depth_stencil_buffer.Get(), &depth_stencil_view_desc,
+            depth_stencil_view.GetAddressOf());
+        _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
-    shader_resource_view_desc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-    shader_resource_view_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-    hr = device->CreateShaderResourceView(depth_stencil_buffer.Get(), &shader_resource_view_desc,
-        shader_resource_view[1].GetAddressOf());
-    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+        shader_resource_view_desc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+        shader_resource_view_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+        hr = device->CreateShaderResourceView(depth_stencil_buffer.Get(), &shader_resource_view_desc,
+            shader_resource_view[1].GetAddressOf());
+        _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+    }
 
     viewport.Width = static_cast<float>(width);
     viewport.Height = static_cast<float>(height);
