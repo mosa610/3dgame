@@ -68,7 +68,8 @@ void SceneTest::Initialize()
 	font = std::make_unique<Font>(graphics.Get_device(), ".\\Data\\Font\\MS_Gothic.fnt", 1024);
 
 	create_ps_from_cso(graphics.Get_device(), ".//Data//Shader//luminance_extraction_ps.cso", pixel_shaders[0].GetAddressOf());
-	create_ps_from_cso(graphics.Get_device(), ".//Data//Shader//blur_ps.cso", pixel_shaders[1].GetAddressOf());
+	//create_ps_from_cso(graphics.Get_device(), ".//Data//Shader//blur_ps.cso", pixel_shaders[1].GetAddressOf());
+	create_ps_from_cso(graphics.Get_device(), ".//Data//Shader//bloom_final_pass_ps.cso", pixel_shaders[1].GetAddressOf());
 
 	bit_block_transfer = std::make_unique<fullscreen_quad>(graphics.Get_device());
 
@@ -119,6 +120,7 @@ void SceneTest::Initialize()
 	g_buffer = std::make_unique<GBuffer>(GetSceneShaderResourceView());
 
 	deferred_rendering_sprite = std::make_unique<Sprite>(graphics.Get_device(), g_buffer_shader_resource_view[GB_BaseColor]);
+	bloomer = std::make_unique<bloom>(device, graphics.Get_screen_width(), graphics.Get_screen_height());
 }
 
 void SceneTest::Finalize()
@@ -400,7 +402,7 @@ void SceneTest::Render(float elapsedTime)
 	ID3D11ShaderResourceView* srv = graphics.Get_render_target_resource_view();
 
 
-	framebuffers[1]->clear(dc);
+	/*framebuffers[1]->clear(dc);
 	framebuffers[1]->activate(dc);
 	dc->OMSetDepthStencilState(GState.GetDepthStencilState(DEPTH_STATE::ZT_OFF_ZW_OFF).Get(), 0);
 	dc->RSSetState(GState.GetRasterizerState(RASTER_STATE::CULL_NONE).Get());
@@ -414,7 +416,21 @@ void SceneTest::Render(float elapsedTime)
 
 	ID3D11ShaderResourceView* shader_resource_views[2] =
 	{ framebuffers[0]->shader_resource_view[0].Get(), framebuffers[1]->shader_resource_view[0].Get()};
-	bit_block_transfer->blit(dc, shader_resource_views, 0, 2, pixel_shaders[1].Get());
+	bit_block_transfer->blit(dc, shader_resource_views, 0, 2, pixel_shaders[1].Get());*/
+
+	bloomer->make(dc, framebuffers[0]->shader_resource_view[0].Get());
+
+	dc->OMSetDepthStencilState(GState.GetDepthStencilState(DEPTH_STATE::ZT_OFF_ZW_OFF).Get(), 0);
+	dc->RSSetState(GState.GetRasterizerState(RASTER_STATE::CULL_NONE).Get());
+	dc->OMSetBlendState(GState.GetBlendState(BLEND_STATE::ALPHA).Get(), nullptr, 0xFFFFFFFF);
+
+	ID3D11ShaderResourceView* shader_resource_views[2] =
+	{
+		framebuffers[0]->shader_resource_view[0].Get(),
+		bloomer->shader_resource_view()
+	};
+
+    bit_block_transfer->blit(dc, shader_resource_views, 0, 2, pixel_shaders[1].Get());
 
 
 	font->Begin(graphics.Get_device_context());
@@ -434,8 +450,8 @@ void SceneTest::DrawGUI()
 		ImGui::SliderFloat3("objScale", &object_scale.x, 0.1f, 10.0f, "%.1f");
 		ImGui::SliderFloat4("light", &directional_light.x, -20.0f, 20.0f, "%.1f");
 		ImGui::SliderFloat("gaussian_sigma", { &gaussian_sigma }, 0.0f, 10.0f);
-		ImGui::SliderFloat("bloom_intensity", { &bloom_intensity }, 0.0f, 10.0f);
-		ImGui::SliderFloat("extraction", &extraction_threshold, 0.0f, 5.0f, "%.1f");
+		ImGui::SliderFloat("bloom_intensity", { &bloomer->bloom_intensity }, 0.0f, 10.0f);
+		ImGui::SliderFloat("extraction", &bloomer->bloom_extraction_threshold, 0.0f, 5.0f);
 		ImGui::SliderFloat("extraction_end", &extraction_threshold_end, 0.0f, 5.0f, "%.1f");
 		ImGui::SliderFloat("exposure", &exposure, 0.0f, 10.0f, "%.1f");
 		ImGui::SliderFloat("alpha", &modelAlpha, 0.0f, 1.0f, "%.1f");
@@ -598,7 +614,6 @@ void Scene::SetSceneConstant(int start_slot, DirectX::XMFLOAT2 viewport_size, bo
 
 
 // TODO　引継ぎタスク一覧（タスクは確認、完了次第消すこと。　[]内は優先度１～５）
-// Blurの実装（モデルのテクスチャが白くならないかを確認）[5]
 // Gbufferのライティング描画[4]
 // IBLの適応するかしないかの変更[4]
 // ステージの描画[3]

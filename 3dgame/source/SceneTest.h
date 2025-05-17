@@ -18,6 +18,7 @@
 #include "Graphics/GBuffer.h"
 #include "CameraController.h"
 #include "Graphics/Skymap.h"
+#include "Graphics/bloom.h"
 
 class SceneTest : public Scene
 {
@@ -102,6 +103,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders[8];
 
 	std::unique_ptr<Shader> shader;
+
+	std::unique_ptr<bloom> bloomer;
 
 	DirectX::XMFLOAT3 object_pos;
 	DirectX::XMFLOAT3 object_rot;
