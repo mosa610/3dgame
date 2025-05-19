@@ -1,5 +1,5 @@
 // BLOOM
-#include "fullscreen_quad.hlsli"
+#include "..//fullscreen_quad.hlsli"
 
 #define POINT 0
 #define LINEAR 1
@@ -28,7 +28,7 @@ float4 main(VS_OUT pin) : SV_TARGET
 	fragment_color = reinhard_tone_mapping(fragment_color);
 
 	// Gamma correction
-	const float INV_GAMMA = 1.0 / 2.2;
+	const float INV_GAMMA = 1.0 / 2.6;
 	fragment_color = pow(fragment_color, INV_GAMMA);
 
 	return float4(fragment_color, alpha);
