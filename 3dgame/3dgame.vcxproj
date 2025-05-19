@@ -103,6 +103,7 @@
   <ItemGroup>
     <None Include="HLSL\BidirectionalReflectanceDistributionFunction.hlsli" />
     <None Include="HLSL\bidirectional_reflectance_distribution.hlsli" />
+    <None Include="HLSL\bloom\bloom.hlsli" />
     <None Include="HLSL\common.hlsli" />
     <None Include="HLSL\deferred\deferred_primitive_lighting.hlsli" />
     <None Include="HLSL\deferred\deferred_rendering.hlsli" />
@@ -129,6 +130,24 @@
     <None Include="HLSL\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="HLSL\bloom\bloom_final_pass_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="HLSL\bloom\gaussian_blur_downsampling_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="HLSL\bloom\gaussian_blur_horizontal_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="HLSL\bloom\gaussian_blur_upsampling_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="HLSL\bloom\gaussian_blur_vertical_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="HLSL\bloom\glow_extraction_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="HLSL\blur_ps.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>

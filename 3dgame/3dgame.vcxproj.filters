@@ -67,6 +67,9 @@
     <Filter Include="HLSL\Skymap">
       <UniqueIdentifier>{58b79dcc-2d76-4267-906c-7619a07cd1b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HLSL\Bloom">
+      <UniqueIdentifier>{953aed56-3009-4dc4-a1cc-fa082c904c3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\framework.cpp">
@@ -385,6 +388,9 @@
     <None Include="HLSL\sky_box.hlsli">
       <Filter>HLSL\Skymap</Filter>
     </None>
+    <None Include="HLSL\bloom\bloom.hlsli">
+      <Filter>HLSL\Bloom</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="HLSL\lambert_vs.hlsl">
@@ -506,6 +512,24 @@
     </FxCompile>
     <FxCompile Include="HLSL\sky_box_vs.hlsl">
       <Filter>HLSL\Skymap</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\bloom\gaussian_blur_downsampling_ps.hlsl">
+      <Filter>HLSL\Bloom</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\bloom\gaussian_blur_horizontal_ps.hlsl">
+      <Filter>HLSL\Bloom</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\bloom\gaussian_blur_upsampling_ps.hlsl">
+      <Filter>HLSL\Bloom</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\bloom\gaussian_blur_vertical_ps.hlsl">
+      <Filter>HLSL\Bloom</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\bloom\glow_extraction_ps.hlsl">
+      <Filter>HLSL\Bloom</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\bloom\bloom_final_pass_ps.hlsl">
+      <Filter>HLSL\Bloom</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
