@@ -44,7 +44,7 @@ dcl_temps 7
 //   v2.x <- pin.texcoord.x; v2.y <- pin.texcoord.y; 
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
-#line 24 "D:\ライブラリ\3dgame\HLSL\deferred\deferred_rendering_indirect_ps.hlsl"
+#line 24 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\deferred\deferred_rendering_indirect_ps.hlsl"
 nop 
 
 #line 25
@@ -68,7 +68,7 @@ nop
 #line 32
 nop 
 
-#line 97 "D:\ライブラリ\3dgame\HLSL\deferred\gbuffer.hlsli"
+#line 97 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\deferred\gbuffer.hlsli"
 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v2.xyxx, t0.xyzw, s0  // r0.x <- base_color.x; r0.y <- base_color.y; r0.z <- base_color.z; r0.w <- base_color.w
 
 #line 98
@@ -105,7 +105,7 @@ mov r3.y, r3.y  // r3.y <- <DecodeGBuffer return value>.occlusion_factor
 mov r3.z, r3.z  // r3.z <- <DecodeGBuffer return value>.occlusion_strength
 mov r1.xyz, r1.xyzx  // r1.x <- <DecodeGBuffer return value>.emissive_color.x; r1.y <- <DecodeGBuffer return value>.emissive_color.y; r1.z <- <DecodeGBuffer return value>.emissive_color.z
 
-#line 32 "D:\ライブラリ\3dgame\HLSL\deferred\deferred_rendering_indirect_ps.hlsl"
+#line 32 "C:\Users\2230151\Desktop\プログラミング\描画エンジン\3dgame\HLSL\deferred\deferred_rendering_indirect_ps.hlsl"
 mov r0.xyz, r0.xyzx  // r0.x <- data.base_color.x; r0.y <- data.base_color.y; r0.z <- data.base_color.z
 mov r1.xyz, r1.xyzx  // r1.x <- data.emissive_color.x; r1.y <- data.emissive_color.y; r1.z <- data.emissive_color.z
 mov r3.xyz, r3.xyzx  // r3.x <- data.shading_model; r3.y <- data.occlusion_factor; r3.z <- data.occlusion_strength
