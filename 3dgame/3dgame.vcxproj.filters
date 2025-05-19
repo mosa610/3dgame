@@ -70,6 +70,9 @@
     <Filter Include="HLSL\Bloom">
       <UniqueIdentifier>{953aed56-3009-4dc4-a1cc-fa082c904c3b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Component">
+      <UniqueIdentifier>{1eba8794-3df5-4cf0-b139-7ceab2efe0a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\framework.cpp">
@@ -307,6 +310,12 @@
     </ClInclude>
     <ClInclude Include="source\Graphics\KBloom.h">
       <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\SparseSet.h">
+      <Filter>Source\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\Entity.h">
+      <Filter>Source\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
