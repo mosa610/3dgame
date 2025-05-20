@@ -177,7 +177,11 @@ void SceneTest::Update(float elapsedTime)
 		x = world.getRegister().getComponent<ComponentTransform>(e).position.x;
 	}
 	x += elapsedTime;
-
+	Entity en = world.getRegister().createEntity();
+    world.getRegister().addComponent(en, ComponentTransform{ {100,1,1} });
+	world.getRegister().addComponent(en, ComponentTransform{ {1000,1,1} });
+	x = world.getRegister().getComponent<ComponentTransform>(en).position.x;
+	x += elapsedTime;
 }
 
 
