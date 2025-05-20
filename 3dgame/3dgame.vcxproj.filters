@@ -317,6 +317,9 @@
     <ClInclude Include="source\Component\Entity.h">
       <Filter>Source\Component</Filter>
     </ClInclude>
+    <ClInclude Include="source\Component\Register.h">
+      <Filter>Source\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\lambert.hlsli">

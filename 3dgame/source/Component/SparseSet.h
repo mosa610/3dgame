@@ -12,23 +12,23 @@ class SparseSet
     std::vector<Component> components;
 
 public:
-    void Insert(Entity entity, const Component& component)
+    void add(Entity entity, const Component& component)
     {
         if (entity >= sparse.size())
         {
             sparse.resize(entity + 1, static_cast<size_t>(-1));
         }
 
-        if (Contains(entity)) return;
+        if (has(entity)) return;
 
         sparse[entity] = dense.size();
         dense.push_back(entity);
         components.push_back(component);
     }
 
-    void Erase(Entity entity)
+    void remove(Entity entity)
     {
-        if(!Contains(entity)) return;
+        if(!has(entity)) return;
 
         size_t index = sparse[entity];
         size_t last_index = dense.size() - 1;
@@ -44,13 +44,13 @@ public:
         sparse[entity] = static_cast<size_t>(-1);
     }
 
-    Component* Get(Entity entity)
+    Component* et(Entity entity)
     {
-        if (!Contains(entity)) return nullptr;
+        if (!has(entity)) return nullptr;
         return &components[sparse[entity]];
     }
 
-    bool Contains(Entity entity) const
+    bool has(Entity entity) const
     {
         return entity < sparse.size() && sparse[entity] != static_cast<size_t>(-1);
     }
@@ -58,15 +58,17 @@ public:
     auto begin() { return dense.begin(); }
     auto end() { return dense.end(); }
 
-    Component& AtDenseIndex(size_t i)
+    Component& atDenseIndex(size_t i)
     {
         return conponents[i];
     }
 
-    Entity EntityAtDenseIndx(size_t i)
+    Entity entityAtDenseIndx(size_t i)
     {
         return dense[i];
     }
 
-    size_t Size() const { return dense.size(); }
+    const std::vector<Entity>& entities() const { return dense; }
+
+    size_t size() const { return dense.size(); }
 };
