@@ -57,9 +57,13 @@
   <ItemGroup>
     <ClInclude Include="source\Camera.h" />
     <ClInclude Include="source\CameraController.h" />
+    <ClInclude Include="source\Component\ComponentPool.h" />
+    <ClInclude Include="source\Component\ComponentTransform.h" />
     <ClInclude Include="source\Component\Entity.h" />
     <ClInclude Include="source\Component\Register.h" />
     <ClInclude Include="source\Component\SparseSet.h" />
+    <ClInclude Include="source\Component\System.h" />
+    <ClInclude Include="source\Component\World.h" />
     <ClInclude Include="source\Framework.h" />
     <ClInclude Include="source\Graphics\bloom.h" />
     <ClInclude Include="source\Graphics\ConstantBuffer.h" />

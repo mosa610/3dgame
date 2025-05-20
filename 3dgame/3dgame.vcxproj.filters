@@ -70,8 +70,17 @@
     <Filter Include="HLSL\Bloom">
       <UniqueIdentifier>{953aed56-3009-4dc4-a1cc-fa082c904c3b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Component">
+    <Filter Include="Source\EntityComponentSystem">
       <UniqueIdentifier>{1eba8794-3df5-4cf0-b139-7ceab2efe0a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\EntityComponentSystem\System">
+      <UniqueIdentifier>{04a328fe-2ea7-45ef-8cee-d5414e73a680}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\EntityComponentSystem\Component">
+      <UniqueIdentifier>{be59a092-62d7-4804-b23a-cebee1c17a31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\EntityComponentSystem\Component\ComponentPool">
+      <UniqueIdentifier>{2ff1d537-6278-4611-9cb4-185c08d0247a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -312,13 +321,25 @@
       <Filter>Source\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="source\Component\SparseSet.h">
-      <Filter>Source\Component</Filter>
+      <Filter>Source\EntityComponentSystem</Filter>
     </ClInclude>
     <ClInclude Include="source\Component\Entity.h">
-      <Filter>Source\Component</Filter>
+      <Filter>Source\EntityComponentSystem</Filter>
     </ClInclude>
     <ClInclude Include="source\Component\Register.h">
-      <Filter>Source\Component</Filter>
+      <Filter>Source\EntityComponentSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\World.h">
+      <Filter>Source\EntityComponentSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\System.h">
+      <Filter>Source\EntityComponentSystem\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\ComponentTransform.h">
+      <Filter>Source\EntityComponentSystem\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\ComponentPool.h">
+      <Filter>Source\EntityComponentSystem\Component\ComponentPool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

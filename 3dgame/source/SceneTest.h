@@ -19,6 +19,7 @@
 #include "CameraController.h"
 #include "Graphics/Skymap.h"
 #include "Graphics/bloom.h"
+#include "Component/World.h"
 
 class SceneTest : public Scene
 {
@@ -123,4 +124,6 @@ private:
 	float timer = { 0.0f };
 
 	float modelAlpha = 1.0f;
+
+	World world;
 };

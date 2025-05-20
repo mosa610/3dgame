@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <memory>
 
 using Entity = std::uint32_t;
 
@@ -44,10 +44,10 @@ public:
         sparse[entity] = static_cast<size_t>(-1);
     }
 
-    Component* et(Entity entity)
+    Component& get(Entity entity)
     {
-        if (!has(entity)) return nullptr;
-        return &components[sparse[entity]];
+        assert(has(entity));
+        return components[sparse[entity]];
     }
 
     bool has(Entity entity) const
@@ -60,7 +60,7 @@ public:
 
     Component& atDenseIndex(size_t i)
     {
-        return conponents[i];
+        return components[i];
     }
 
     Entity entityAtDenseIndx(size_t i)

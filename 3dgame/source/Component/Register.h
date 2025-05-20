@@ -1,6 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include "SparseSet.h"
+#include "ComponentPool.h"
 
 #include <unordered_map>
 #include <typeindex>
@@ -33,20 +34,35 @@ public:
 	}
 
 	template<typename T>
+	void removeComponent(Entity e) {
+		getSet<T>().remove(e);
+	}
+
+	template<typename T>
 	std::vector<Entity> view() {
 		return getSet<T>().entities();
 	}
 
+	void removeEntity(Entity e) {
+		for (auto& [type, pool] : componentPools) {
+			// 動的キャストして remove を試みる
+			auto remover = dynamic_cast<IComponentPoolRemovable*>(pool.get());
+			if (remover) {
+				remover->remove(e);
+			}
+		}
+	}
+
 private:
 	Entity nextEntity = 1;
-	std::unordered_map<std::type_index, std::unique_ptr<void>> componentPools;
+	std::unordered_map<std::type_index, std::unique_ptr<IComponentPool>> componentPools;
 
 	template<typename T>
-	SparseSet<T> getSet() {
+	ComponentPool<T>& getSet() {
 		std::type_index type = typeid(T);
-		if(componentPools.find(type) == 0) {
-            componentPools[type] = std::make_unique<SparseSet<T>>();
+		if(componentPools.count(type) == 0) {
+            componentPools[type] = std::make_unique<ComponentPool<T>>();
         }
-        return *static_cast<SparseSet<T>*>(componentPools[type].get());
+        return *static_cast<ComponentPool<T>*>(componentPools[type].get());
 	}
 };

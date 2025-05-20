@@ -6,7 +6,10 @@
 #include "Graphics/GraphicsState.h"
 #include "Graphics/ModelRenderer.h"
 #include "Mouse.h"
+#include "Component/ComponentTransform.h"
 
+
+Entity e,w;
 
 void SceneTest::Initialize()
 {
@@ -121,6 +124,11 @@ void SceneTest::Initialize()
 
 	deferred_rendering_sprite = std::make_unique<Sprite>(graphics.Get_device(), g_buffer_shader_resource_view[GB_BaseColor]);
 	bloomer = std::make_unique<bloom>(device, graphics.Get_screen_width(), graphics.Get_screen_height());
+
+	e = world.getRegister().createEntity();
+	world.getRegister().addComponent(e, ComponentTransform{ {56,1,1} });
+	w = world.getRegister().createEntity();
+    world.getRegister().addComponent(w, ComponentTransform{ {23,1,1} });
 }
 
 void SceneTest::Finalize()
@@ -158,6 +166,18 @@ void SceneTest::Update(float elapsedTime)
 
 	skymap->update();
 	model->Update(elapsedTime);
+
+	float x = world.getRegister().getComponent<ComponentTransform>(e).position.x;
+	x += elapsedTime;
+	x = world.getRegister().getComponent<ComponentTransform>(w).position.x;
+	x += elapsedTime;
+	world.getRegister().removeEntity(e);
+	if (world.getRegister().hasComponent<ComponentTransform>(e))
+	{
+		x = world.getRegister().getComponent<ComponentTransform>(e).position.x;
+	}
+	x += elapsedTime;
+
 }
 
 
