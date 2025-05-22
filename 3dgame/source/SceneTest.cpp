@@ -7,6 +7,7 @@
 #include "Graphics/ModelRenderer.h"
 #include "Mouse.h"
 #include "Component/ComponentTransform.h"
+#include "Component/System.h"
 
 
 Entity e,w;
@@ -126,9 +127,11 @@ void SceneTest::Initialize()
 	bloomer = std::make_unique<bloom>(device, graphics.Get_screen_width(), graphics.Get_screen_height());
 
 	e = world.getRegister().createEntity();
-	world.getRegister().addComponent(e, ComponentTransform{ {56,1,1} });
+	world.getRegister().addComponent(e, ComponentTransform{ {0,0,0} });
 	w = world.getRegister().createEntity();
     world.getRegister().addComponent(w, ComponentTransform{ {23,1,1} });
+
+	world.addSystem<TransformSystem>();
 }
 
 void SceneTest::Finalize()
@@ -167,7 +170,7 @@ void SceneTest::Update(float elapsedTime)
 	skymap->update();
 	model->Update(elapsedTime);
 
-	float x = world.getRegister().getComponent<ComponentTransform>(e).position.x;
+	/*float x = world.getRegister().getComponent<ComponentTransform>(e).position.x;
 	x += elapsedTime;
 	x = world.getRegister().getComponent<ComponentTransform>(w).position.x;
 	x += elapsedTime;
@@ -181,7 +184,9 @@ void SceneTest::Update(float elapsedTime)
     world.getRegister().addComponent(en, ComponentTransform{ {100,1,1} });
 	world.getRegister().addComponent(en, ComponentTransform{ {1000,1,1} });
 	x = world.getRegister().getComponent<ComponentTransform>(en).position.x;
-	x += elapsedTime;
+	x += elapsedTime;*/
+
+	world.update(elapsedTime);
 }
 
 
@@ -383,8 +388,9 @@ void SceneTest::Render(float elapsedTime)
 		skymap->Render(dc, rc);
 	}
 
-	model->_worldTransform = world4;
-	model->UpdateTransform(world4);
+	ComponentTransform* transform = &world.getRegister().getComponent<ComponentTransform>(e);
+	model->_worldTransform = transform->world_transform;
+	model->UpdateTransform(transform->world_transform);
 
 	shader->Begin(dc, rc,model.get(), "main");
 	shader->Draw(dc, model.get(), modelAlpha);
@@ -495,6 +501,15 @@ void SceneTest::DrawGUI()
 		DirectX::XMFLOAT3 focus = Camera::Instance().GetFocus();
 		ImGui::SliderFloat3("pos", &pos.x, -10.0f, 10.0f, "%.1f");
 		ImGui::SliderFloat3("focus", &focus.x, -10.0f, 10.0f, "%.1f");
+
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("Component"))
+	{
+		ComponentTransform* transform = &world.getRegister().getComponent<ComponentTransform>(e);
+		ImGui::SliderFloat3("position", &transform->position.x, -10.0f, 10.0f, "%.1f");
+		ImGui::SliderFloat3("rotation", &transform->rotation.x, -DirectX::XM_2PI, DirectX::XM_2PI, "%.1f");
+        ImGui::SliderFloat3("scale", &transform->scale.x, 0.0f, 10.0f, "%.1f");
 
 		ImGui::TreePop();
 	}

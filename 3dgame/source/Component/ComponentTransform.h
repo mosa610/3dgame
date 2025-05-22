@@ -8,4 +8,6 @@ struct ComponentTransform
     XMFLOAT3 position;
     XMFLOAT3 rotation;
     XMFLOAT3 scale;
+
+    XMFLOAT4X4 world_transform;
 };

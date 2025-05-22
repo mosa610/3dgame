@@ -341,6 +341,15 @@
     <ClInclude Include="source\Component\ComponentPool.h">
       <Filter>Source\EntityComponentSystem\Component\ComponentPool</Filter>
     </ClInclude>
+    <ClInclude Include="source\Component\ComponentModel.h">
+      <Filter>Source\EntityComponentSystem\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\ComponentNode.h">
+      <Filter>Source\EntityComponentSystem\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\SystemLoadModel.h">
+      <Filter>Source\EntityComponentSystem\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\lambert.hlsli">
