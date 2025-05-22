@@ -6,8 +6,12 @@
 #include "Graphics/GraphicsState.h"
 #include "Graphics/ModelRenderer.h"
 #include "Mouse.h"
+#include "Component/ComponentModel.h"
+#include "Component/ComponentNode.h"
 #include "Component/ComponentTransform.h"
 #include "Component/System.h"
+#include "Component/SystemLoadModel.h"
+
 
 
 Entity e,w;
@@ -127,11 +131,16 @@ void SceneTest::Initialize()
 	bloomer = std::make_unique<bloom>(device, graphics.Get_screen_width(), graphics.Get_screen_height());
 
 	e = world.getRegister().createEntity();
+	world.getRegister().addComponent(e, ComponentModel{ ".\\resources\\gltfobject\\unity-chan_emissivezero.gltf" });
+	world.getRegister().addComponent(e, ComponentNode{});
 	world.getRegister().addComponent(e, ComponentTransform{ {0,0,0} });
 	w = world.getRegister().createEntity();
     world.getRegister().addComponent(w, ComponentTransform{ {23,1,1} });
 
 	world.addSystem<TransformSystem>();
+	world.addSystem<SystemLoadModel>();
+
+	world.initialize();
 }
 
 void SceneTest::Finalize()
@@ -469,6 +478,49 @@ void SceneTest::Render(float elapsedTime)
 
 	g_buffer->FinalDraw(scene_shader_resource_view);
 }
+static Node* selectedNode = nullptr;
+
+void DrawNodeTree(Node* node) {
+	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
+
+	if (node->children.empty()) {
+		flags |= ImGuiTreeNodeFlags_Leaf;
+	}
+	if (node == selectedNode) {
+		flags |= ImGuiTreeNodeFlags_Selected;
+	}
+
+	ImGui::PushID(node);
+	bool open = ImGui::TreeNodeEx(node->name.c_str(), flags);
+
+	if (ImGui::IsItemClicked()) {
+		selectedNode = node;
+	}
+
+	if (open) {
+		for (Node* child : node->children) {
+			DrawNodeTree(child);
+		}
+		ImGui::TreePop();
+	}
+
+	ImGui::PopID();
+}
+
+void DrawSelectedNodeUI() {
+	if (selectedNode) {
+		ImGui::Separator();
+		ImGui::Text("Selected Node: %s", selectedNode->name.c_str());
+
+		ImGui::PushID(selectedNode);  // ‚±‚ê‚ªd—vI
+
+		ImGui::SliderFloat3("Position", &selectedNode->position.x, -10.0f, 10.0f);
+		ImGui::SliderFloat3("Scale", &selectedNode->scale.x, 0.1f, 10.0f);
+		ImGui::SliderFloat4("Rotation", &selectedNode->rotation.x, -DirectX::XM_PI, DirectX::XM_PI);
+
+		ImGui::PopID();
+	}
+}
 
 void SceneTest::DrawGUI()
 {
@@ -510,8 +562,14 @@ void SceneTest::DrawGUI()
 		ImGui::SliderFloat3("position", &transform->position.x, -10.0f, 10.0f, "%.1f");
 		ImGui::SliderFloat3("rotation", &transform->rotation.x, -DirectX::XM_2PI, DirectX::XM_2PI, "%.1f");
         ImGui::SliderFloat3("scale", &transform->scale.x, 0.0f, 10.0f, "%.1f");
-
 		ImGui::TreePop();
+		ComponentNode* node = &world.getRegister().getComponent<ComponentNode>(e);
+		for (auto& n : node->nodes)
+		{
+			DrawNodeTree(&n);
+		}
+		DrawSelectedNodeUI();
+
 	}
 
 	g_buffer->DrawGUI();

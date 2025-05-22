@@ -4,8 +4,9 @@
 #include <DirectXMath.h>
 #include <memory>
 
-struct ComponentNode
+struct Node
 {
+    ;
     std::string			name;
     int                 myIndex = -1;
     int					parentIndex = -1;
@@ -18,6 +19,11 @@ struct ComponentNode
     DirectX::XMFLOAT4X4	globalTransform = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
     DirectX::XMFLOAT4X4	worldTransform = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
 
-    ComponentNode* parent = nullptr;
-    std::vector<ComponentNode*>	children;
+    Node* parent = nullptr;
+    std::vector<Node*>	children;
+};
+
+struct ComponentNode
+{
+    std::vector<Node> nodes;
 };

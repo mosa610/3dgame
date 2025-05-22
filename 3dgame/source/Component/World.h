@@ -9,6 +9,10 @@ public:
     World() {}
     ~World() {}
 public:
+    void initialize() {
+        for (auto& sys : systems) sys->Initialize(reg);
+    }
+
     void update(float dt) {
         for (auto& sys : systems) sys->update(reg, dt);
     }

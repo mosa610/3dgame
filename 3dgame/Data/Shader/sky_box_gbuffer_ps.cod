@@ -86,10 +86,10 @@ dcl_temps 10
 //   o1.x <- <main return value>.emissive_color.x; o1.y <- <main return value>.emissive_color.y; o1.z <- <main return value>.emissive_color.z; o1.w <- <main return value>.emissive_color.w; 
 //   o0.x <- <main return value>.base_color.x; o0.y <- <main return value>.base_color.y; o0.z <- <main return value>.base_color.z; o0.w <- <main return value>.base_color.w
 //
-#line 5 "D:\ライブラリ\3dgame\HLSL\deferred\gbuffer.hlsli"
+#line 5 "C:\Users\ba-mu\Desktop\Library\3dgame\HLSL\deferred\gbuffer.hlsli"
 mov r0.x, l(0)  // r0.x <- shading_model_unlit
 
-#line 9 "D:\ライブラリ\3dgame\HLSL\sky_box_gbuffer_ps.hlsl"
+#line 9 "C:\Users\ba-mu\Desktop\Library\3dgame\HLSL\sky_box_gbuffer_ps.hlsl"
 mov r0.yzw, -cb1[2].xxyz
 add r0.yzw, r0.yyzw, v2.xxyz
 dp3 r1.x, r0.yzwy, r0.yzwy
@@ -120,7 +120,7 @@ nop
 mov r0.yzw, v3.xxyw
 mov r6.xyz, v4.xywx
 
-#line 50 "D:\ライブラリ\3dgame\HLSL\deferred\gbuffer.hlsli"
+#line 50 "C:\Users\ba-mu\Desktop\Library\3dgame\HLSL\deferred\gbuffer.hlsli"
 div r0.yz, r0.yyzy, r0.wwww
 
 #line 51
@@ -138,7 +138,7 @@ add r6.xy, r6.xyxx, l(0.500000, 0.500000, 0.000000, 0.000000)  // r6.x <- previo
 mov r6.xy, -r6.xyxx
 add r6.xy, r0.yzyy, r6.xyxx  // r6.x <- <calculate_uvspace_velocity return value>.x; r6.y <- <calculate_uvspace_velocity return value>.y
 
-#line 19 "D:\ライブラリ\3dgame\HLSL\sky_box_gbuffer_ps.hlsl"
+#line 19 "C:\Users\ba-mu\Desktop\Library\3dgame\HLSL\sky_box_gbuffer_ps.hlsl"
 mov r6.xy, r6.xyxx  // r6.x <- data.velocity.x; r6.y <- data.velocity.y
 
 #line 20
@@ -158,7 +158,7 @@ mov r9.xy, cb1[16].zwzz
 mov r9.zw, cb1[17].zzzw
 mov r0.yz, cb1[1].xxyx
 
-#line 73 "D:\ライブラリ\3dgame\HLSL\deferred\gbuffer.hlsli"
+#line 73 "C:\Users\ba-mu\Desktop\Library\3dgame\HLSL\deferred\gbuffer.hlsli"
 mov r3.xyz, r3.xyzx  // r3.x <- ret.base_color.x; r3.y <- ret.base_color.y; r3.z <- ret.base_color.z
 
 #line 74
@@ -238,7 +238,7 @@ mov r6.z, r6.z  // r6.z <- <EncodeGBuffer return value>.velocity.z
 mov r6.w, r6.w  // r6.w <- <EncodeGBuffer return value>.velocity.w
 mov r0.x, r0.x  // r0.x <- <EncodeGBuffer return value>.depth
 
-#line 20 "D:\ライブラリ\3dgame\HLSL\sky_box_gbuffer_ps.hlsl"
+#line 20 "C:\Users\ba-mu\Desktop\Library\3dgame\HLSL\sky_box_gbuffer_ps.hlsl"
 mov o0.xyzw, r3.xyzw
 mov o1.xyzw, r1.xyzw
 mov o2.xyzw, r4.xyzw

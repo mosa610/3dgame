@@ -15,13 +15,34 @@ public:
 	~Register() {}
 
 public:
-	Entity createEntity() { 
+	Entity createEntity(const std::string& name = "") {
 		if (!free_entities.empty()) {
 			Entity e = free_entities.front();
 			free_entities.pop();
+			if (!name.empty()) {
+				nameToEntity[name] = e;
+				entityToName[e] = name;
+			}
 			return e;
 		}
-		return next_entity++;
+		Entity e = next_entity++;
+		if (!name.empty()) {
+			nameToEntity[name] = e;
+			entityToName[e] = name;
+		}
+		return e;
+	}
+
+	Entity getEntityByName(const std::string& name) const {
+		auto it = nameToEntity.find(name);
+		if (it != nameToEntity.end()) return it->second;
+		return INVALID_ENTITY; // ‚Ü‚½‚Í—áŠO‚ð“Š‚°‚é
+	}
+
+	std::string getEntityName(Entity e) const {
+		auto it = entityToName.find(e);
+		if (it != entityToName.end()) return it->second;
+		return "";
 	}
 
 	void destroyEntity(Entity e) {
@@ -62,6 +83,13 @@ public:
 				remover->remove(e);
 			}
 		}
+
+		auto it = entityToName.find(e);
+		if (it != entityToName.end()) {
+			nameToEntity.erase(it->second);
+			entityToName.erase(it);
+		}
+
 		destroyEntity(e);
 	}
 
@@ -69,6 +97,9 @@ private:
 	Entity next_entity = 1;
 	std::queue<Entity> free_entities;
 	std::unordered_map<std::type_index, std::unique_ptr<IComponentPool>> component_pools;
+
+	std::unordered_map<std::string, Entity> nameToEntity;
+	std::unordered_map<Entity, std::string> entityToName;
 
 	template<typename T>
 	ComponentPool<T>& getSet() {
