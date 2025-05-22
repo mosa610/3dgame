@@ -4,6 +4,7 @@
 
 class ISystem {
 public:
+    virtual void Initialize(Register& reg) = 0;
     virtual void update(Register& reg, float dt) = 0;
     virtual void render(Register& reg) = 0;
     virtual ~ISystem() = default;
@@ -11,6 +12,7 @@ public:
 
 class TransformSystem : public ISystem {
 public:
+    void Initialize(Register& reg) override {}
     void update(Register& reg, float dt) override {
         for (Entity e : reg.view<ComponentTransform>()) {
             auto& t = reg.getComponent<ComponentTransform>(e);
