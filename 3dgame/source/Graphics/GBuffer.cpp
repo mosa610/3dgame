@@ -247,13 +247,14 @@ void GBuffer::DrawGUI()
 			"parameters",
 			"depth",
 		};
-		ImGui::Image(Graphics::Instance().Get_render_target_resource_view(), {256, 144}, {0, 0}, {1, 1}, {1, 1, 1, 1});
+		//ImGui::Image(Graphics::Instance().Get_render_target_resource_view(), {256, 144}, {0, 0}, {1, 1}, {1, 1, 1, 1});
 		ImGui::NewLine();
 
 		for (int i = GB_BaseColor; i < GB_Max; ++i)
 		{
 			ImGui::Text(GBufferNames[i]);
-			ImGui::Image(g_buffer_shader_resource_view[i].Get(), { 256, 144 }, { 0, 0 }, { 1, 1 }, { 1, 1, 1, 1 });
+			//ImGui::Image(g_buffer_shader_resource_view[i].Get(), { 256, 144 }, { 0, 0 }, { 1, 1 }, { 1, 1, 1, 1 });
+			ImGui::Image((ImTextureID)g_buffer_shader_resource_view[i].Get(), ImVec2(256, 144), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 1, 1));
 			ImGui::NewLine();
 		}
 		ImGui::TreePop();

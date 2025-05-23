@@ -1,4 +1,5 @@
 #include "ImguiRenderer.h"
+#include "..//imgui/IconsFontAwesome6.h"
 
 ImGuiRenderer::ImGuiRenderer(HWND hwnd, ID3D11Device* device,
 	ID3D11DeviceContext* immediate_context)
@@ -6,7 +7,18 @@ ImGuiRenderer::ImGuiRenderer(HWND hwnd, ID3D11Device* device,
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGui::GetIO().Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\consola.ttf", 14.0f, nullptr, glyphRangesJapanese);
+
+	ImGuiIO& io = ImGui::GetIO();
+
+	ImGui::GetIO().Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\consola.ttf", 14.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
+
+	ImFontConfig config;
+	config.MergeMode = true;
+	config.PixelSnapH = true;
+	static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };  // © ‚±‚±d—v
+
+	io.Fonts->AddFontFromFileTTF("Data\\Font\\fa-solid-900.ttf", 16.0f, &config, icons_ranges);
+
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(device, immediate_context);
 	ImGui::StyleColorsDark();
@@ -35,8 +47,10 @@ void ImGuiRenderer::Render(ID3D11DeviceContext* context)
 
 LRESULT ImGuiRenderer::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam);
-	return 0;
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
+		return true;
+
+    return false;
 }
 
 bool ImGuiRenderer::UpdateMouseCursor()

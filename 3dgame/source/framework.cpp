@@ -3,6 +3,8 @@
 #include "SceneManager.h"
 #include "SceneTest.h"
 #include "Mouse.h"
+#include "imgui/IconsFontAwesome6.h"
+
 
 
 Framework::Framework(HWND hwnd, BOOL fullscreen)
@@ -11,6 +13,7 @@ Framework::Framework(HWND hwnd, BOOL fullscreen)
 	, fullscreen_mode(fullscreen)
 	, windowed_style(static_cast<DWORD>(GetWindowLongPtrW(hwnd, GWL_STYLE)))
 {
+
 	SceneManager::Instance().ChangeScene(new SceneTest);
 	GraphicsState::GetInstance().Initialize(graphics.Get_device());
 	if (fullscreen)
@@ -39,7 +42,6 @@ void Framework::Update(float elapsedTime)
 {
 	Mouse::GetInstance().Update(hwnd);
 
-	SceneManager::Instance().Update(elapsedTime);
 
 #if 1
 	if (GetAsyncKeyState(VK_RETURN) & 1 && GetAsyncKeyState(VK_MENU) & 1)
@@ -53,10 +55,11 @@ void Framework::Update(float elapsedTime)
 	graphics.Get_ImGui_renderer()->NewFrame();
 #endif
 
+	SceneManager::Instance().Update(elapsedTime);
 
 #ifdef USE_IMGUI
 	ImGui::Begin("ImGUI");
-	ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_Once);
+	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (ImGui::TreeNode("test01")) {
 		ImGui::Text("framed.x : %d, framed.y : %d",framebuffer_dimensions.cx, framebuffer_dimensions.cy);
 		ImGui::Text("Screen.x : %f, Screen.y : %f", graphics.Get_screen_width(), graphics.Get_screen_height());
@@ -305,6 +308,7 @@ LRESULT Framework::Handle_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpa
 #ifdef USE_IMGUI
 	graphics.Get_ImGui_renderer()->HandleMessage(hwnd, msg, wparam, lparam);
 #endif
+
 
 	switch (msg)
 	{

@@ -12,6 +12,8 @@
 #include "Component/System.h"
 #include "Component/SystemLoadModel.h"
 
+#include "ModelNodeTreeEditor.h"
+
 
 
 Entity e,w;
@@ -130,6 +132,7 @@ void SceneTest::Initialize()
 	deferred_rendering_sprite = std::make_unique<Sprite>(graphics.Get_device(), g_buffer_shader_resource_view[GB_BaseColor]);
 	bloomer = std::make_unique<bloom>(device, graphics.Get_screen_width(), graphics.Get_screen_height());
 
+
 	e = world.getRegister().createEntity();
 	world.getRegister().addComponent(e, ComponentModel{ ".\\resources\\gltfobject\\unity-chan_emissivezero.gltf" });
 	world.getRegister().addComponent(e, ComponentNode{});
@@ -164,17 +167,17 @@ void SceneTest::Update(float elapsedTime)
 	camera_controller.Update();
 	camera_controller.SyncControllerToCamera(camera);
 	
-	//model->ComputeAnimation(0, animeTimer, model->_nodePoses);
+	model->ComputeAnimation(0, animeTimer, model->_nodePoses);
 
 	// アニメーション更新
-	/*const ModelResource::Animation& animation = model->_resource->GetAnimations().at(0);
+	const ModelResource::Animation& animation = model->_resource->GetAnimations().at(0);
 	animeTimer += elapsedTime;
 	if (animeTimer > animation.secondsLength)
 	{
 		animeTimer -= animation.secondsLength;
 	}
 	model->SetNodePoses(model->_nodePoses);
-	model->Update(elapsedTime);*/
+	model->Update(elapsedTime);
 
 	skymap->update();
 	model->Update(elapsedTime);
@@ -525,7 +528,7 @@ void DrawSelectedNodeUI() {
 void SceneTest::DrawGUI()
 {
 	ImGui::Begin("ImGUI");
-	ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_Once);
+	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (ImGui::TreeNode("test02")) {
 		ImGui::SliderFloat3("objPos", &object_pos.x, -10.0f, 10.0f, "%.1f");
 		ImGui::SliderFloat3("objRot", &object_rot.x, -DirectX::XM_2PI, DirectX::XM_2PI, "%.1f");
@@ -539,9 +542,11 @@ void SceneTest::DrawGUI()
 		ImGui::SliderFloat("alpha", &modelAlpha, 0.0f, 1.0f, "%.1f");
 		ImGui::NewLine();
 		ImGui::Text("scene");
-		ImGui::Image(scene_shader_resource_view.Get(),{ 256, 144 }, { 0, 0 }, { 1, 1 }, { 1, 1, 1, 1 });
+		//ImGui::Image(scene_shader_resource_view.Get(),{ 256, 144 }, { 0, 0 }, { 1, 1 }, { 1, 1, 1, 1 });
+		ImGui::Image((ImTextureID)scene_shader_resource_view.Get(), ImVec2(256, 144), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 1, 1));
 		ImGui::Text("framebuffer");
-		ImGui::Image(framebuffers[1]->shader_resource_view->Get(), { 256, 144 }, { 0, 0 }, { 1, 1 }, { 1, 1, 1, 1 });
+		//ImGui::Image(framebuffers[1]->shader_resource_view->Get(), { 256, 144 }, { 0, 0 }, { 1, 1 }, { 1, 1, 1, 1 });
+		ImGui::Image((ImTextureID)framebuffers[1]->shader_resource_view->Get(), ImVec2(256, 144), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 1, 1));
 
 		ImGui::TreePop();
 	}
@@ -566,9 +571,12 @@ void SceneTest::DrawGUI()
 		ComponentNode* node = &world.getRegister().getComponent<ComponentNode>(e);
 		for (auto& n : node->nodes)
 		{
-			DrawNodeTree(&n);
+			if (n.parent == nullptr)
+			{
+				ModelNodeTreeEditor::Draw(&n);
+			}
 		}
-		DrawSelectedNodeUI();
+		
 
 	}
 

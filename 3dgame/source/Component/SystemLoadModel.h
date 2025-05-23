@@ -39,6 +39,11 @@ class SystemLoadModel : public ISystem
                     dst.localTransform = src.localTransform;
                     dst.globalTransform = src.globalTransform;
                     dst.worldTransform = src.worldTransform;
+
+                    if (dst.parent != nullptr)
+                    {
+                        dst.parent->children.emplace_back(&dst);
+                    }
                 }
                 {
                     
