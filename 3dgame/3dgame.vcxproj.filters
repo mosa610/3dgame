@@ -356,6 +356,9 @@
     <ClInclude Include="source\imgui\backends\imgui_impl_win32.h">
       <Filter>imgui</Filter>
     </ClInclude>
+    <ClInclude Include="source\Component\ComponentNodePose.h">
+      <Filter>Source\EntityComponentSystem\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\lambert.hlsli">

@@ -13,9 +13,11 @@ class SystemLoadModel : public ISystem
     void Initialize(Register& reg) override {
         ID3D11Device* device = Graphics::Instance().Get_device();
         for (Entity e : reg.view<ComponentModel>()) {
+
             auto& model = reg.getComponent<ComponentModel>(e);
             if(!model.resource) model.resource = std::make_shared<ModelResource>();
             model.resource->Load(device, model.file_name, 0);
+
             if (reg.hasComponent<ComponentNode>(e))
             {
                 auto& node = reg.getComponent<ComponentNode>(e);
