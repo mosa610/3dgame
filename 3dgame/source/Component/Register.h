@@ -51,7 +51,15 @@ public:
 
 	template<typename T>
 	void addComponent(Entity entity, const T& value) {
+		if(hasComponent<T>(entity)) return;
+
 		getSet<T>().add(entity, value);
+
+		auto it = onAddedCallbacks.find(typeid(T));
+		if (it != onAddedCallbacks.end()) {
+			void* ptr = &getSet<T>().get(entity);
+			it->second(entity, ptr);
+		}
 	}
 
 	template<typename T>
@@ -74,6 +82,13 @@ public:
 	std::vector<Entity> view() {
 		return getSet<T>().entities();
 	}
+
+	template<typename T>
+    void setOnComponentAdded(std::function<void(Register&, Entity, T&)> callback) {
+		onAddedCallbacks[typeid(T)] = [this, callback](Entity e, void* ptr) {
+			callback(*this, e, *static_cast<T*>(ptr));
+			};
+    }
 
 	void removeEntity(Entity e) {
 		for (auto& [type, pool] : component_pools) {
@@ -100,6 +115,8 @@ private:
 
 	std::unordered_map<std::string, Entity> nameToEntity;
 	std::unordered_map<Entity, std::string> entityToName;
+
+	std::unordered_map<std::type_index, std::function<void(Entity, void*)>> onAddedCallbacks;
 
 	template<typename T>
 	ComponentPool<T>& getSet() {

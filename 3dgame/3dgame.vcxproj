@@ -58,9 +58,9 @@
   <ItemGroup>
     <ClInclude Include="source\Camera.h" />
     <ClInclude Include="source\CameraController.h" />
+    <ClInclude Include="source\Component\ComponentBone.h" />
     <ClInclude Include="source\Component\ComponentModel.h" />
     <ClInclude Include="source\Component\ComponentNode.h" />
-    <ClInclude Include="source\Component\ComponentNodePose.h" />
     <ClInclude Include="source\Component\ComponentPool.h" />
     <ClInclude Include="source\Component\ComponentTransform.h" />
     <ClInclude Include="source\Component\Entity.h" />

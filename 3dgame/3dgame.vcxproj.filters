@@ -356,7 +356,7 @@
     <ClInclude Include="source\imgui\backends\imgui_impl_win32.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="source\Component\ComponentNodePose.h">
+    <ClInclude Include="source\Component\ComponentBone.h">
       <Filter>Source\EntityComponentSystem\Component</Filter>
     </ClInclude>
   </ItemGroup>

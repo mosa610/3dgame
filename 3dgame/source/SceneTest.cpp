@@ -135,8 +135,8 @@ void SceneTest::Initialize()
 
 	e = world.getRegister().createEntity();
 	world.getRegister().addComponent(e, ComponentModel{ ".\\resources\\gltfobject\\unity-chan_emissivezero.gltf" });
-	world.getRegister().addComponent(e, ComponentNode{});
 	world.getRegister().addComponent(e, ComponentTransform{ {0,0,0} });
+
 	w = world.getRegister().createEntity();
     world.getRegister().addComponent(w, ComponentTransform{ {23,1,1} });
 
@@ -167,10 +167,10 @@ void SceneTest::Update(float elapsedTime)
 	camera_controller.Update();
 	camera_controller.SyncControllerToCamera(camera);
 	
-	model->ComputeAnimation(0, animeTimer, model->_nodePoses);
+	model->ComputeAnimation(1, animeTimer, model->_nodePoses);
 
 	// アニメーション更新
-	const ModelResource::Animation& animation = model->_resource->GetAnimations().at(0);
+	const ModelResource::Animation& animation = model->_resource->GetAnimations().at(1);
 	animeTimer += elapsedTime;
 	if (animeTimer > animation.secondsLength)
 	{
@@ -576,8 +576,6 @@ void SceneTest::DrawGUI()
 				ModelNodeTreeEditor::Draw(&n);
 			}
 		}
-		
-
 	}
 
 	g_buffer->DrawGUI();

@@ -11,7 +11,7 @@ class ModelResource;
 class SystemLoadModel : public ISystem
 {
     void Initialize(Register& reg) override {
-        ID3D11Device* device = Graphics::Instance().Get_device();
+        /*ID3D11Device* device = Graphics::Instance().Get_device();
         for (Entity e : reg.view<ComponentModel>()) {
 
             auto& model = reg.getComponent<ComponentModel>(e);
@@ -24,10 +24,13 @@ class SystemLoadModel : public ISystem
                 std::vector<ModelResource::Node> nodes = model.resource->GetNodes();
 
                 node.nodes.resize(nodes.size());
+                node.node_poses.resize(nodes.size());
+
                 for (size_t node_index = 0; node_index < node.nodes.size(); node_index++)
                 {
                     auto&& src = nodes[node_index];
                     auto&& dst = node.nodes[node_index];
+                    auto&& anim = node.node_poses[node_index];
                     
                     dst.name = src.name.c_str();
                     dst.parent = src.parentIndex >= 0 ? &node.nodes[src.parentIndex] : nullptr;
@@ -42,11 +45,16 @@ class SystemLoadModel : public ISystem
                     dst.globalTransform = src.globalTransform;
                     dst.worldTransform = src.worldTransform;
 
+                    anim.scale = dst.scale;
+                    anim.rotation = dst.rotation;
+                    anim.position = dst.position;
+
                     if (dst.parent != nullptr)
                     {
                         dst.parent->children.emplace_back(&dst);
                     }
                 }
+
                 {
                     
                 }
@@ -54,7 +62,7 @@ class SystemLoadModel : public ISystem
             }
 
             
-        }
+        }*/
     }
     void update(Register& reg, float dt) override {}
     void render(Register& reg) override {}
