@@ -68,6 +68,7 @@
     <ClInclude Include="source\Component\SparseSet.h" />
     <ClInclude Include="source\Component\System.h" />
     <ClInclude Include="source\Component\SystemLoadModel.h" />
+    <ClInclude Include="source\Component\SystemModel.h" />
     <ClInclude Include="source\Component\World.h" />
     <ClInclude Include="source\Framework.h" />
     <ClInclude Include="source\Graphics\bloom.h" />

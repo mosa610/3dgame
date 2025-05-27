@@ -359,6 +359,9 @@
     <ClInclude Include="source\Component\ComponentBone.h">
       <Filter>Source\EntityComponentSystem\Component</Filter>
     </ClInclude>
+    <ClInclude Include="source\Component\SystemModel.h">
+      <Filter>Source\EntityComponentSystem\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\lambert.hlsli">

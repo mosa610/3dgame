@@ -4,6 +4,7 @@
 #include "System.h"
 #include "ComponentModel.h"
 #include "ComponentNode.h"
+#include "ComponentBone.h"
 
 class World
 {
@@ -84,7 +85,31 @@ private:
             }
             });
 
+        // ConmponentBone に対するコールバック
+        reg.setOnComponentAdded<ComponentBone>([](Register& reg, Entity e, ComponentBone& bone) {
+            if(!reg.hasComponent<ComponentModel>(e)) return;
+                ComponentModel& model = reg.getComponent<ComponentModel>(e);
+                if(!reg.hasComponent<ComponentNode>(e)) return;
+                ComponentNode& node = reg.getComponent<ComponentNode>(e);
+            const std::vector<ModelResource::Mesh>& resMeshes = model.resource->GetMeshes();
 
+            for (auto&& mesh : resMeshes)
+            {
+                std::vector<Bone> bones;
+                bones.resize(mesh.bones.size());
+                for (size_t boneIndex = 0; boneIndex < bones.size(); ++boneIndex)
+                {
+                    auto&& src = mesh.bones.at(boneIndex);
+                    auto&& dst = bones.at(boneIndex);
+
+                    dst.node = &node.nodes[src.nodeIndex];
+                    dst.nodeIndex = src.nodeIndex;
+                    dst.offsetTransform = src.offsetTransform;
+                    
+                }
+                bone.bones.emplace(mesh.index, bones);
+            }
+            });
     }
 
 private:

@@ -1,6 +1,7 @@
 #pragma once
 #include <DirectXMath.h>
 #include <vector>
+#include <unordered_map>
 
 class Node;
 
@@ -14,5 +15,5 @@ struct Bone
 class ComponentBone
 {
 public:
-    std::vector<Bone> bones;
+    std::unordered_map<int, std::vector<Bone>> bones;
 };
