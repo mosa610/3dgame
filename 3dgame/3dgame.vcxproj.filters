@@ -189,6 +189,9 @@
     <ClCompile Include="source\imgui\backends\imgui_impl_win32.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="source\Graphics\PipeLineState.cpp">
+      <Filter>Source\Graphics\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Framework.h">

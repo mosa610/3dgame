@@ -3,17 +3,27 @@
 #include <d3d11.h>
 #include <wrl.h>
 #include <cstring>
+#include <string>
+#include <unordered_map>
+#include <memory>
 #include "GraphicsState.h"
+
 using namespace Microsoft::WRL;
 
 struct PipeLineState
 {
-public:
+private:
     // 各ステート
    ComPtr<ID3D11RasterizerState> rasterizer_state;
    ComPtr<ID3D11BlendState> blend_state;
    ComPtr<ID3D11DepthStencilState> depth_stencil_state; 
    ComPtr<ID3D11SamplerState> sampler_state;
+public:
+
+   SAMPLER_STATE sampler = SAMPLER_STATE::ALL;
+   DEPTH_STATE depth = DEPTH_STATE::ZT_ON_ZW_ON;
+   BLEND_STATE blend = BLEND_STATE::NONE;
+   RASTER_STATE raster = RASTER_STATE::CULL_NONE;
 
    ComPtr<ID3D11PixelShader> pixel_shader;
    ComPtr<ID3D11VertexShader> vertex_shader;
@@ -25,11 +35,6 @@ public:
    ComPtr<ID3D11InputLayout> input_layout;
    D3D_PRIMITIVE_TOPOLOGY primitive_toporogy;
 };
-
-//enum class SAMPLER_STATE { POINT, LINEAR, ANISOTROPIC, LINEAR_BORDER_BLACK/*UNIT.32*/, LINEAR_BORDER_WHITE/*UNIT.32*/, ALL, End };
-//enum class DEPTH_STATE { ZT_ON_ZW_ON, ZT_ON_ZW_OFF, ZT_OFF_ZW_ON, ZT_OFF_ZW_OFF, End };
-//enum class BLEND_STATE { NONE, ALPHA, ADD, MULTIPLY, End };
-//enum class RASTER_STATE { SOLID, WIREFRAME, CULL_NONE, WIREFRAME_CULL_NONE, End };
 
 struct PipelineStateDesc
 {
@@ -49,13 +54,13 @@ struct PipelineStateDesc
 	D3D_PRIMITIVE_TOPOLOGY primitive_toporogy = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;	//	図形指定
 };
 
-class PiplineManager {
+class PipelineManager {
 private:
-	PiplineManager() {}
-	~PiplineManager() {}
+	PipelineManager() {}
+	~PipelineManager() {}
 public:
-	static PiplineManager& instance() {
-		static PiplineManager instance;
+	static PipelineManager& instance() {
+		static PipelineManager instance;
 		return instance;
 	}
 
@@ -75,43 +80,9 @@ public:
 		return nullptr;
 	}
 
-	bool AddPipelineState(ID3D11Device* device, PipelineStateDesc desc)
-	{
-		auto it = pipeline_states.find(desc.id);
-		if (it != pipeline_states.end())
-			return false;
+	bool addPipelineState(ID3D11Device* device, PipelineStateDesc desc);
 
-		// descに各ステートの使用するステートをかんりするIdのような変数を作ってIdによってステートをGraphicStateから取り出せる関数を作りstateに設定もしIDがなければDefaultのステートを呼ぶようにする。
-
-		//const std::map<std::string, buffer_view>& vertex_buffer_views{ meshes.at(0).primitives.at(0).vertex_buffer_views };
-		D3D11_INPUT_ELEMENT_DESC input_element_desc[]
-		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TANGENT",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "JOINTS",   0, DXGI_FORMAT_R32G32B32A32_UINT,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "WEIGHTS",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		};
-
-		PipeLineState state;
-		state.rasterizer_state = GraphicsState::GetInstance().GetRasterizerState(desc.raster);
-
-		if (!desc.vs_path.empty())
-			create_vs_from_cso(device, desc.vs_path.data(), state.vertex_shader.ReleaseAndGetAddressOf(), state.input_layout.ReleaseAndGetAddressOf(), input_element_desc, _countof(input_element_desc));
-		if (!desc.hs_path.empty())
-			create_hs_from_cso(device, desc.hs_path.data(), state.hull_shader.ReleaseAndGetAddressOf());
-		if (!desc.ds_path.empty())
-			create_ds_from_cso(device, desc.ds_path.data(), state.domain_shader.ReleaseAndGetAddressOf());
-		if (!desc.gs_path.empty())
-			create_gs_from_cso(device, desc.gs_path.data(), state.geometry_shader.ReleaseAndGetAddressOf());
-		if (!desc.ps_path.empty())
-			create_ps_from_cso(device, desc.ps_path.data(), state.pixel_shader.ReleaseAndGetAddressOf());
-		state.primitive_toporogy = desc.primitive_toporogy;
-
-		pipeline_states.insert_or_assign(desc.id, state);
-		return true;
-	}
+	bool setPipelineState(uint32_t id, ID3D11DeviceContext* dc);
 
 private:
 	std::unordered_map<uint32_t, std::shared_ptr<PipeLineState>> pipeline_states;

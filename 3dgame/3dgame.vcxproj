@@ -37,6 +37,7 @@
     <ClCompile Include="source\Graphics\Model.cpp" />
     <ClCompile Include="source\Graphics\ModelRenderer.cpp" />
     <ClCompile Include="source\Graphics\ModelResource.cpp" />
+    <ClCompile Include="source\Graphics\PipeLineState.cpp" />
     <ClCompile Include="source\Graphics\shader.cpp" />
     <ClCompile Include="source\Graphics\skinned_mesh.cpp" />
     <ClCompile Include="source\Graphics\Skymap.cpp" />

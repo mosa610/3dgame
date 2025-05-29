@@ -78,9 +78,24 @@ public:
 	}
 
 	// 対象のコンポーネントを持つ全てのEntity取得
-	template<typename T>
+	/*template<typename T>
 	std::vector<Entity> view() {
 		return getSet<T>().entities();
+	}*/
+
+	template<typename... Components>
+	std::vector<Entity> view() {
+		std::vector<Entity> result;
+
+		// 最も小さいSetをベースにしてループ（SparseSetの前提）
+		const auto& baseSet = getSet<std::tuple_element_t<0, std::tuple<Components...>>>();
+		for (Entity e : baseSet.entities()) {
+			if ((getSet<Components>().has(e) && ...)) {
+				result.push_back(e);
+			}
+		}
+
+		return result;
 	}
 
 	template<typename T>

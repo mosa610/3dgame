@@ -69,6 +69,7 @@ void SceneTest::Initialize()
 		/*".\\glTF-Sample-Models-main\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf"*/
 		/*".\\resources\\gltfobject\\set costume_02 sd unity-chan wgs.gltf"*/
 		".\\resources\\gltfobject\\unity-chan_emissivezero.gltf"
+		/*".\\resources\\Player\\player.gltf"*/
 		/*".\\glTF-Sample-Models-main\\2.0\\BrainStem\\glTF\\BrainStem.gltf"*/
 		/*".\\glTF-Sample-Models-main\\2.0\\Duck\\glTF\\Duck.gltf"*/);
 	model->GetNodePoses(model->_nodePoses);
@@ -400,9 +401,12 @@ void SceneTest::Render(float elapsedTime)
 		skymap->Render(dc, rc);
 	}
 
-	ComponentTransform* transform = &world.getRegister().getComponent<ComponentTransform>(e);
+	/*ComponentTransform* transform = &world.getRegister().getComponent<ComponentTransform>(e);
 	model->_worldTransform = transform->world_transform;
-	model->UpdateTransform(transform->world_transform);
+	model->UpdateTransform(transform->world_transform);*/
+
+	model->_worldTransform = world4;
+    model->UpdateTransform(world4);
 
 	shader->Begin(dc, rc,model.get(), "main");
 	shader->Draw(dc, model.get(), modelAlpha);
@@ -540,6 +544,7 @@ void SceneTest::DrawGUI()
 		ImGui::SliderFloat("extraction_end", &extraction_threshold_end, 0.0f, 5.0f, "%.1f");
 		ImGui::SliderFloat("exposure", &exposure, 0.0f, 10.0f, "%.1f");
 		ImGui::SliderFloat("alpha", &modelAlpha, 0.0f, 1.0f, "%.1f");
+		ImGui::SliderFloat("animeTimer", &animeTimer, 0.0f, 10.0f, "%.1f");
 		ImGui::NewLine();
 		ImGui::Text("scene");
 		//ImGui::Image(scene_shader_resource_view.Get(),{ 256, 144 }, { 0, 0 }, { 1, 1 }, { 1, 1, 1, 1 });
