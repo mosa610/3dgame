@@ -3,6 +3,7 @@
 #include <d3d11.h>
 #include <wrl.h>
 #include <cstring>
+#include "GraphicsState.h"
 using namespace Microsoft::WRL;
 
 struct PipeLineState
@@ -25,10 +26,20 @@ public:
    D3D_PRIMITIVE_TOPOLOGY primitive_toporogy;
 };
 
+//enum class SAMPLER_STATE { POINT, LINEAR, ANISOTROPIC, LINEAR_BORDER_BLACK/*UNIT.32*/, LINEAR_BORDER_WHITE/*UNIT.32*/, ALL, End };
+//enum class DEPTH_STATE { ZT_ON_ZW_ON, ZT_ON_ZW_OFF, ZT_OFF_ZW_ON, ZT_OFF_ZW_OFF, End };
+//enum class BLEND_STATE { NONE, ALPHA, ADD, MULTIPLY, End };
+//enum class RASTER_STATE { SOLID, WIREFRAME, CULL_NONE, WIREFRAME_CULL_NONE, End };
+
 struct PipelineStateDesc
 {
 	std::string name;		//	シェーダーセット名
 	uint32_t id = 0;
+
+	SAMPLER_STATE sampler = SAMPLER_STATE::ALL;
+	DEPTH_STATE depth = DEPTH_STATE::ZT_ON_ZW_ON;
+	BLEND_STATE blend = BLEND_STATE::NONE;
+	RASTER_STATE raster = RASTER_STATE::SOLID;
 
 	std::string vs_path;	//	頂点シェーダーファイルパス
 	std::string hs_path;	//	ハルシェーダーファイルパス
@@ -84,6 +95,8 @@ public:
 		};
 
 		PipeLineState state;
+		state.rasterizer_state = GraphicsState::GetInstance().GetRasterizerState(desc.raster);
+
 		if (!desc.vs_path.empty())
 			create_vs_from_cso(device, desc.vs_path.data(), state.vertex_shader.ReleaseAndGetAddressOf(), state.input_layout.ReleaseAndGetAddressOf(), input_element_desc, _countof(input_element_desc));
 		if (!desc.hs_path.empty())
