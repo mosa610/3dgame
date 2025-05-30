@@ -3,11 +3,62 @@
 #include <wrl.h>
 #include "..//misc.h"
 
+//template<class T>
+//class ConstantBuffer
+//{
+//private:
+//    ConstantBuffer(const ConstantBuffer<T>& rhs) = default;
+//
+//private:
+//    Microsoft::WRL::ComPtr<ID3D11Buffer> _buffer;
+//    ID3D11DeviceContext* _deviceContext = nullptr;
+//
+//public:
+//    ConstantBuffer() {}
+//    T _data;
+//
+//    ID3D11Buffer* Get()const
+//    {
+//        return _buffer.Get();
+//    }
+//
+//    ID3D11Buffer* const* GetAddressOf()const
+//    {
+//        return _buffer.GetAddressOf();
+//    }
+//
+//    HRESULT Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+//    {
+//        if (_buffer.Get() != nullptr)
+//            _buffer.Reset();
+//
+//        _deviceContext = deviceContext;
+//
+//        D3D11_BUFFER_DESC desc;
+//        desc.Usage = D3D11_USAGE_DEFAULT;
+//        desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+//        desc.CPUAccessFlags = 0;
+//        desc.MiscFlags = 0;
+//        desc.StructureByteStride = 0;
+//        desc.ByteWidth = static_cast<UINT>(sizeof(T) + /*padding*/(16 - (sizeof(T) % 16)));
+//
+//        HRESULT hr = device->CreateBuffer(&desc, 0, _buffer.GetAddressOf());
+//        return hr;
+//    }
+//
+//    void Update()
+//    {
+//        _deviceContext->UpdateSubresource(_buffer.Get(), 0, nullptr, &_data, 0, 0);
+//    }
+//};
+
 template<class T>
 class ConstantBuffer
 {
 private:
-    ConstantBuffer(const ConstantBuffer<T>& rhs);
+    // コピーコンストラクタとコピー代入演算子を削除
+    ConstantBuffer(const ConstantBuffer<T>& rhs) = delete;
+    ConstantBuffer& operator=(const ConstantBuffer<T>& rhs) = delete;
 
 private:
     Microsoft::WRL::ComPtr<ID3D11Buffer> _buffer;
@@ -15,14 +66,36 @@ private:
 
 public:
     ConstantBuffer() {}
+
+    // ムーブコンストラクタ
+    ConstantBuffer(ConstantBuffer<T>&& rhs) noexcept
+        : _buffer(std::move(rhs._buffer))
+        , _deviceContext(rhs._deviceContext)
+        , _data(std::move(rhs._data))
+    {
+        rhs._deviceContext = nullptr;
+    }
+
+    // ムーブ代入演算子
+    ConstantBuffer& operator=(ConstantBuffer<T>&& rhs) noexcept
+    {
+        if (this != &rhs) {
+            _buffer = std::move(rhs._buffer);
+            _deviceContext = rhs._deviceContext;
+            _data = std::move(rhs._data);
+            rhs._deviceContext = nullptr;
+        }
+        return *this;
+    }
+
     T _data;
 
-    ID3D11Buffer* Get()const
+    ID3D11Buffer* Get() const
     {
         return _buffer.Get();
     }
 
-    ID3D11Buffer* const* GetAddressOf()const
+    ID3D11Buffer* const* GetAddressOf() const
     {
         return _buffer.GetAddressOf();
     }
@@ -31,7 +104,6 @@ public:
     {
         if (_buffer.Get() != nullptr)
             _buffer.Reset();
-
         _deviceContext = deviceContext;
 
         D3D11_BUFFER_DESC desc;
@@ -40,7 +112,7 @@ public:
         desc.CPUAccessFlags = 0;
         desc.MiscFlags = 0;
         desc.StructureByteStride = 0;
-        desc.ByteWidth = static_cast<UINT>(sizeof(T) + /*padding*/(16 - (sizeof(T) % 16)));
+        desc.ByteWidth = static_cast<UINT>(sizeof(T) + (16 - (sizeof(T) % 16)));
 
         HRESULT hr = device->CreateBuffer(&desc, 0, _buffer.GetAddressOf());
         return hr;
@@ -48,6 +120,7 @@ public:
 
     void Update()
     {
+        // 構文エラーを修正
         _deviceContext->UpdateSubresource(_buffer.Get(), 0, nullptr, &_data, 0, 0);
     }
 };

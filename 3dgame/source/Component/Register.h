@@ -3,6 +3,11 @@
 #include "SparseSet.h"
 #include "ComponentPool.h"
 
+#include <vector>
+#include <cstdint>
+#include <cassert>
+#include <string>
+#include <functional>
 #include <unordered_map>
 #include <typeindex>
 #include <memory>
@@ -50,14 +55,16 @@ public:
 	}
 
 	template<typename T>
-	void addComponent(Entity entity, const T& value) {
-		if(hasComponent<T>(entity)) return;
+	void addComponent(Entity entity, T&& value) {
+		using Decayed = std::decay_t<T>;
 
-		getSet<T>().add(entity, value);
+		if(hasComponent<Decayed>(entity)) return;
 
-		auto it = onAddedCallbacks.find(typeid(T));
+		getSet<Decayed>().add(entity, std::forward<T>(value));
+
+		auto it = onAddedCallbacks.find(typeid(Decayed));
 		if (it != onAddedCallbacks.end()) {
-			void* ptr = &getSet<T>().get(entity);
+			void* ptr = &getSet<Decayed>().get(entity);
 			it->second(entity, ptr);
 		}
 	}

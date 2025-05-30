@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+#include <cstdint>
+#include <cassert>
 #include <memory>
 
 using Entity = std::uint32_t;
@@ -12,7 +15,8 @@ class SparseSet
     std::vector<Component> components;
 
 public:
-    void add(Entity entity, const Component& component)
+    template<typename T>
+    void add(Entity entity, T&& component)
     {
         if (entity >= sparse.size())
         {
@@ -23,7 +27,7 @@ public:
 
         sparse[entity] = dense.size();
         dense.push_back(entity);
-        components.push_back(component);
+        components.push_back(std::forward<T>(component));
     }
 
     void remove(Entity entity)
@@ -36,7 +40,7 @@ public:
 
         // ƒXƒƒbƒv‚µ‚Äíœ
         dense[index] = last_entity;
-        components[index] = components[last_index];
+        components[index] = std::move(components[last_index]);
         sparse[last_entity] = index;
 
         dense.pop_back();

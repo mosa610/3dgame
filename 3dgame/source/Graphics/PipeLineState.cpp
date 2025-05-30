@@ -55,6 +55,8 @@ bool PipelineManager::setPipelineState(uint32_t id, ID3D11DeviceContext* dc)
 		gs.SetRasterizerState(dc, it->second->raster);
 		gs.SetSamplerState(dc, it->second->sampler);
 
+		if(it->second->input_layout)
+            dc->IASetInputLayout(it->second->input_layout.Get());
 		if (it->second->vertex_shader)
 			dc->VSSetShader(it->second->vertex_shader.Get(), nullptr, 0);
 		if(it->second->hull_shader)

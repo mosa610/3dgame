@@ -21,6 +21,9 @@
   <ItemGroup>
     <ClCompile Include="source\Camera.cpp" />
     <ClCompile Include="source\CameraController.cpp" />
+    <ClCompile Include="source\Component\SystemAnimation.cpp" />
+    <ClCompile Include="source\Component\SystemModel.cpp" />
+    <ClCompile Include="source\Component\SystemTransform.cpp" />
     <ClCompile Include="source\framework.cpp" />
     <ClCompile Include="source\Graphics\bloom.cpp" />
     <ClCompile Include="source\Graphics\Font.cpp" />
@@ -59,7 +62,9 @@
   <ItemGroup>
     <ClInclude Include="source\Camera.h" />
     <ClInclude Include="source\CameraController.h" />
+    <ClInclude Include="source\Component\ComponentAnimation.h" />
     <ClInclude Include="source\Component\ComponentBone.h" />
+    <ClInclude Include="source\Component\ComponentMaterial.h" />
     <ClInclude Include="source\Component\ComponentModel.h" />
     <ClInclude Include="source\Component\ComponentNode.h" />
     <ClInclude Include="source\Component\ComponentPool.h" />
@@ -68,8 +73,10 @@
     <ClInclude Include="source\Component\Register.h" />
     <ClInclude Include="source\Component\SparseSet.h" />
     <ClInclude Include="source\Component\System.h" />
+    <ClInclude Include="source\Component\SystemAnimation.h" />
     <ClInclude Include="source\Component\SystemLoadModel.h" />
     <ClInclude Include="source\Component\SystemModel.h" />
+    <ClInclude Include="source\Component\SystemTransform.h" />
     <ClInclude Include="source\Component\World.h" />
     <ClInclude Include="source\Framework.h" />
     <ClInclude Include="source\Graphics\bloom.h" />

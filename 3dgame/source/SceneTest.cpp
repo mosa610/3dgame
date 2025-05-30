@@ -9,8 +9,12 @@
 #include "Component/ComponentModel.h"
 #include "Component/ComponentNode.h"
 #include "Component/ComponentTransform.h"
+#include "Component/ComponentAnimation.h"
+
 #include "Component/System.h"
-#include "Component/SystemLoadModel.h"
+#include "Component/SystemTransform.h"
+#include "Component/SystemModel.h"
+#include "Component/SystemAnimation.h"
 
 #include "ModelNodeTreeEditor.h"
 
@@ -137,12 +141,15 @@ void SceneTest::Initialize()
 	e = world.getRegister().createEntity();
 	world.getRegister().addComponent(e, ComponentModel{ ".\\resources\\gltfobject\\unity-chan_emissivezero.gltf" });
 	world.getRegister().addComponent(e, ComponentTransform{ {0,0,0} });
+	world.getRegister().addComponent(e, ComponentAnimation{});
+
 
 	w = world.getRegister().createEntity();
     world.getRegister().addComponent(w, ComponentTransform{ {23,1,1} });
 
-	world.addSystem<TransformSystem>();
-	world.addSystem<SystemLoadModel>();
+	world.addSystem<SystemModel>();
+	world.addSystem<SystemTransform>();
+    world.addSystem<SystemAnimation>();
 
 	world.initialize();
 }
@@ -182,22 +189,6 @@ void SceneTest::Update(float elapsedTime)
 
 	skymap->update();
 	model->Update(elapsedTime);
-
-	/*float x = world.getRegister().getComponent<ComponentTransform>(e).position.x;
-	x += elapsedTime;
-	x = world.getRegister().getComponent<ComponentTransform>(w).position.x;
-	x += elapsedTime;
-	world.getRegister().removeEntity(e);
-	if (world.getRegister().hasComponent<ComponentTransform>(e))
-	{
-		x = world.getRegister().getComponent<ComponentTransform>(e).position.x;
-	}
-	x += elapsedTime;
-	Entity en = world.getRegister().createEntity();
-    world.getRegister().addComponent(en, ComponentTransform{ {100,1,1} });
-	world.getRegister().addComponent(en, ComponentTransform{ {1000,1,1} });
-	x = world.getRegister().getComponent<ComponentTransform>(en).position.x;
-	x += elapsedTime;*/
 
 	world.update(elapsedTime);
 }
@@ -411,6 +402,8 @@ void SceneTest::Render(float elapsedTime)
 	shader->Begin(dc, rc,model.get(), "main");
 	shader->Draw(dc, model.get(), modelAlpha);
     shader->End(dc);
+
+	world.render();
 
 	//	出力先をシーンに変更
 	{

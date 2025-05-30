@@ -17,8 +17,9 @@ class ComponentPool : public IComponentPoolRemovable {
 public:
     SparseSet<T> set;
 
-    void add(Entity e, const T& value) {
-        set.add(e, value);
+    template<typename U>
+    void add(Entity e, U&& value) {
+        set.add(e, std::forward<U>(value));
     }
 
     bool has(Entity e) const {
