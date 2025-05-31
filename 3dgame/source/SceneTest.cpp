@@ -1,4 +1,4 @@
-#include "SceneTest.h"
+ï»¿#include "SceneTest.h"
 #include <array>
 #include "Graphics/Graphics.h"
 #include "Camera.h"
@@ -16,9 +16,7 @@
 #include "Component/SystemModel.h"
 #include "Component/SystemAnimation.h"
 
-#include "ModelNodeTreeEditor.h"
-
-
+#define IMGUI_ENABLE_DOCKING
 
 Entity e,w;
 
@@ -119,10 +117,10 @@ void SceneTest::Initialize()
 	//		Microsoft::WRL::ComPtr<ID3D11Texture2D> color_buffer{};
 	//		hr = device->CreateTexture2D(&texture2d_desc, NULL, color_buffer.GetAddressOf());
 	//		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-	//		//	ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒgƒrƒ…[¶¬
+	//		//	ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒ“ãƒ¥ãƒ¼ç”Ÿæˆ
 	//		hr = device->CreateRenderTargetView(color_buffer.Get(), NULL, g_buffer_render_target_view[i].GetAddressOf());
 	//		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-	//		//	ƒVƒF[ƒ_[ƒŠƒ\[ƒXƒrƒ…[¶¬
+	//		//	ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ç”Ÿæˆ
 	//		hr = device->CreateShaderResourceView(color_buffer.Get(), NULL, g_buffer_shader_resource_view[i].GetAddressOf());
 	//		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	//	}
@@ -165,7 +163,7 @@ void SceneTest::Update(float elapsedTime)
 	Scene::SetSceneConstant(1, DirectX::XMFLOAT2(Graphics::Instance().Get_screen_width(), Graphics::Instance().Get_screen_height()), true);
 	timer += elapsedTime;
 
-	// ƒV[ƒ“—p’è”ƒoƒbƒtƒ@İ’è
+	// ã‚·ãƒ¼ãƒ³ç”¨å®šæ•°ãƒãƒƒãƒ•ã‚¡è¨­å®š
 
 	/*framebuffers[0]->UpdateWindowSize(Graphics::Instance().Get_device(),
 		Graphics::Instance().Get_screen_width(), Graphics::Instance().Get_screen_height());*/
@@ -177,7 +175,7 @@ void SceneTest::Update(float elapsedTime)
 	
 	model->ComputeAnimation(1, animeTimer, model->_nodePoses);
 
-	// ƒAƒjƒ[ƒVƒ‡ƒ“XV
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ›´æ–°
 	const ModelResource::Animation& animation = model->_resource->GetAnimations().at(1);
 	animeTimer += elapsedTime;
 	if (animeTimer > animation.secondsLength)
@@ -209,8 +207,8 @@ void SceneTest::Render(float elapsedTime)
 	dc->VSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);
 	dc->PSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);
 
-	// ‰æ–ÊƒNƒŠƒA•ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒgİ’è
-	FLOAT color[] = { 0.0f, 0.0f, 0.5f, 1.0f };	// RGBA(0.0`1.0)
+	// ç”»é¢ã‚¯ãƒªã‚¢ï¼†ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆè¨­å®š
+	FLOAT color[] = { 0.0f, 0.0f, 0.5f, 1.0f };	// RGBA(0.0ï½1.0)
 	/*dc->ClearRenderTargetView(scene_render_target_view.Get(), color);
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	dc->OMSetRenderTargets(1, scene_render_target_view.GetAddressOf(), dsv);*/
@@ -220,11 +218,11 @@ void SceneTest::Render(float elapsedTime)
 	dc->OMSetRenderTargets(1, scene_render_target_view.GetAddressOf(), dsv);
 
 
-	// •`‰æˆ—
+	// æç”»å‡¦ç†
 	RenderContext rc;
-	rc.lightDirection = { directional_light.x, directional_light.y, directional_light.z,directional_light.w };	// ƒ‰ƒCƒg•ûŒü
+	rc.lightDirection = { directional_light.x, directional_light.y, directional_light.z,directional_light.w };	// ãƒ©ã‚¤ãƒˆæ–¹å‘
 
-	//ƒJƒƒ‰ƒpƒ‰ƒ[ƒ^İ’è
+	//ã‚«ãƒ¡ãƒ©ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¨­å®š
 	Camera& camera = Camera::Instance();
 	rc.view = camera.GetView();
 	rc.projection = camera.GetProjection();
@@ -238,7 +236,7 @@ void SceneTest::Render(float elapsedTime)
 
 	DirectX::XMMATRIX V = DirectX::XMLoadFloat4x4(&rc.view);
 
-	// ’è”ƒoƒbƒtƒ@XV
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡æ›´æ–°
 	{
 		Param param;
 		param.bloom_intensity = bloom_intensity;
@@ -272,7 +270,7 @@ void SceneTest::Render(float elapsedTime)
 	dc->PSSetSamplers(4, 1, GState.GetInstance().GetSamplerState(SAMPLER_STATE::LINEAR_BORDER_WHITE).GetAddressOf());
 
 
-	//	o—Íæ‚ğGBuffer‚É•ÏX
+	//	å‡ºåŠ›å…ˆã‚’GBufferã«å¤‰æ›´
 	{
 		/*ID3D11RenderTargetView* render_targets[GB_Max] =
 		{
@@ -348,7 +346,7 @@ void SceneTest::Render(float elapsedTime)
 		DirectX::XMStoreFloat4x4(&world1, C* S1* R1* T1);
 	}
 
-	//ƒAƒjƒ[ƒVƒ‡ƒ“XV
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ›´æ–°
 	int clip_index{ 0 };
 	int frame_index{ 0 };
 	static float animation_tick{ 0 };
@@ -399,13 +397,13 @@ void SceneTest::Render(float elapsedTime)
 	model->_worldTransform = world4;
     model->UpdateTransform(world4);
 
-	shader->Begin(dc, rc,model.get(), "main");
-	shader->Draw(dc, model.get(), modelAlpha);
-    shader->End(dc);
+	//shader->Begin(dc, rc,model.get(), "main");
+	//shader->Draw(dc, model.get(), modelAlpha);
+    //shader->End(dc);
 
 	world.render();
 
-	//	o—Íæ‚ğƒV[ƒ“‚É•ÏX
+	//	å‡ºåŠ›å…ˆã‚’ã‚·ãƒ¼ãƒ³ã«å¤‰æ›´
 	{
 		/*dc->ClearRenderTargetView(rtv, color);
 		dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -428,7 +426,7 @@ void SceneTest::Render(float elapsedTime)
 
 
 
-	//// 2D•`‰æ
+	//// 2Dæç”»
 	//{
 	//	sprite_batches[0]->begin(graphics.Get_device_context(), 0);
 	//	sprite_batches[0]->render(graphics.Get_device_context(),
@@ -473,59 +471,51 @@ void SceneTest::Render(float elapsedTime)
 
 
 	font->Begin(graphics.Get_device_context());
-	font->Draw(0, 100, L"‚ ‚ ‚ ");
+	font->Draw(0, 100, L"ã‚ã‚ã‚");
 	font->End(graphics.Get_device_context());
 
 	g_buffer->FinalDraw(scene_shader_resource_view);
 }
-static Node* selectedNode = nullptr;
-
-void DrawNodeTree(Node* node) {
-	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
-
-	if (node->children.empty()) {
-		flags |= ImGuiTreeNodeFlags_Leaf;
-	}
-	if (node == selectedNode) {
-		flags |= ImGuiTreeNodeFlags_Selected;
-	}
-
-	ImGui::PushID(node);
-	bool open = ImGui::TreeNodeEx(node->name.c_str(), flags);
-
-	if (ImGui::IsItemClicked()) {
-		selectedNode = node;
-	}
-
-	if (open) {
-		for (Node* child : node->children) {
-			DrawNodeTree(child);
-		}
-		ImGui::TreePop();
-	}
-
-	ImGui::PopID();
-}
-
-void DrawSelectedNodeUI() {
-	if (selectedNode) {
-		ImGui::Separator();
-		ImGui::Text("Selected Node: %s", selectedNode->name.c_str());
-
-		ImGui::PushID(selectedNode);  // ‚±‚ê‚ªd—vI
-
-		ImGui::SliderFloat3("Position", &selectedNode->position.x, -10.0f, 10.0f);
-		ImGui::SliderFloat3("Scale", &selectedNode->scale.x, 0.1f, 10.0f);
-		ImGui::SliderFloat4("Rotation", &selectedNode->rotation.x, -DirectX::XM_PI, DirectX::XM_PI);
-
-		ImGui::PopID();
-	}
-}
 
 void SceneTest::DrawGUI()
 {
-	ImGui::Begin("ImGUI");
+
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Exit")) Graphics::Instance().Get_ImGui_renderer()->ChangeDockSpace();
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+	ImGui::End();
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
+	ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 20.0f);
+
+	ImGui::Begin("hierarchy");
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+	if (ImGui::TreeNode("Component"))
+		{
+			ComponentTransform* transform = &world.getRegister().getComponent<ComponentTransform>(e);
+			ImGui::SliderFloat3("position", &transform->position.x, -10.0f, 10.0f, "%.1f");
+			ImGui::SliderFloat3("rotation", &transform->rotation.x, -DirectX::XM_2PI, DirectX::XM_2PI, "%.1f");
+	        ImGui::SliderFloat3("scale", &transform->scale.x, 0.0f, 10.0f, "%.1f");
+			ImGui::TreePop();
+			ComponentNode* node = &world.getRegister().getComponent<ComponentNode>(e);
+			for (auto& n : node->nodes)
+			{
+				if (n.parent == nullptr)
+				{
+					node_tree.HierarchyDraw(e,&n);
+				}
+			}
+		}
+	ImGui::End();
+
+	ImGui::Begin("inspector");
+	node_tree.InspectorDraw(world.getRegister());
 	if (ImGui::TreeNode("test02")) {
 		ImGui::SliderFloat3("objPos", &object_pos.x, -10.0f, 10.0f, "%.1f");
 		ImGui::SliderFloat3("objRot", &object_rot.x, -DirectX::XM_2PI, DirectX::XM_2PI, "%.1f");
@@ -548,50 +538,80 @@ void SceneTest::DrawGUI()
 
 		ImGui::TreePop();
 	}
-	if (ImGui::TreeNode("Camera"))
-	{
-		ImGui::Text("near : %.2f", Camera::Instance().GetNearClipDistance());
-        ImGui::Text("far : %.2f", Camera::Instance().GetFarClipDistance());
-		DirectX::XMFLOAT3 pos = Camera::Instance().GetPosition();
-		DirectX::XMFLOAT3 focus = Camera::Instance().GetFocus();
-		ImGui::SliderFloat3("pos", &pos.x, -10.0f, 10.0f, "%.1f");
-		ImGui::SliderFloat3("focus", &focus.x, -10.0f, 10.0f, "%.1f");
-
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("Component"))
-	{
-		ComponentTransform* transform = &world.getRegister().getComponent<ComponentTransform>(e);
-		ImGui::SliderFloat3("position", &transform->position.x, -10.0f, 10.0f, "%.1f");
-		ImGui::SliderFloat3("rotation", &transform->rotation.x, -DirectX::XM_2PI, DirectX::XM_2PI, "%.1f");
-        ImGui::SliderFloat3("scale", &transform->scale.x, 0.0f, 10.0f, "%.1f");
-		ImGui::TreePop();
-		ComponentNode* node = &world.getRegister().getComponent<ComponentNode>(e);
-		for (auto& n : node->nodes)
-		{
-			if (n.parent == nullptr)
-			{
-				ModelNodeTreeEditor::Draw(&n);
-			}
-		}
-	}
-
 	g_buffer->DrawGUI();
 
-	model->DrawGUI();
-
 	ImGui::End();
+
+	ImGui::PopStyleVar(2);
+
+	//ImGui::Begin("ImGUI");
+	//ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+	//if (ImGui::TreeNode("test02")) {
+	//	ImGui::SliderFloat3("objPos", &object_pos.x, -10.0f, 10.0f, "%.1f");
+	//	ImGui::SliderFloat3("objRot", &object_rot.x, -DirectX::XM_2PI, DirectX::XM_2PI, "%.1f");
+	//	ImGui::SliderFloat3("objScale", &object_scale.x, 0.1f, 10.0f, "%.1f");
+	//	ImGui::SliderFloat4("light", &directional_light.x, -20.0f, 20.0f, "%.1f");
+	//	ImGui::SliderFloat("gaussian_sigma", { &gaussian_sigma }, 0.0f, 10.0f);
+	//	ImGui::SliderFloat("bloom_intensity", { &bloomer->bloom_intensity }, 0.0f, 10.0f);
+	//	ImGui::SliderFloat("extraction", &bloomer->bloom_extraction_threshold, 0.0f, 5.0f);
+	//	ImGui::SliderFloat("extraction_end", &extraction_threshold_end, 0.0f, 5.0f, "%.1f");
+	//	ImGui::SliderFloat("exposure", &exposure, 0.0f, 10.0f, "%.1f");
+	//	ImGui::SliderFloat("alpha", &modelAlpha, 0.0f, 1.0f, "%.1f");
+	//	ImGui::SliderFloat("animeTimer", &animeTimer, 0.0f, 10.0f, "%.1f");
+	//	ImGui::NewLine();
+	//	ImGui::Text("scene");
+	//	//ImGui::Image(scene_shader_resource_view.Get(),{ 256, 144 }, { 0, 0 }, { 1, 1 }, { 1, 1, 1, 1 });
+	//	ImGui::Image((ImTextureID)scene_shader_resource_view.Get(), ImVec2(256, 144), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 1, 1));
+	//	ImGui::Text("framebuffer");
+	//	//ImGui::Image(framebuffers[1]->shader_resource_view->Get(), { 256, 144 }, { 0, 0 }, { 1, 1 }, { 1, 1, 1, 1 });
+	//	ImGui::Image((ImTextureID)framebuffers[1]->shader_resource_view->Get(), ImVec2(256, 144), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 1, 1));
+
+	//	ImGui::TreePop();
+	//}
+	//if (ImGui::TreeNode("Camera"))
+	//{
+	//	ImGui::Text("near : %.2f", Camera::Instance().GetNearClipDistance());
+ //       ImGui::Text("far : %.2f", Camera::Instance().GetFarClipDistance());
+	//	DirectX::XMFLOAT3 pos = Camera::Instance().GetPosition();
+	//	DirectX::XMFLOAT3 focus = Camera::Instance().GetFocus();
+	//	ImGui::SliderFloat3("pos", &pos.x, -10.0f, 10.0f, "%.1f");
+	//	ImGui::SliderFloat3("focus", &focus.x, -10.0f, 10.0f, "%.1f");
+
+	//	ImGui::TreePop();
+	//}
+	//if (ImGui::TreeNode("Component"))
+	//{
+	//	ComponentTransform* transform = &world.getRegister().getComponent<ComponentTransform>(e);
+	//	ImGui::SliderFloat3("position", &transform->position.x, -10.0f, 10.0f, "%.1f");
+	//	ImGui::SliderFloat3("rotation", &transform->rotation.x, -DirectX::XM_2PI, DirectX::XM_2PI, "%.1f");
+ //       ImGui::SliderFloat3("scale", &transform->scale.x, 0.0f, 10.0f, "%.1f");
+	//	ImGui::TreePop();
+	//	ComponentNode* node = &world.getRegister().getComponent<ComponentNode>(e);
+	//	for (auto& n : node->nodes)
+	//	{
+	//		if (n.parent == nullptr)
+	//		{
+	//			ModelNodeTreeEditor::Draw(&n);
+	//		}
+	//	}
+	//}
+
+	//g_buffer->DrawGUI();
+
+	//model->DrawGUI();
+
+	//ImGui::End();
 }
 
 void SceneTest::ResetShaderResource()
 {
-	// ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒg‚©‚çSRV‚Ö‚ÌQÆ‚ğƒNƒŠƒA
+	// ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‹ã‚‰SRVã¸ã®å‚ç…§ã‚’ã‚¯ãƒªã‚¢
 	ID3D11DeviceContext* dc = Graphics::Instance().Get_device_context();
 	ID3D11ShaderResourceView* null_views[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = { nullptr };
 	dc->PSSetShaderResources(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT, null_views);
 	dc->VSSetShaderResources(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT, null_views);
 
-	// ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒg‚ÅƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ğƒŠƒZƒbƒg
+	// ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã§ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ãƒªã‚»ãƒƒãƒˆ
 	ID3D11RenderTargetView* null_targets[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = { nullptr };
 	dc->OMSetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, null_targets, nullptr);
 
@@ -714,7 +734,7 @@ void Scene::SetSceneConstant(int start_slot, DirectX::XMFLOAT2 viewport_size, bo
 }
 
 
-// TODO@ˆøŒp‚¬ƒ^ƒXƒNˆê——iƒ^ƒXƒN‚ÍŠm”FAŠ®—¹Ÿ‘æÁ‚·‚±‚ÆB@[]“à‚Í—Dæ“x‚P`‚Tj
-// Gbuffer‚Ìƒ‰ƒCƒeƒBƒ“ƒO•`‰æ[4]
-// IBL‚Ì“K‰‚·‚é‚©‚µ‚È‚¢‚©‚Ì•ÏX[4]
-// ƒXƒe[ƒW‚Ì•`‰æ[3]
+// TODOã€€å¼•ç¶™ãã‚¿ã‚¹ã‚¯ä¸€è¦§ï¼ˆã‚¿ã‚¹ã‚¯ã¯ç¢ºèªã€å®Œäº†æ¬¡ç¬¬æ¶ˆã™ã“ã¨ã€‚ã€€[]å†…ã¯å„ªå…ˆåº¦ï¼‘ï½ï¼•ï¼‰
+// Gbufferã®ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°æç”»[4]
+// IBLã®é©å¿œã™ã‚‹ã‹ã—ãªã„ã‹ã®å¤‰æ›´[4]
+// ã‚¹ãƒ†ãƒ¼ã‚¸ã®æç”»[3]

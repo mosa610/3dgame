@@ -58,6 +58,7 @@ void Framework::Update(float elapsedTime)
 	SceneManager::Instance().Update(elapsedTime);
 
 #ifdef USE_IMGUI
+	graphics.Get_ImGui_renderer()->DockSpace();
 	ImGui::Begin("ImGUI");
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (ImGui::TreeNode("test01")) {
@@ -84,6 +85,7 @@ void Framework::Render(float elapsedTime)
 	graphics.Get_device_context()->OMSetRenderTargets(1, &rtv, dsv);
 
 	graphics.Get_ImGui_renderer()->Render(graphics.Get_device_context());
+	SetForegroundWindow(hwnd);
 
 	//UINT sync_interval{ 0 };
 	//graphics.Get_swap_chain()->Present(sync_interval, 0);

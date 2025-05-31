@@ -69,6 +69,8 @@ bool PipelineManager::setPipelineState(uint32_t id, ID3D11DeviceContext* dc)
 			dc->PSSetShader(it->second->pixel_shader.Get(), nullptr, 0);
 		if (it->second->compute_shader)
 			dc->CSSetShader(it->second->compute_shader.Get(), nullptr, 0);
+		if (it->second->primitive_toporogy)
+			dc->IASetPrimitiveTopology(it->second->primitive_toporogy);
 	}
 	return true;
 }

@@ -20,6 +20,7 @@
 #include "Graphics/Skymap.h"
 #include "Graphics/bloom.h"
 #include "Component/World.h"
+#include "ModelNodeTreeEditor.h"
 
 class SceneTest : public Scene
 {
@@ -126,4 +127,6 @@ private:
 	float modelAlpha = 1.0f;
 
 	World world;
+
+	ModelNodeTreeEditor node_tree;
 };

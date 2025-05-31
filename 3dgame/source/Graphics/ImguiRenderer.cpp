@@ -1,4 +1,4 @@
-#include "ImguiRenderer.h"
+﻿#include "ImguiRenderer.h"
 #include "..//imgui/IconsFontAwesome6.h"
 
 ImGuiRenderer::ImGuiRenderer(HWND hwnd, ID3D11Device* device,
@@ -9,13 +9,36 @@ ImGuiRenderer::ImGuiRenderer(HWND hwnd, ID3D11Device* device,
 	ImGui::CreateContext();
 
 	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+
+	ImGui::StyleColorsDark();
+
+	// When viewports enabled, tweak style for platform windows
+	ImGuiStyle& style = ImGui::GetStyle();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+
+		style.WindowPadding = ImVec2(0.0f, 0.0f);      // ウィンドウ内の余白をゼロに
+		style.FramePadding = ImVec2(0.0f, 0.0f);       // ボタンなどの内部パディング
+		style.ItemSpacing = ImVec2(0.0f, 0.0f);        // UI要素間の間隔
+		style.WindowBorderSize = 0.0f;                 // ウィンドウの枠線なし
+		style.FrameBorderSize = 0.0f;                  // フレームの枠線なし
+		style.TabBorderSize = 0.0f;                    // タブの枠線なし
+		style.CellPadding = ImVec2(0.0f, 0.0f);        // テーブル内の余白
+		style.IndentSpacing = 0.0f;                    // インデントの間隔
+		style.DisplaySafeAreaPadding = ImVec2(0.0f, 0.0f); // 安全領域のパディング
+	}
 
 	ImGui::GetIO().Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\consola.ttf", 14.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
 
 	ImFontConfig config;
 	config.MergeMode = true;
 	config.PixelSnapH = true;
-	static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };  // �� �����d�v
+	static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };  // ← ここ重要
 
 	io.Fonts->AddFontFromFileTTF("Data\\Font\\fa-solid-900.ttf", 16.0f, &config, icons_ranges);
 
@@ -43,6 +66,14 @@ void ImGuiRenderer::Render(ID3D11DeviceContext* context)
 	ImGui::Render();
 
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		//SetForegroundWindow(hwnd);
+	}
 }
 
 LRESULT ImGuiRenderer::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -51,6 +82,28 @@ LRESULT ImGuiRenderer::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM 
 		return true;
 
     return false;
+}
+
+void ImGuiRenderer::DockSpace()
+{
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+
+	const ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(viewport->WorkPos);
+	ImGui::SetNextWindowSize(viewport->WorkSize);
+	ImGui::SetNextWindowViewport(viewport->ID);
+
+	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+	window_flags |= ImGuiWindowFlags_NoBackground;  // 👈 背景を透明にする
+
+	ImGui::Begin("DockSpace", &p_open, window_flags);
+
+	ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f),
+		ImGuiDockNodeFlags_PassthruCentralNode |  // 中央部分を透過させる！
+		ImGuiDockNodeFlags_NoDockingInCentralNode // （必要に応じて）
+	);
 }
 
 bool ImGuiRenderer::UpdateMouseCursor()

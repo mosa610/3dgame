@@ -44,7 +44,7 @@ struct PipelineStateDesc
 	SAMPLER_STATE sampler = SAMPLER_STATE::ALL;
 	DEPTH_STATE depth = DEPTH_STATE::ZT_ON_ZW_ON;
 	BLEND_STATE blend = BLEND_STATE::NONE;
-	RASTER_STATE raster = RASTER_STATE::SOLID;
+	RASTER_STATE raster = RASTER_STATE::CULL_NONE;
 
 	std::string vs_path;	//	頂点シェーダーファイルパス
 	std::string hs_path;	//	ハルシェーダーファイルパス

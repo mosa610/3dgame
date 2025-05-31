@@ -168,6 +168,18 @@
     <ClCompile Include="source\SceneTest.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="source\Graphics\PipeLineState.cpp">
+      <Filter>Source\Graphics\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Component\SystemModel.cpp">
+      <Filter>Source\EntityComponentSystem\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Component\SystemTransform.cpp">
+      <Filter>Source\EntityComponentSystem\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Component\SystemAnimation.cpp">
+      <Filter>Source\EntityComponentSystem\System</Filter>
+    </ClCompile>
     <ClCompile Include="source\imgui\imgui.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
@@ -188,18 +200,6 @@
     </ClCompile>
     <ClCompile Include="source\imgui\backends\imgui_impl_win32.cpp">
       <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Graphics\PipeLineState.cpp">
-      <Filter>Source\Graphics\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Component\SystemModel.cpp">
-      <Filter>Source\EntityComponentSystem\System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Component\SystemTransform.cpp">
-      <Filter>Source\EntityComponentSystem\System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Component\SystemAnimation.cpp">
-      <Filter>Source\EntityComponentSystem\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -344,6 +344,24 @@
     <ClInclude Include="source\ModelNodeTreeEditor.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="source\Component\ComponentBone.h">
+      <Filter>Source\EntityComponentSystem\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\SystemModel.h">
+      <Filter>Source\EntityComponentSystem\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\ComponentMaterial.h">
+      <Filter>Source\EntityComponentSystem\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\SystemTransform.h">
+      <Filter>Source\EntityComponentSystem\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\ComponentAnimation.h">
+      <Filter>Source\EntityComponentSystem\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\SystemAnimation.h">
+      <Filter>Source\EntityComponentSystem\System</Filter>
+    </ClInclude>
     <ClInclude Include="source\imgui\imconfig.h">
       <Filter>imgui</Filter>
     </ClInclude>
@@ -367,24 +385,6 @@
     </ClInclude>
     <ClInclude Include="source\imgui\backends\imgui_impl_win32.h">
       <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Component\ComponentBone.h">
-      <Filter>Source\EntityComponentSystem\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Component\SystemModel.h">
-      <Filter>Source\EntityComponentSystem\System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Component\ComponentMaterial.h">
-      <Filter>Source\EntityComponentSystem\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Component\SystemTransform.h">
-      <Filter>Source\EntityComponentSystem\System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Component\ComponentAnimation.h">
-      <Filter>Source\EntityComponentSystem\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Component\SystemAnimation.h">
-      <Filter>Source\EntityComponentSystem\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

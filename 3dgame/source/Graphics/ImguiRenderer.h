@@ -29,6 +29,9 @@ public:
 	// WIN32メッセージハンドラー
 	LRESULT HandleMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+	void DockSpace();
+
+	void ChangeDockSpace() { p_open = !p_open; }
 private:
 	// マウスカーソル更新
 	bool UpdateMouseCursor();
@@ -65,4 +68,5 @@ private:
 	int													vertexCount = 0;
 	int													indexCount = 0;
 
+	bool												p_open = true;
 };
