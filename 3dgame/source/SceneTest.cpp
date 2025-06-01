@@ -67,14 +67,14 @@ void SceneTest::Initialize()
 		/*".//resources//TestAssets//Wraith.gltf"*/
 		".\\glTF-Sample-Models-main\\2.0\\BrainStem\\glTF\\BrainStem.gltf");
 
-	model = std::make_unique<Model>(graphics.Get_device(),
-		/*".\\glTF-Sample-Models-main\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf"*/
-		/*".\\resources\\gltfobject\\set costume_02 sd unity-chan wgs.gltf"*/
-		".\\resources\\gltfobject\\unity-chan_emissivezero.gltf"
-		/*".\\resources\\Player\\player.gltf"*/
-		/*".\\glTF-Sample-Models-main\\2.0\\BrainStem\\glTF\\BrainStem.gltf"*/
-		/*".\\glTF-Sample-Models-main\\2.0\\Duck\\glTF\\Duck.gltf"*/);
-	model->GetNodePoses(model->_nodePoses);
+	//model = std::make_unique<Model>(graphics.Get_device(),
+	//	/*".\\glTF-Sample-Models-main\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf"*/
+	//	/*".\\resources\\gltfobject\\set costume_02 sd unity-chan wgs.gltf"*/
+	//	".\\resources\\gltfobject\\unity-chan_emissivezero.gltf"
+	//	/*".\\resources\\Player\\player.gltf"*/
+	//	/*".\\glTF-Sample-Models-main\\2.0\\BrainStem\\glTF\\BrainStem.gltf"*/
+	//	/*".\\glTF-Sample-Models-main\\2.0\\Duck\\glTF\\Duck.gltf"*/);
+	//model->GetNodePoses(model->_nodePoses);
 
 	shader = std::make_unique<ModelRenderer>(graphics.Get_device(),graphics.Get_device_context());
 
@@ -173,20 +173,20 @@ void SceneTest::Update(float elapsedTime)
 	camera_controller.Update();
 	camera_controller.SyncControllerToCamera(camera);
 	
-	model->ComputeAnimation(1, animeTimer, model->_nodePoses);
+	//model->ComputeAnimation(1, animeTimer, model->_nodePoses);
 
-	// アニメーション更新
-	const ModelResource::Animation& animation = model->_resource->GetAnimations().at(1);
-	animeTimer += elapsedTime;
-	if (animeTimer > animation.secondsLength)
-	{
-		animeTimer -= animation.secondsLength;
-	}
-	model->SetNodePoses(model->_nodePoses);
-	model->Update(elapsedTime);
+	//// アニメーション更新
+	//const ModelResource::Animation& animation = model->_resource->GetAnimations().at(1);
+	//animeTimer += elapsedTime;
+	//if (animeTimer > animation.secondsLength)
+	//{
+	//	animeTimer -= animation.secondsLength;
+	//}
+	//model->SetNodePoses(model->_nodePoses);
+	//model->Update(elapsedTime);
 
 	skymap->update();
-	model->Update(elapsedTime);
+	//model->Update(elapsedTime);
 
 	world.update(elapsedTime);
 }
@@ -394,8 +394,8 @@ void SceneTest::Render(float elapsedTime)
 	model->_worldTransform = transform->world_transform;
 	model->UpdateTransform(transform->world_transform);*/
 
-	model->_worldTransform = world4;
-    model->UpdateTransform(world4);
+	/*model->_worldTransform = world4;
+    model->UpdateTransform(world4);*/
 
 	//shader->Begin(dc, rc,model.get(), "main");
 	//shader->Draw(dc, model.get(), modelAlpha);
