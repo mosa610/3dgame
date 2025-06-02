@@ -50,6 +50,10 @@ private:
             if(!reg.hasComponent<ComponentMaterial>(e)) {
                 reg.addComponent<ComponentMaterial>(e, ComponentMaterial{});
             }
+
+            if(!reg.hasComponent<ComponentBone>(e)) {
+                reg.addComponent<ComponentBone>(e, ComponentBone{});
+            }
             });
 
         // ConmponentNode に対するコールバック

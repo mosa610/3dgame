@@ -22,6 +22,7 @@
     <ClCompile Include="source\Camera.cpp" />
     <ClCompile Include="source\CameraController.cpp" />
     <ClCompile Include="source\Component\SystemAnimation.cpp" />
+    <ClCompile Include="source\Component\SystemGbuffer.cpp" />
     <ClCompile Include="source\Component\SystemModel.cpp" />
     <ClCompile Include="source\Component\SystemTransform.cpp" />
     <ClCompile Include="source\framework.cpp" />
@@ -74,6 +75,7 @@
     <ClInclude Include="source\Component\SparseSet.h" />
     <ClInclude Include="source\Component\System.h" />
     <ClInclude Include="source\Component\SystemAnimation.h" />
+    <ClInclude Include="source\Component\SystemGbuffer.h" />
     <ClInclude Include="source\Component\SystemLoadModel.h" />
     <ClInclude Include="source\Component\SystemModel.h" />
     <ClInclude Include="source\Component\SystemTransform.h" />

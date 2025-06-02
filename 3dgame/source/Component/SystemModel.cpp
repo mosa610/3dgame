@@ -11,11 +11,15 @@ void SystemModel::Initialize(Register& reg)
 {
     ID3D11Device* device = Graphics::Instance().Get_device();
     ID3D11DeviceContext* dc = Graphics::Instance().Get_device_context();
-    for (Entity e : reg.view<ComponentModel, ComponentBone>()) {
+    for (Entity e : reg.view<ComponentModel>()) {
         auto& model = reg.getComponent<ComponentModel>(e);
+       
+        model.mesh_constant_buffer.Initialize(device, dc);
+    }
+
+    for (Entity e : reg.view<ComponentBone>()) {
         auto& bone = reg.getComponent<ComponentBone>(e);
 
-        model.mesh_constant_buffer.Initialize(device, dc);
         bone.skeleton_constant_buffer.Initialize(device, dc);
     }
 }
@@ -106,21 +110,21 @@ void SystemModel::draw(Register& reg, ID3D11DeviceContext* dc)
                 bone.skeleton_constant_buffer._data = skeletonCB;
                 bone.skeleton_constant_buffer.Update();
 
-                auto& transform = reg.getComponent<ComponentTransform>(e);
-
-                DirectX::XMMATRIX   World = XMLoadFloat4x4(&node.globalTransform) * XMLoadFloat4x4(&transform.world_transform);
-                DirectX::XMFLOAT4X4 world;
-                DirectX::XMStoreFloat4x4(&world, World);
-                model.mesh_constant_buffer._data.previous_world = model.mesh_constant_buffer._data.world;
-                model.mesh_constant_buffer._data.world = world;
-                model.mesh_constant_buffer._data.materialIndex = mesh.materialIndex;
-                model.mesh_constant_buffer._data.skin = node.jointIndex;
-                model.mesh_constant_buffer._data.adjustalpha = 1.0f;
-                model.mesh_constant_buffer.Update();
-
-                // •`‰æ
-                dc->DrawIndexed(static_cast<UINT>(mesh.indices.size()), 0, 0);
             }
+
+            auto& transform = reg.getComponent<ComponentTransform>(e);
+            DirectX::XMMATRIX   World = XMLoadFloat4x4(&node.globalTransform) * XMLoadFloat4x4(&transform.world_transform);
+            DirectX::XMFLOAT4X4 world;
+            DirectX::XMStoreFloat4x4(&world, World);
+            model.mesh_constant_buffer._data.previous_world = model.mesh_constant_buffer._data.world;
+            model.mesh_constant_buffer._data.world = world;
+            model.mesh_constant_buffer._data.materialIndex = mesh.materialIndex;
+            model.mesh_constant_buffer._data.skin = node.jointIndex;
+            model.mesh_constant_buffer._data.adjustalpha = 1.0f;
+            model.mesh_constant_buffer.Update();
+
+            // •`‰æ
+            dc->DrawIndexed(static_cast<UINT>(mesh.indices.size()), 0, 0);
         }
     }
 }
