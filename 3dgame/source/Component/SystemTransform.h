@@ -8,4 +8,8 @@ public:
     void update(Register& reg, float dt) override;
 
     void render(Register&) override {} // •`‰æ‚Í‚µ‚È‚¢
+
+    void finalize(Register& reg) override {}
+
+    void drawDebugGUI(Register& reg) override {}
 };

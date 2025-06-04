@@ -44,17 +44,15 @@ float4 main(VS_OUT pin) : SV_TARGET
 
 	    //	‚’¼”½Ë‚ÌƒtƒŒƒlƒ‹”½Ë—¦(”ñ‹à‘®‚Å‚àÅ’á4%‚Í‹¾–Ê”½Ë‚·‚é)
         float3 F0 = lerp(0.04f, albedo.rgb, data.metalness);
-
-        total_diffuse = albedo;
         
 	    //	IBLˆ—
-        //total_diffuse += DiffuseIBL(N, V, data.roughness, diffuse_reflectance, F0, diffuse_iem, sampler_states[LINEAR]);
-        //total_specular += SpecularIBL(N, V, data.roughness, F0, lut_ggx, specular_pmrem, sampler_states[LINEAR]);
+        total_diffuse += DiffuseIBL(N, V, data.roughness, diffuse_reflectance, F0, diffuse_iem, sampler_states[LINEAR]);
+        total_specular += SpecularIBL(N, V, data.roughness, F0, lut_ggx, specular_pmrem, sampler_states[LINEAR]);
 
     	//	©ŒÈÕ•Á
         total_diffuse = lerp(total_diffuse, total_diffuse * data.occlusion_factor, data.occlusion_strength);
         total_specular = lerp(total_specular, total_specular * data.occlusion_factor, data.occlusion_strength);
     }
 
-    return float4(total_diffuse + total_specular + data.emissive_color, 1);
+    return float4(total_diffuse + total_specular, 1);
 }

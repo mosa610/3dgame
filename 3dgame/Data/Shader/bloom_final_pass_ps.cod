@@ -74,16 +74,8 @@ mov r0.xyz, r0.xyzx  // r0.x <- <reinhard_tone_mapping return value>.x; r0.y <- 
 #line 28
 mov r0.xyz, r0.xyzx  // r0.x <- fragment_color.x; r0.y <- fragment_color.y; r0.z <- fragment_color.z
 
-#line 31
-mov r1.x, l(0.384615)  // r1.x <- INV_GAMMA
-
-#line 32
-log r0.xyz, r0.xyzx
-mul r0.xyz, r0.xyzx, r1.xxxx
-exp r0.xyz, r0.xyzx  // r0.x <- fragment_color.x; r0.y <- fragment_color.y; r0.z <- fragment_color.z
-
 #line 34
 mov o0.xyz, r0.xyzx
 mov o0.w, r0.w
 ret 
-// Approximately 21 instruction slots used
+// Approximately 17 instruction slots used

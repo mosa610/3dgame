@@ -15,6 +15,7 @@
 #include "Component/SystemTransform.h"
 #include "Component/SystemModel.h"
 #include "Component/SystemAnimation.h"
+#include "Component/SystemGbuffer.h"
 
 #define IMGUI_ENABLE_DOCKING
 
@@ -67,14 +68,14 @@ void SceneTest::Initialize()
 		/*".//resources//TestAssets//Wraith.gltf"*/
 		".\\glTF-Sample-Models-main\\2.0\\BrainStem\\glTF\\BrainStem.gltf");
 
-	//model = std::make_unique<Model>(graphics.Get_device(),
-	//	/*".\\glTF-Sample-Models-main\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf"*/
-	//	/*".\\resources\\gltfobject\\set costume_02 sd unity-chan wgs.gltf"*/
-	//	".\\resources\\gltfobject\\unity-chan_emissivezero.gltf"
-	//	/*".\\resources\\Player\\player.gltf"*/
-	//	/*".\\glTF-Sample-Models-main\\2.0\\BrainStem\\glTF\\BrainStem.gltf"*/
-	//	/*".\\glTF-Sample-Models-main\\2.0\\Duck\\glTF\\Duck.gltf"*/);
-	//model->GetNodePoses(model->_nodePoses);
+	model = std::make_unique<Model>(graphics.Get_device(),
+		".\\glTF-Sample-Models-main\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf"
+		/*".\\resources\\gltfobject\\set costume_02 sd unity-chan wgs.gltf"*/
+		/*".\\resources\\gltfobject\\unity-chan_emissivezero.gltf"*/
+		/*".\\resources\\Player\\player.gltf"*/
+		/*".\\glTF-Sample-Models-main\\2.0\\BrainStem\\glTF\\BrainStem.gltf"*/
+		/*".\\glTF-Sample-Models-main\\2.0\\Duck\\glTF\\Duck.gltf"*/);
+	model->GetNodePoses(model->_nodePoses);
 
 	shader = std::make_unique<ModelRenderer>(graphics.Get_device(),graphics.Get_device_context());
 
@@ -145,11 +146,13 @@ void SceneTest::Initialize()
 	w = world.getRegister().createEntity();
     world.getRegister().addComponent(w, ComponentTransform{ {23,1,1} });
 
+	//world.addSystem<SystemGbufferRendering>();
 	world.addSystem<SystemModel>();
 	world.addSystem<SystemTransform>();
     world.addSystem<SystemAnimation>();
 
 	world.initialize();
+	world.setRenderContext(render_resource_context.get());
 }
 
 void SceneTest::Finalize()
@@ -198,6 +201,7 @@ void SceneTest::Render(float elapsedTime)
 	ID3D11DeviceContext* dc = graphics.Get_device_context();
 	ID3D11RenderTargetView* rtv = graphics.Get_render_target_view();
 	ID3D11DepthStencilView* dsv = graphics.Get_depth_stencil_view();
+	render_resource_context->depth_stencil_view = graphics.Get_depth_stencil_view();
 
 	GraphicsState& GState = GraphicsState::GetInstance();
 
@@ -213,9 +217,9 @@ void SceneTest::Render(float elapsedTime)
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	dc->OMSetRenderTargets(1, scene_render_target_view.GetAddressOf(), dsv);*/
 
-	dc->ClearRenderTargetView(scene_render_target_view.Get(), color);
-	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	dc->OMSetRenderTargets(1, scene_render_target_view.GetAddressOf(), dsv);
+	dc->ClearRenderTargetView(render_resource_context->render_target_view.Get(), color);
+	dc->ClearDepthStencilView(render_resource_context->depth_stencil_view.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	dc->OMSetRenderTargets(1, render_resource_context->render_target_view.GetAddressOf(), render_resource_context->depth_stencil_view.Get());
 
 
 	// 描画処理
@@ -394,12 +398,12 @@ void SceneTest::Render(float elapsedTime)
 	model->_worldTransform = transform->world_transform;
 	model->UpdateTransform(transform->world_transform);*/
 
-	/*model->_worldTransform = world4;
-    model->UpdateTransform(world4);*/
+	model->_worldTransform = world4;
+    model->UpdateTransform(world4);
 
-	//shader->Begin(dc, rc,model.get(), "main");
-	//shader->Draw(dc, model.get(), modelAlpha);
-    //shader->End(dc);
+	/*shader->Begin(dc, rc,model.get(), "main");
+	shader->Draw(dc, model.get(), modelAlpha);
+    shader->End(dc);*/
 
 	world.render();
 
@@ -409,7 +413,7 @@ void SceneTest::Render(float elapsedTime)
 		dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 		dc->OMSetRenderTargets(1, &rtv, dsv);*/
 
-		g_buffer->End(dsv, scene_render_target_view.Get(), color);
+		g_buffer->End(dsv, render_resource_context->render_target_view.Get(), color);
 	}
 
 	framebuffers[0]->clear(dc, 0.4f, 0.4f, 0.4f);
@@ -474,7 +478,7 @@ void SceneTest::Render(float elapsedTime)
 	font->Draw(0, 100, L"あああ");
 	font->End(graphics.Get_device_context());
 
-	g_buffer->FinalDraw(scene_shader_resource_view);
+	g_buffer->FinalDraw(render_resource_context->shader_resource_view);
 }
 
 void SceneTest::DrawGUI()
@@ -528,6 +532,15 @@ void SceneTest::DrawGUI()
 		ImGui::SliderFloat("exposure", &exposure, 0.0f, 10.0f, "%.1f");
 		ImGui::SliderFloat("alpha", &modelAlpha, 0.0f, 1.0f, "%.1f");
 		ImGui::SliderFloat("animeTimer", &animeTimer, 0.0f, 10.0f, "%.1f");
+		if (world.getRegister().hasComponent<ComponentMaterial>(e))
+		{
+            ComponentMaterial* material = &world.getRegister().getComponent<ComponentMaterial>(e);
+			for (auto& data : material->material_dates)
+			{
+                ImGui::SliderFloat("metallic", &data.pbrMetallicRoughness.metallicFactor, 0.0f, 10.0f, "%.1f");
+                ImGui::SliderFloat("roughness", &data.pbrMetallicRoughness.roughnessFactor, 0.0f, 10.0f, "%.1f");
+			}
+		}
 		ImGui::NewLine();
 		ImGui::Text("scene");
 		//ImGui::Image(scene_shader_resource_view.Get(),{ 256, 144 }, { 0, 0 }, { 1, 1 }, { 1, 1, 1, 1 });
@@ -539,6 +552,7 @@ void SceneTest::DrawGUI()
 		ImGui::TreePop();
 	}
 	g_buffer->DrawGUI();
+	world.drawDebugGUI();
 
 	ImGui::End();
 
@@ -618,8 +632,8 @@ void SceneTest::ResetShaderResource()
 	framebuffers[0]->ResetShaderResourceView();
 	framebuffers[1]->ResetShaderResourceView();
 	g_buffer->ResetShaderResourceView();
-	scene_shader_resource_view.Reset();
-	scene_render_target_view.Reset();
+	render_resource_context->shader_resource_view.Reset();
+	render_resource_context->render_target_view.Reset();
 }
 
 void SceneTest::RemakeShaderResource(float width, float height)
@@ -646,10 +660,10 @@ void SceneTest::RemakeShaderResource(float width, float height)
 		HRESULT hr = device->CreateTexture2D(&texture2d_desc, NULL, color_buffer.ReleaseAndGetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
-		hr = device->CreateRenderTargetView(color_buffer.Get(), NULL, scene_render_target_view.GetAddressOf());
+		hr = device->CreateRenderTargetView(color_buffer.Get(), NULL, render_resource_context->render_target_view.GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
-		hr = device->CreateShaderResourceView(color_buffer.Get(), NULL, scene_shader_resource_view.GetAddressOf());
+		hr = device->CreateShaderResourceView(color_buffer.Get(), NULL, render_resource_context->shader_resource_view.GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	}
 

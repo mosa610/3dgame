@@ -98,6 +98,7 @@
     <ClInclude Include="source\Graphics\ModelResource.h" />
     <ClInclude Include="source\Graphics\ModelRenderer.h" />
     <ClInclude Include="source\Graphics\PipeLineState.h" />
+    <ClInclude Include="source\Graphics\RenderResourceContext.h" />
     <ClInclude Include="source\Graphics\render_context.h" />
     <ClInclude Include="source\Graphics\SerializeTemplate.h" />
     <ClInclude Include="source\Graphics\shader.h" />

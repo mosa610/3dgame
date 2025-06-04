@@ -2,17 +2,18 @@
 #include <d3d11.h>
 #include <wrl.h>
 #include "Sprite.h"
+#include "..//Component/SystemGbuffer.h"
 
-enum GBufferId
-{
-	GB_BaseColor = 0,
-	GB_Emissive,
-	GB_Normal,
-	GB_Parameters,
-	GB_Depth,
-	//	必要なら追加(シェーダー側の対応も必須)
-	GB_Max,
-};
+//enum GBufferId
+//{
+//	GB_BaseColor = 0,
+//	GB_Emissive,
+//	GB_Normal,
+//	GB_Parameters,
+//	GB_Depth,
+//	//	必要なら追加(シェーダー側の対応も必須)
+//	GB_Max,
+//};
 
 class GBuffer
 {

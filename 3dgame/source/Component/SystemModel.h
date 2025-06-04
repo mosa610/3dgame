@@ -30,10 +30,14 @@ public:
             end(reg, dc);
         }
     }
+
+    void finalize(Register& reg) override {}
+
+    void drawDebugGUI(Register& reg) override {}
 private:
     void begin(Register& reg, ID3D11Device* device, ID3D11DeviceContext* dc);
     void draw(Register& reg, ID3D11DeviceContext* dc);
     void end(Register& reg, ID3D11DeviceContext* dc);
 
-    void UpdateStructedBuffer(Entity e, Register& reg, ID3D11DeviceContext* dc, const ModelResource::Mesh* mesh);
+    void UpdateStructedBuffer(Entity e, Register& reg, ID3D11DeviceContext* dc);
 };

@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include "Graphics/render_context.h"
 #include "Graphics/Graphics.h"
+#include "Graphics/RenderResourceContext.h"
 
 //ƒV[ƒ“
 class Scene
@@ -13,6 +14,8 @@ public:
     {
         Graphics& graphics = Graphics::Instance();
         Microsoft::WRL::ComPtr<ID3D11Device> device = graphics.Get_device();
+
+        render_resource_context = std::make_unique<RenderResourceContext>();
 
         if (!scene_constant_buffer)
         {
@@ -47,16 +50,16 @@ public:
             HRESULT hr = device->CreateTexture2D(&texture2d_desc, NULL, color_buffer.ReleaseAndGetAddressOf());
             _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
-            hr = device->CreateRenderTargetView(color_buffer.Get(), NULL, scene_render_target_view.GetAddressOf());
+            hr = device->CreateRenderTargetView(color_buffer.Get(), NULL, render_resource_context->render_target_view.GetAddressOf());
             _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
-            hr = device->CreateShaderResourceView(color_buffer.Get(), NULL, scene_shader_resource_view.GetAddressOf());
+            hr = device->CreateShaderResourceView(color_buffer.Get(), NULL, render_resource_context->shader_resource_view.GetAddressOf());
             _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
         }
     }
     virtual ~Scene() {
-        if (scene_shader_resource_view) scene_shader_resource_view.Reset();
-        if (scene_render_target_view) scene_render_target_view.Reset();
+        if (render_resource_context->shader_resource_view) render_resource_context->shader_resource_view.Reset();
+        if (render_resource_context->render_target_view) render_resource_context->render_target_view.Reset();
     }
 
     //‰Šú‰»
@@ -86,9 +89,9 @@ public:
     //€”õŠ®—¹İ’è
     void SetReady() { ready = true; }
 
-    Microsoft::WRL::ComPtr < ID3D11RenderTargetView> GetSceneRenderTargetView() { return scene_render_target_view; }
+    Microsoft::WRL::ComPtr < ID3D11RenderTargetView> GetSceneRenderTargetView() { return render_resource_context->render_target_view; }
 
-    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetSceneShaderResourceView() { return scene_shader_resource_view; }
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetSceneShaderResourceView() { return render_resource_context->shader_resource_view; }
 protected:
 
     float   timer = 0.0f;
@@ -99,6 +102,8 @@ protected:
 
     Microsoft::WRL::ComPtr<ID3D11RenderTargetView> scene_render_target_view;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> scene_shader_resource_view;
+
+    std::unique_ptr<RenderResourceContext> render_resource_context;
 private:
     bool    ready = false;
 

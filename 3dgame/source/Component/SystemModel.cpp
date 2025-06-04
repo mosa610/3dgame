@@ -55,6 +55,7 @@ void SystemModel::draw(Register& reg, ID3D11DeviceContext* dc)
         if (reg.hasComponent<ComponentMaterial>(e)) {
             auto& c_material = reg.getComponent<ComponentMaterial>(e);
 
+            UpdateStructedBuffer(e, reg, dc);
             // material_resource Set
             dc->PSSetShaderResources(0,1, c_material.material_resource_view.GetAddressOf());
         }
@@ -75,7 +76,6 @@ void SystemModel::draw(Register& reg, ID3D11DeviceContext* dc)
                 material.occlusionMap.Get()
             };
             dc->PSSetShaderResources(1, static_cast<UINT>(shaderResourceViews.size()), shaderResourceViews.data());
-            UpdateStructedBuffer(e, reg, dc, &mesh);
 
             // 頂点バッファ設定
             UINT stride = sizeof(ModelResource::Vertex);
@@ -135,25 +135,19 @@ void SystemModel::end(Register& reg, ID3D11DeviceContext* dc)
     dc->VSSetShader(nullptr, nullptr, 0);
     dc->PSSetShader(nullptr, nullptr, 0);
     dc->IASetInputLayout(nullptr);
+
+    FLOAT color[]{ 0.f, 0.f, 0.f, .0f };
+    //	出力先をシーンに変更
+    {
+        dc->ClearRenderTargetView(m_context->render_target_view.Get(), color);
+        //dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+        dc->OMSetRenderTargets(1, m_context->render_target_view.GetAddressOf(), nullptr);
+    }
 }
 
-void SystemModel::UpdateStructedBuffer(Entity e, Register& reg, ID3D11DeviceContext* dc, const ModelResource::Mesh* mesh)
+void SystemModel::UpdateStructedBuffer(Entity e, Register& reg, ID3D11DeviceContext* dc)
 {
     auto& material = reg.getComponent<ComponentMaterial>(e);
-
-    if (mesh != nullptr)
-    {
-        material.material_dates[0].pbrMetallicRoughness.baseColor = mesh->material->data.pbrMetallicRoughness.baseColor;
-        material.material_dates[0].pbrMetallicRoughness.metallicFactor = mesh->material->data.pbrMetallicRoughness.metallicFactor;
-        material.material_dates[0].pbrMetallicRoughness.roughnessFactor = mesh->material->data.pbrMetallicRoughness.roughnessFactor;
-        material.material_dates[0].emissiveColor = mesh->material->data.emissiveColor;
-        material.material_dates[0].alphaMode = mesh->material->data.alphaMode;
-        material.material_dates[0].alphaCutOff = mesh->material->data.alphaCutOff;
-        material.material_dates[0].doubleSided = mesh->material->data.doubleSided;
-        material.material_dates[0].emissiveTexture = mesh->material->data.emissiveTexture;
-        material.material_dates[0].normalTexture = mesh->material->data.normalTexture;
-        material.material_dates[0].occlusionTexture = mesh->material->data.occlusionTexture;
-
 
         D3D11_MAPPED_SUBRESOURCE mappedResource{};
         HRESULT hr = dc->Map(material.material_buffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -164,5 +158,4 @@ void SystemModel::UpdateStructedBuffer(Entity e, Register& reg, ID3D11DeviceCont
 
         // マップ解除
         dc->Unmap(material.material_buffer.Get(), 0);
-    }
 }

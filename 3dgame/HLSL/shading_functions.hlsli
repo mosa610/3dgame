@@ -117,7 +117,7 @@ float4 CalcFog(in float4 color, float4 fog_color, float2 fog_range, float eye_le
 }
 
 //	ƒKƒ“ƒ}ŒW”
-static const float GammaFactor = /*2.2f*/1.0f;
+static const float GammaFactor = 2.2f;
 
 //	‰~ü—¦
 static const float PI = 3.141592654f;

@@ -7,6 +7,7 @@
 #include "ComponentAnimation.h"
 #include "ComponentBone.h"
 #include "ComponentMaterial.h"
+#include "..//Graphics/RenderResourceContext.h"
 
 class World
 {
@@ -25,6 +26,16 @@ public:
     void render() {
         for (auto& sys : systems) sys->render(reg);
     }
+
+    void setRenderContext(RenderResourceContext* context) {
+        for (auto& sys : systems) sys->SetRenderContext(context);
+    }
+
+    void drawDebugGUI() {
+        for (auto& sys : systems) sys->drawDebugGUI(reg);
+    }
+
+
 
     template<typename T, typename... Args>
     void addSystem(Args&&... args) {
@@ -133,6 +144,7 @@ private:
         reg.setOnComponentAdded<ComponentMaterial>([](Register& reg, Entity e, ComponentMaterial& c_material) {
             if (!reg.hasComponent<ComponentModel>(e)) return;
             auto& model = reg.getComponent<ComponentModel>(e);
+
             for (std::vector<ModelResource::Material>::const_reference material : model.resource->GetMaterials())
             {
                 c_material.material_dates.push_back(material.data);
