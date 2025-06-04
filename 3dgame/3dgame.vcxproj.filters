@@ -204,6 +204,9 @@
     <ClCompile Include="source\SceneTest.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="source\Graphics\RenderGraph.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Framework.h">
@@ -393,6 +396,9 @@
       <Filter>Source\EntityComponentSystem\System</Filter>
     </ClInclude>
     <ClInclude Include="source\Graphics\RenderResourceContext.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\RenderGraph.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
