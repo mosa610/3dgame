@@ -82,6 +82,9 @@
     <Filter Include="Source\EntityComponentSystem\Component\ComponentPool">
       <UniqueIdentifier>{2ff1d537-6278-4611-9cb4-185c08d0247a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Graphics\RenderGraph">
+      <UniqueIdentifier>{2113ac12-a630-4142-873e-75eb936d21a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\framework.cpp">
@@ -205,7 +208,7 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="source\Graphics\RenderGraph.cpp">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Source\Graphics\RenderGraph</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -399,7 +402,10 @@
       <Filter>Source\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="source\Graphics\RenderGraph.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\GbufferRenderPass.h">
+      <Filter>Source\Graphics\RenderGraph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
