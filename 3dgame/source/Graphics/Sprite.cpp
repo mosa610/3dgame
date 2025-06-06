@@ -309,7 +309,7 @@ Sprite::Sprite(ID3D11Device* device, Microsoft::WRL::ComPtr<ID3D11ShaderResource
 	if (shader_resource_view)
 	{
 		isLoadFile = false;
-		shader_resource_view.Get()->AddRef();
+		//shader_resource_view.Get()->AddRef();
 		this->shaderResourceView = shader_resource_view;
 		//
 		Microsoft::WRL::ComPtr<ID3D11Resource> resource;
@@ -319,6 +319,24 @@ Sprite::Sprite(ID3D11Device* device, Microsoft::WRL::ComPtr<ID3D11ShaderResource
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		texture2d->GetDesc(&texture2d_desc);
 
+	}
+}
+
+void Sprite::setShaderResourceView(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_view)
+{
+
+	if (shader_resource_view)
+	{
+		isLoadFile = false;
+		this->shaderResourceView = shader_resource_view;  // Å© Ç±ÇÍÇæÇØÇ≈è\ï™
+		Microsoft::WRL::ComPtr<ID3D11Resource> resource;
+		this->shaderResourceView->GetResource(resource.GetAddressOf());
+
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> texture2d;
+		HRESULT hr = resource->QueryInterface<ID3D11Texture2D>(texture2d.GetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+		texture2d->GetDesc(&texture2d_desc);
 	}
 }
 

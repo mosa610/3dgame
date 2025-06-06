@@ -90,10 +90,38 @@ void DeferredLightingPass::execute(ID3D11DeviceContext* ctx, RenderGraphResource
 void DeferredLightingPass::debug(RenderGraphResources& resources)
 {
     // ‚±‚±‚ÅDebug‚µ‚Ä‚Ý‚é
+    ID3D11ShaderResourceView* srvs[] = {
+        resources.getSRV(albedo),
+        resources.getSRV(emissive),
+        resources.getSRV(normal),
+        resources.getSRV(parameter),
+        resources.getSRV(depth)
+    };
+
+    if (ImGui::TreeNode("DeferredLightingPass")) {
+        static const char* GBufferNames[] = {
+            "base_color",
+            "emissive",
+            "normal",
+            "parameters",
+            "depth",
+        };
+
+        ImGui::NewLine();
+
+        for (int i = 0; i < 5; ++i) {
+            ImGui::Text(GBufferNames[i]);
+            ImGui::Image((ImTextureID)srvs[i], ImVec2(256, 144), ImVec2(0, 0), ImVec2(1, 1),
+                ImVec4(1, 1, 1, 1), ImVec4(1, 1, 1, 1));
+            ImGui::NewLine();
+        }
+        ImGui::TreePop();
+    }
 }
 
 void DeferredLightingPass::setCommonResources(ID3D11DeviceContext* ctx, RenderGraphResources& resources)
 {
+    static constexpr int GBufferSRVIndex = 0;
     ID3D11ShaderResourceView* shader_resource_views[] =
     {
         resources.getSRV(albedo),
@@ -102,7 +130,7 @@ void DeferredLightingPass::setCommonResources(ID3D11DeviceContext* ctx, RenderGr
         resources.getSRV(parameter),
         resources.getSRV(depth)
     };
-    ctx->PSSetShaderResources(0, ARRAYSIZE(shader_resource_views), shader_resource_views);
+    ctx->PSSetShaderResources(GBufferSRVIndex, ARRAYSIZE(shader_resource_views), shader_resource_views);
 
-    sprite_shader_resource_view = shader_resource_views[0];
+    deferred_rendering_sprite->setShaderResourceView(resources.getSRV(albedo));
 }

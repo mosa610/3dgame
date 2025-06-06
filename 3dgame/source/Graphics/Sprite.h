@@ -24,10 +24,12 @@ public:
 	Sprite(const char* filename);
 
 	Sprite(ID3D11Device* device, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_view);
+
+	void setShaderResourceView(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_view);
 	~Sprite() 
 	{
-		if (!isLoadFile)
-			shaderResourceView->Release();
+		/*if (!isLoadFile)
+			shaderResourceView->Release();*/
 		/*if (patternShaderResourceView)
 			patternShaderResourceView->Release();*/
 	}
