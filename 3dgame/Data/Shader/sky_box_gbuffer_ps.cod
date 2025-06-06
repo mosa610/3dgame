@@ -163,7 +163,7 @@ mov r3.xyz, r3.xyzx  // r3.x <- ret.base_color.x; r3.y <- ret.base_color.y; r3.z
 
 #line 74
 itof r0.x, r0.x
-div r3.w, r0.x, l(32.000000)  // r3.w <- ret.base_color.w
+div r3.w, r0.x, l(1.000000)  // r3.w <- ret.base_color.w
 
 #line 75
 mov r1.xyz, r1.xyzx  // r1.x <- ret.emissive_color.x; r1.y <- ret.emissive_color.y; r1.z <- ret.emissive_color.z

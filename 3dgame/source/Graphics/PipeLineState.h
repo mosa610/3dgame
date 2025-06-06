@@ -52,6 +52,7 @@ struct PipelineStateDesc
 	std::string gs_path;	//	ジオメトリシェーダーファイルパス
 	std::string ps_path;	//	ピクセルシェーダーファイルパス
 	D3D_PRIMITIVE_TOPOLOGY primitive_toporogy = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;	//	図形指定
+	D3D11_INPUT_ELEMENT_DESC* input_element_desc;
 };
 
 class PipelineManager {
@@ -80,7 +81,7 @@ public:
 		return nullptr;
 	}
 
-	bool addPipelineState(ID3D11Device* device, PipelineStateDesc desc);
+	bool addPipelineState(ID3D11Device* device, PipelineStateDesc desc, D3D11_INPUT_ELEMENT_DESC input_element_desc[] = nullptr, UINT element_count = 0);
 
 	bool setPipelineState(uint32_t id, ID3D11DeviceContext* dc);
 

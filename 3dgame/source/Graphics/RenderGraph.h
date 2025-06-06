@@ -107,6 +107,8 @@ public:
 
     virtual void setup(RenderGraphBuilder& builder) = 0;
     virtual void execute(ID3D11DeviceContext* ctx, RenderGraphResources& resources) = 0;
+
+    virtual void debug(RenderGraphResources& resources) {}
     virtual ~RenderPass() = default;
 };
 
@@ -124,6 +126,8 @@ public:
     void compile();
     void execute(ID3D11DeviceContext* ctx);
     void reset();  // パスをクリアして再利用可能にする
+
+    void debug();
 
 private:
     std::vector<std::unique_ptr<RenderPass>> passes;

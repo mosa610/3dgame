@@ -210,6 +210,21 @@
     <ClCompile Include="source\Graphics\RenderGraph.cpp">
       <Filter>Source\Graphics\RenderGraph</Filter>
     </ClCompile>
+    <ClCompile Include="source\Graphics\GbufferRenderPass.cpp">
+      <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\SceneRenderPass.cpp">
+      <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\DeferredLightingPass.cpp">
+      <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Component\SystemSkymap.cpp">
+      <Filter>Source\EntityComponentSystem\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Component\World.cpp">
+      <Filter>Source\EntityComponentSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Framework.h">
@@ -406,6 +421,21 @@
     </ClInclude>
     <ClInclude Include="source\Graphics\GbufferRenderPass.h">
       <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\SceneRenderPass.h">
+      <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\DeferredLightingPass.h">
+      <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\ComponentSkymap.h">
+      <Filter>Source\EntityComponentSystem\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\SystemSkymap.h">
+      <Filter>Source\EntityComponentSystem\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\ComponentIBL.h">
+      <Filter>Source\EntityComponentSystem\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -29,6 +29,7 @@ private:
 	{
 		DirectX::XMFLOAT4X4 inverse_view_projection;
 	};
+
 	Microsoft::WRL::ComPtr<ID3D11Buffer> skymap_constant_buffer;
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> skymap_vertex_shader;
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> skymap_input_layout;

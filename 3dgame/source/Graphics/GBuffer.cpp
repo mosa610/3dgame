@@ -166,6 +166,7 @@ void GBuffer::Render()
 	ID3D11DeviceContext* dc = Graphics::Instance().Get_device_context();
 
 	SetCommonResource();
+
 	//	間接光処理
 	{
 		//	IBLテクスチャを設定

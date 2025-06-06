@@ -71,7 +71,7 @@ PSGBufferOut EncodeGBuffer(in GBufferData data, matrix view_projection_matrix, f
 {
     PSGBufferOut ret = (PSGBufferOut) 0;
     ret.base_color.rgb = data.base_color;
-    ret.base_color.a = data.shading_model / 32.0f;
+    ret.base_color.a = data.shading_model / 1.0f;
     ret.emissive_color.rgb = data.emissive_color;
     ret.emissive_color.a = 1;
     ret.normal.rgb = data.w_normal;

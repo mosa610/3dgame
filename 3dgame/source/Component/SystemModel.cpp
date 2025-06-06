@@ -135,14 +135,6 @@ void SystemModel::end(Register& reg, ID3D11DeviceContext* dc)
     dc->VSSetShader(nullptr, nullptr, 0);
     dc->PSSetShader(nullptr, nullptr, 0);
     dc->IASetInputLayout(nullptr);
-
-    FLOAT color[]{ 0.f, 0.f, 0.f, .0f };
-    //	出力先をシーンに変更
-    {
-        dc->ClearRenderTargetView(m_context->render_target_view.Get(), color);
-        //dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-        dc->OMSetRenderTargets(1, m_context->render_target_view.GetAddressOf(), nullptr);
-    }
 }
 
 void SystemModel::UpdateStructedBuffer(Entity e, Register& reg, ID3D11DeviceContext* dc)

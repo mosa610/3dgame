@@ -236,6 +236,13 @@ void RenderGraph::execute(ID3D11DeviceContext* ctx) {
     }
 }
 
+void RenderGraph::debug()
+{
+    for (auto* pass : sortedPasses) {
+        pass->debug(resources);
+    }
+}
+
 void RenderGraph::reset() {
     passes.clear();
     passNames.clear();
@@ -244,3 +251,4 @@ void RenderGraph::reset() {
     globalResourceInfos.clear();
     resources.clear();
 }
+

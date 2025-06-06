@@ -10,8 +10,11 @@
 #include "Component/ComponentNode.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentIBL.h"
+#include "Component/ComponentMaterial.h"
 
 #include "Component/System.h"
+#include "Component/SystemSkymap.h"
 #include "Component/SystemTransform.h"
 #include "Component/SystemModel.h"
 #include "Component/SystemAnimation.h"
@@ -138,7 +141,7 @@ void SceneTest::Initialize()
 
 
 	e = world.getRegister().createEntity();
-	world.getRegister().addComponent(e, ComponentModel{ /*".\\resources\\gltfobject\\unity-chan_emissivezero.gltf"*/ ".\\glTF-Sample-Models-main\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf" });
+	world.getRegister().addComponent(e, ComponentModel{ ".\\resources\\gltfobject\\unity-chan_emissivezero.gltf" /*".\\glTF-Sample-Models-main\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf"*/ /*".\\resources\\Manny\\Manny.gltf"*/ });
 	world.getRegister().addComponent(e, ComponentTransform{ {0,0,0} });
 	//world.getRegister().addComponent(e, ComponentAnimation{});
 
@@ -146,7 +149,11 @@ void SceneTest::Initialize()
 	w = world.getRegister().createEntity();
     world.getRegister().addComponent(w, ComponentTransform{ {23,1,1} });
 
+	auto sky = world.getRegister().createEntity();
+    world.getRegister().addComponent(sky, ComponentIBL{});
+
 	//world.addSystem<SystemGbufferRendering>();
+    world.addSystem<SystemSkymap>();
 	world.addSystem<SystemModel>();
 	world.addSystem<SystemTransform>();
     world.addSystem<SystemAnimation>();
@@ -274,6 +281,8 @@ void SceneTest::Render(float elapsedTime)
 	dc->PSSetSamplers(4, 1, GState.GetInstance().GetSamplerState(SAMPLER_STATE::LINEAR_BORDER_WHITE).GetAddressOf());
 
 
+	world.getRenderGraph().execute(dc);
+
 	//	出力先をGBufferに変更
 	{
 		/*ID3D11RenderTargetView* render_targets[GB_Max] =
@@ -398,8 +407,8 @@ void SceneTest::Render(float elapsedTime)
 	model->_worldTransform = transform->world_transform;
 	model->UpdateTransform(transform->world_transform);*/
 
-	model->_worldTransform = world4;
-    model->UpdateTransform(world4);
+	//model->_worldTransform = world4;
+    //model->UpdateTransform(world4);
 
 	/*shader->Begin(dc, rc,model.get(), "main");
 	shader->Draw(dc, model.get(), modelAlpha);
@@ -551,8 +560,9 @@ void SceneTest::DrawGUI()
 
 		ImGui::TreePop();
 	}
-	g_buffer->DrawGUI();
-	world.drawDebugGUI();
+	//g_buffer->DrawGUI();
+	//world.drawDebugGUI();
+	world.getRenderGraph().debug();
 
 	ImGui::End();
 

@@ -1,7 +1,7 @@
 #include "PipeLineState.h"
 #include "shader.h"
 
-bool PipelineManager::addPipelineState(ID3D11Device* device, PipelineStateDesc desc)
+bool PipelineManager::addPipelineState(ID3D11Device* device, PipelineStateDesc desc, D3D11_INPUT_ELEMENT_DESC element_desc[], UINT element_count)
 {
 	auto it = pipeline_states.find(desc.id);
 	if (it != pipeline_states.end())
@@ -10,15 +10,22 @@ bool PipelineManager::addPipelineState(ID3D11Device* device, PipelineStateDesc d
 	// descに各ステートの使用するステートをかんりするIdのような変数を作ってIdによってステートをGraphicStateから取り出せる関数を作りstateに設定もしIDがなければDefaultのステートを呼ぶようにする。
 
 	//const std::map<std::string, buffer_view>& vertex_buffer_views{ meshes.at(0).primitives.at(0).vertex_buffer_views };
-	D3D11_INPUT_ELEMENT_DESC input_element_desc[]
+
+	if (element_desc == nullptr)
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TANGENT",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "JOINTS",   0, DXGI_FORMAT_R32G32B32A32_UINT,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "WEIGHTS",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
+		D3D11_INPUT_ELEMENT_DESC input_element_desc[]
+		{
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TANGENT",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "JOINTS",   0, DXGI_FORMAT_R32G32B32A32_UINT,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "WEIGHTS",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+
+		element_desc = input_element_desc;
+		element_count = _countof(input_element_desc);
+	}
 
 	std::shared_ptr<PipeLineState> state = std::make_shared<PipeLineState>();
 
@@ -29,7 +36,7 @@ bool PipelineManager::addPipelineState(ID3D11Device* device, PipelineStateDesc d
 
 
 	if (!desc.vs_path.empty())
-		create_vs_from_cso(device, desc.vs_path.data(), state->vertex_shader.ReleaseAndGetAddressOf(), state->input_layout.ReleaseAndGetAddressOf(), input_element_desc, _countof(input_element_desc));
+		create_vs_from_cso(device, desc.vs_path.data(), state->vertex_shader.ReleaseAndGetAddressOf(), state->input_layout.ReleaseAndGetAddressOf(), element_desc, element_count);
 	if (!desc.hs_path.empty())
 		create_hs_from_cso(device, desc.hs_path.data(), state->hull_shader.ReleaseAndGetAddressOf());
 	if (!desc.ds_path.empty())
