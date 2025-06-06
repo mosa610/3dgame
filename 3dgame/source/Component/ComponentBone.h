@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include "..//Graphics/ConstantBuffer.h"
 
-class Node;
+struct Node;
 
 struct Bone
 {
