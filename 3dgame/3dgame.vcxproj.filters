@@ -225,6 +225,9 @@
     <ClCompile Include="source\Component\World.cpp">
       <Filter>Source\EntityComponentSystem</Filter>
     </ClCompile>
+    <ClCompile Include="source\Graphics\PostEffectPass.cpp">
+      <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Framework.h">
@@ -436,6 +439,9 @@
     </ClInclude>
     <ClInclude Include="source\Component\ComponentIBL.h">
       <Filter>Source\EntityComponentSystem\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\PostEffectPass.h">
+      <Filter>Source\Graphics\RenderGraph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

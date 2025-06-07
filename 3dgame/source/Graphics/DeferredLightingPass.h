@@ -8,6 +8,8 @@ class DeferredLightingPass : public RenderPass
 public:
     DeferredLightingPass(World* w);
 
+    ResourceHandle deferred_lighting;
+
     ResourceHandle albedo;
     ResourceHandle emissive;
     ResourceHandle normal;

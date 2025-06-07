@@ -46,6 +46,7 @@
     <ClCompile Include="source\Graphics\ModelRenderer.cpp" />
     <ClCompile Include="source\Graphics\ModelResource.cpp" />
     <ClCompile Include="source\Graphics\PipeLineState.cpp" />
+    <ClCompile Include="source\Graphics\PostEffectPass.cpp" />
     <ClCompile Include="source\Graphics\RenderGraph.cpp" />
     <ClCompile Include="source\Graphics\SceneRenderPass.cpp" />
     <ClCompile Include="source\Graphics\shader.cpp" />
@@ -109,6 +110,7 @@
     <ClInclude Include="source\Graphics\ModelResource.h" />
     <ClInclude Include="source\Graphics\ModelRenderer.h" />
     <ClInclude Include="source\Graphics\PipeLineState.h" />
+    <ClInclude Include="source\Graphics\PostEffectPass.h" />
     <ClInclude Include="source\Graphics\RenderGraph.h" />
     <ClInclude Include="source\Graphics\RenderResourceContext.h" />
     <ClInclude Include="source\Graphics\render_context.h" />

@@ -15,6 +15,8 @@ void DeferredLightingPass::setup(RenderGraphBuilder& builder)
     parameter = builder.createRenderTarget("gbuffer_parameter", ResourceType::RenderTarget);
     depth = builder.createRenderTarget("gbuffer_depth", ResourceType::RenderTarget, DXGI_FORMAT_R32_FLOAT);
 
+    deferred_lighting = builder.createRenderTarget("DeferredLighting", ResourceType::RenderTarget, DXGI_FORMAT_R32G32B32A32_FLOAT);
+
     builder.declareRead(albedo);
     builder.declareRead(emissive);
     builder.declareRead(normal);
