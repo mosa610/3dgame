@@ -29,6 +29,7 @@
     <ClCompile Include="source\Component\World.cpp" />
     <ClCompile Include="source\framework.cpp" />
     <ClCompile Include="source\Graphics\bloom.cpp" />
+    <ClCompile Include="source\Graphics\BloomExtractPass.cpp" />
     <ClCompile Include="source\Graphics\DeferredLightingPass.cpp" />
     <ClCompile Include="source\Graphics\Font.cpp" />
     <ClCompile Include="source\Graphics\framebuffer.cpp" />
@@ -70,6 +71,7 @@
   <ItemGroup>
     <ClInclude Include="source\Camera.h" />
     <ClInclude Include="source\CameraController.h" />
+    <ClInclude Include="source\Component\ComponentBloom.h" />
     <ClInclude Include="source\Component\ComponentAnimation.h" />
     <ClInclude Include="source\Component\ComponentBone.h" />
     <ClInclude Include="source\Component\ComponentIBL.h" />
@@ -92,6 +94,7 @@
     <ClInclude Include="source\Component\World.h" />
     <ClInclude Include="source\Framework.h" />
     <ClInclude Include="source\Graphics\bloom.h" />
+    <ClInclude Include="source\Graphics\BloomExtractPass.h" />
     <ClInclude Include="source\Graphics\ConstantBuffer.h" />
     <ClInclude Include="source\Graphics\DeferredLightingPass.h" />
     <ClInclude Include="source\Graphics\Font.h" />

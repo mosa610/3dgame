@@ -15,13 +15,15 @@ void DeferredLightingPass::setup(RenderGraphBuilder& builder)
     parameter = builder.createRenderTarget("gbuffer_parameter", ResourceType::RenderTarget);
     depth = builder.createRenderTarget("gbuffer_depth", ResourceType::RenderTarget, DXGI_FORMAT_R32_FLOAT);
 
-    deferred_lighting = builder.createRenderTarget("DeferredLighting", ResourceType::RenderTarget, DXGI_FORMAT_R32G32B32A32_FLOAT);
-
     builder.declareRead(albedo);
     builder.declareRead(emissive);
     builder.declareRead(normal);
     builder.declareRead(parameter);
     builder.declareRead(depth);
+
+    deferred_lighting = builder.createRenderTarget("DeferredLighting", ResourceType::RenderTarget, DXGI_FORMAT_R32G32B32A32_FLOAT);
+
+    builder.declareWrite(deferred_lighting);
 
     ID3D11Device* device = Graphics::Instance().Get_device();
     create_ps_from_cso(device, ".//Data//Shader//deferred_rendering_emissive_ps.cso", deferred_rendering_emissive_pixel_shader.GetAddressOf());
@@ -42,6 +44,12 @@ void DeferredLightingPass::setup(RenderGraphBuilder& builder)
 
 void DeferredLightingPass::execute(ID3D11DeviceContext* ctx, RenderGraphResources& resources)
 {
+    ID3D11RenderTargetView* rtv = resources.getRTV(deferred_lighting);
+
+    FLOAT color[]{ 0.f, 0.f, 0.f, .0f };
+    ctx->ClearRenderTargetView(rtv, color);
+    ctx->OMSetRenderTargets(1, &rtv, nullptr);
+
     setCommonResources(ctx, resources);
 
     //	ŠÔÚŒõˆ—

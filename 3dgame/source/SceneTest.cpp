@@ -149,7 +149,7 @@ void SceneTest::Initialize()
 	w = world.getRegister().createEntity();
     world.getRegister().addComponent(w, ComponentTransform{ {23,1,1} });
 
-	auto sky = world.getRegister().createEntity();
+	auto sky = world.getRegister().createEntity("Scene");
     world.getRegister().addComponent(sky, ComponentIBL{});
 
 	//world.addSystem<SystemGbufferRendering>();

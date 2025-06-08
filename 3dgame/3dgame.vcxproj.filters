@@ -228,6 +228,9 @@
     <ClCompile Include="source\Graphics\PostEffectPass.cpp">
       <Filter>Source\Graphics\RenderGraph</Filter>
     </ClCompile>
+    <ClCompile Include="source\Graphics\BloomExtractPass.cpp">
+      <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Framework.h">
@@ -442,6 +445,12 @@
     </ClInclude>
     <ClInclude Include="source\Graphics\PostEffectPass.h">
       <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\BloomExtractPass.h">
+      <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\ComponentBloom.h">
+      <Filter>Source\EntityComponentSystem\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

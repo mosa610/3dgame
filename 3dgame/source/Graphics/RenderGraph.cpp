@@ -12,8 +12,8 @@ ResourceHandle RenderGraphResources::create(const ResourceCreateInfo& info) {
     res.createInfo = info;
 
     D3D11_TEXTURE2D_DESC desc = {};
-    desc.Width = width;
-    desc.Height = height;
+    desc.Width = width >> info.divide_rate;
+    desc.Height = height >> info.divide_rate;
     desc.MipLevels = 1;
     desc.ArraySize = 1;
     desc.Format = info.format;
@@ -117,7 +117,8 @@ void RenderGraphBuilder::clear() {
 
 ResourceHandle RenderGraphBuilder::createRenderTarget(const std::string& name,
     ResourceType type,
-    DXGI_FORMAT format) {
+    DXGI_FORMAT format,
+    size_t divide_rate) {
     // グローバルマップから既存のリソースを検索
     if (globalNameToHandle && globalNameToHandle->count(name)) {
         ResourceHandle handle = (*globalNameToHandle)[name];
@@ -137,6 +138,7 @@ ResourceHandle RenderGraphBuilder::createRenderTarget(const std::string& name,
     info.type = type;
     info.format = format;
     info.name = name;
+    info.divide_rate = divide_rate;
 
     if (globalResourceInfos) {
         globalResourceInfos->push_back(info);

@@ -29,6 +29,7 @@ struct ResourceCreateInfo {
     ResourceType type = ResourceType::RenderTarget;
     DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM;
     std::string name;
+    size_t divide_rate = 0;
 };
 
 namespace std {
@@ -75,7 +76,9 @@ public:
 
     ResourceHandle createRenderTarget(const std::string& name,
         ResourceType type = ResourceType::RenderTarget,
-        DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM);
+        DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM,
+        size_t divide_rate = 0
+    );
 
     void declareRead(ResourceHandle handle);
     void declareWrite(ResourceHandle handle);

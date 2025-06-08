@@ -5,24 +5,21 @@
 #include "ComponentBone.h"
 #include "ComponentMaterial.h"
 #include "ComponentIBL.h"
+
 #include "..//Graphics/Graphics.h"
 #include "..//Graphics/RenderResourceContext.h"
+
 #include "..//Graphics/SceneRenderPass.h"
 #include "..//Graphics/GbufferRenderPass.h"
 #include "..//Graphics/DeferredLightingPass.h"
+#include "..//Graphics/BloomExtractPass.h"
+
 #include "..//Graphics/texture.h"
 #include "..//Graphics/Sprite.h"
 
 
 World::World() {
     registerComponentCallback();
-
-    ID3D11Device* device = Graphics::Instance().Get_device();
-    UINT width = Graphics::Instance().Get_screen_width();
-    UINT height = Graphics::Instance().Get_screen_height();
-    render_graph.initialize(device, width, height);
-    setupRenderPasses();
-    render_graph.compile();
 }
 
 World::~World() {}
@@ -30,6 +27,13 @@ World::~World() {}
 
 void World::initialize() {
     for (auto& sys : systems) sys->Initialize(reg);
+
+    ID3D11Device* device = Graphics::Instance().Get_device();
+    UINT width = Graphics::Instance().Get_screen_width();
+    UINT height = Graphics::Instance().Get_screen_height();
+    render_graph.initialize(device, width, height);
+    setupRenderPasses();
+    render_graph.compile();
 }
 
 void World::update(float dt) {
@@ -199,4 +203,5 @@ inline void World::setupRenderPasses()
     render_graph.addPass<SceneRenderPass>("Scene");
     render_graph.addPass<GbufferRenderPass>("Gbuffer", GbufferRenderPass{ this });
     render_graph.addPass<DeferredLightingPass>("DeferredLighting", DeferredLightingPass{ this });
+    render_graph.addPass<BloomExtractPass>("BloomExtract", BloomExtractPass {this});
 }
