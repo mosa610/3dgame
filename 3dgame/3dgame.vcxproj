@@ -78,6 +78,7 @@
     <ClInclude Include="source\Component\ComponentAnimation.h" />
     <ClInclude Include="source\Component\ComponentBone.h" />
     <ClInclude Include="source\Component\ComponentIBL.h" />
+    <ClInclude Include="source\Component\ComponentLight.h" />
     <ClInclude Include="source\Component\ComponentMaterial.h" />
     <ClInclude Include="source\Component\ComponentModel.h" />
     <ClInclude Include="source\Component\ComponentNode.h" />
