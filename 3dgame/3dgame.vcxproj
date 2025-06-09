@@ -29,8 +29,11 @@
     <ClCompile Include="source\Component\World.cpp" />
     <ClCompile Include="source\framework.cpp" />
     <ClCompile Include="source\Graphics\bloom.cpp" />
+    <ClCompile Include="source\Graphics\BloomCombinePass.cpp" />
     <ClCompile Include="source\Graphics\BloomExtractPass.cpp" />
+    <ClCompile Include="source\Graphics\BloomPass.cpp" />
     <ClCompile Include="source\Graphics\DeferredLightingPass.cpp" />
+    <ClCompile Include="source\Graphics\FinalDrawPass.cpp" />
     <ClCompile Include="source\Graphics\Font.cpp" />
     <ClCompile Include="source\Graphics\framebuffer.cpp" />
     <ClCompile Include="source\Graphics\fullscreen_quad.cpp" />
@@ -94,9 +97,12 @@
     <ClInclude Include="source\Component\World.h" />
     <ClInclude Include="source\Framework.h" />
     <ClInclude Include="source\Graphics\bloom.h" />
+    <ClInclude Include="source\Graphics\BloomCombinePass.h" />
     <ClInclude Include="source\Graphics\BloomExtractPass.h" />
+    <ClInclude Include="source\Graphics\BloomPass.h" />
     <ClInclude Include="source\Graphics\ConstantBuffer.h" />
     <ClInclude Include="source\Graphics\DeferredLightingPass.h" />
+    <ClInclude Include="source\Graphics\FinalDrawPass.h" />
     <ClInclude Include="source\Graphics\Font.h" />
     <ClInclude Include="source\Graphics\framebuffer.h" />
     <ClInclude Include="source\Graphics\fullscreen_quad.h" />

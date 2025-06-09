@@ -12,8 +12,14 @@ ResourceHandle RenderGraphResources::create(const ResourceCreateInfo& info) {
     res.createInfo = info;
 
     D3D11_TEXTURE2D_DESC desc = {};
-    desc.Width = width >> info.divide_rate;
-    desc.Height = height >> info.divide_rate;
+    if (info.divide_rate != 0) {
+        desc.Width = static_cast<uint32_t>(width) >> info.divide_rate;
+        desc.Height = static_cast<uint32_t>(height) >> info.divide_rate;
+    }
+    else {
+        desc.Width = width;
+        desc.Height = height;
+    }
     desc.MipLevels = 1;
     desc.ArraySize = 1;
     desc.Format = info.format;
@@ -69,6 +75,15 @@ ResourceHandle RenderGraphResources::create(const ResourceCreateInfo& info) {
         }
     }
 
+    D3D11_VIEWPORT viewport = {};
+    viewport.Width = static_cast<float>(desc.Width);
+    viewport.Height = static_cast<float>(desc.Height);
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+    viewport.TopLeftX = 0.0f;
+    viewport.TopLeftY = 0.0f;
+    res.viewport = viewport;
+
     resources.push_back(res);
     return { resources.size() - 1 };
 }
@@ -91,6 +106,12 @@ ID3D11DepthStencilView* RenderGraphResources::getDSV(ResourceHandle handle) {
 ID3D11UnorderedAccessView* RenderGraphResources::getUAV(ResourceHandle handle) {
     return (handle.exists() && handle.id < resources.size()) ?
         resources[handle.id].uav.Get() : nullptr;
+}
+
+D3D11_VIEWPORT* RenderGraphResources::getViewport(ResourceHandle handle)
+{
+    return (handle.exists() && handle.id < resources.size()) ?
+        &resources[handle.id].viewport : nullptr;
 }
 
 void RenderGraphResources::resize(UINT w, UINT h) {
@@ -153,6 +174,12 @@ void RenderGraphBuilder::declareRead(ResourceHandle handle) {
 
 void RenderGraphBuilder::declareWrite(ResourceHandle handle) {
     if (handle.exists()) writes.push_back(handle);
+}
+
+void RenderGraphBuilder::declareReadWrite(ResourceHandle handle)
+{
+    declareRead(handle);
+    declareWrite(handle);
 }
 
 // RenderGraphŽÀ‘•

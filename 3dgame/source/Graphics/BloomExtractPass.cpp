@@ -1,5 +1,6 @@
 #include "BloomExtractPass.h"
 #include "Graphics.h"
+#include "GraphicsState.h"
 #include "shader.h"
 #include "..//Component/ComponentBloom.h"
 
@@ -9,7 +10,7 @@ void BloomExtractPass::setup(RenderGraphBuilder& builder)
 
     builder.declareRead(deferred_input);
 
-    bloom_extract = builder.createRenderTarget("BloomExtract");
+    bloom_extract = builder.createRenderTarget("BloomExtract",ResourceType::RenderTarget, DXGI_FORMAT_R16G16B16A16_FLOAT);
 
     builder.declareWrite(bloom_extract);
 
@@ -41,14 +42,20 @@ void BloomExtractPass::execute(ID3D11DeviceContext* ctx, RenderGraphResources& r
     ID3D11ShaderResourceView* srv = resources.getSRV(deferred_input);
     ID3D11RenderTargetView* bloom_extract_rtv = resources.getRTV(bloom_extract);
 
+    GraphicsState::GetInstance().SetBlendState(ctx, BLEND_STATE::NONE);
+    GraphicsState::GetInstance().SetDepthStencilState(ctx, DEPTH_STATE::ZT_OFF_ZW_OFF);
+    GraphicsState::GetInstance().SetRasterizerState(ctx, RASTER_STATE::NONE_CCW_SOLID);
+
     FLOAT color[]{ 0.f, 0.f, 0.f, .0f };
     ctx->ClearRenderTargetView(bloom_extract_rtv, color);
     ctx->OMSetRenderTargets(1, &bloom_extract_rtv, nullptr);
+    ctx->RSSetViewports(1, resources.getViewport(bloom_extract));
 
     bloom_constants data{};
-    if(!world->getRegister().view<ComponentBloom>().empty())
+    auto scene = world->getRegister().getEntityByName("Scene");
+    if (scene != INVALID_ENTITY)
     {
-        auto& bloom = world->getRegister().getComponent<ComponentBloom>(world->getRegister().view<ComponentBloom>().front());
+        auto& bloom = world->getRegister().getComponent<ComponentBloom>(scene);
         data.bloom_extraction_threshold = bloom.bloom_extraction_threshold;
         data.bloom_intensity = bloom.bloom_intensity;
     }

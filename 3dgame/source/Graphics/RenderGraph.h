@@ -49,6 +49,7 @@ public:
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
         Microsoft::WRL::ComPtr<ID3D11DepthStencilView> dsv;
         Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView> uav;
+        D3D11_VIEWPORT viewport;
         ResourceCreateInfo createInfo;
     };
 
@@ -59,6 +60,8 @@ public:
     ID3D11ShaderResourceView* getSRV(ResourceHandle handle);
     ID3D11DepthStencilView* getDSV(ResourceHandle handle);
     ID3D11UnorderedAccessView* getUAV(ResourceHandle handle);
+
+    D3D11_VIEWPORT* getViewport(ResourceHandle handle);
 
     void resize(UINT w, UINT h);
     void clear() { resources.clear(); }
@@ -82,6 +85,8 @@ public:
 
     void declareRead(ResourceHandle handle);
     void declareWrite(ResourceHandle handle);
+
+    void declareReadWrite(ResourceHandle handle);
 
     // RenderGraphからグローバルリソース管理への参照を設定
     void setGlobalResourceMap(std::unordered_map<std::string, ResourceHandle>* globalMap,

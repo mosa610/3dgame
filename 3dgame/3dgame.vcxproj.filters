@@ -231,6 +231,15 @@
     <ClCompile Include="source\Graphics\BloomExtractPass.cpp">
       <Filter>Source\Graphics\RenderGraph</Filter>
     </ClCompile>
+    <ClCompile Include="source\Graphics\BloomPass.cpp">
+      <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\BloomCombinePass.cpp">
+      <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\FinalDrawPass.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Framework.h">
@@ -451,6 +460,15 @@
     </ClInclude>
     <ClInclude Include="source\Component\ComponentBloom.h">
       <Filter>Source\EntityComponentSystem\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\BloomPass.h">
+      <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\BloomCombinePass.h">
+      <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\FinalDrawPass.h">
+      <Filter>Source\Graphics\RenderGraph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

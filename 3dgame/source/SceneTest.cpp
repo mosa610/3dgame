@@ -12,6 +12,7 @@
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentIBL.h"
 #include "Component/ComponentMaterial.h"
+#include "Component/ComponentBloom.h"
 
 #include "Component/System.h"
 #include "Component/SystemSkymap.h"
@@ -277,217 +278,219 @@ void SceneTest::Render(float elapsedTime)
 		dc->PSSetConstantBuffers(4, 1, constant_buffers[0].GetAddressOf());
 	}
 
-	dc->PSSetSamplers(3, 1, GState.GetInstance().GetSamplerState(SAMPLER_STATE::LINEAR_BORDER_BLACK).GetAddressOf());
-	dc->PSSetSamplers(4, 1, GState.GetInstance().GetSamplerState(SAMPLER_STATE::LINEAR_BORDER_WHITE).GetAddressOf());
-
-
 	world.getRenderGraph().execute(dc);
 
-	//	出力先をGBufferに変更
-	{
-		/*ID3D11RenderTargetView* render_targets[GB_Max] =
-		{
-			g_buffer_render_target_view[GB_BaseColor].Get(),
-			g_buffer_render_target_view[GB_Emissive].Get(),
-			g_buffer_render_target_view[GB_Normal].Get(),
-			g_buffer_render_target_view[GB_Parameters].Get(),
-			g_buffer_render_target_view[GB_Depth].Get(),
-		};
-		FLOAT clear_color[]{ 0.f, 0.f, 0.f, .0f };
-		for (int i = GB_BaseColor; i < GB_Max; ++i)
-		{
-			if (i == GB_Depth) {
-				clear_color[0] = 1.f;
-			}
-			else {
-				clear_color[0] = 0.f;
-			}
-			dc->ClearRenderTargetView(render_targets[i], clear_color);
-		}
-		dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-		dc->OMSetRenderTargets(GB_Max, render_targets, dsv);*/
-		g_buffer->Begin(dsv);
-	}
-	
+	//dc->PSSetSamplers(3, 1, GState.GetInstance().GetSamplerState(SAMPLER_STATE::LINEAR_BORDER_BLACK).GetAddressOf());
+	//dc->PSSetSamplers(4, 1, GState.GetInstance().GetSamplerState(SAMPLER_STATE::LINEAR_BORDER_WHITE).GetAddressOf());
 
 
+	//world.getRenderGraph().execute(dc);
 
-	DirectX::XMFLOAT4X4 world1;
-	DirectX::XMFLOAT4X4 world4;
-	{
-		const DirectX::XMFLOAT4X4 coordinate_system_transforms[]{
-			{
-				-1,0,0,0,
-				0,1,0,0,
-				0,0,1,0,
-				0,0,0,1
-			},	//0:RHS Y-UP
-			{
-				1,0,0,0,
-				0,1,0,0,
-				0,0,1,0,
-				0,0,0,1
-			},	//1:LHS Y-UP
-			{
-				-1,0,0,0,
-				0,0,-1,0,
-				0,1,0,0,
-				0,0,0,1
-			},	//2:RHS Z-UP
-			{
-				1,0,0,0,
-				0,0,1,0,
-				0,1,0,0,
-				0,0,0,1
-			},	//3:LHS Z-UP
-		};
-
-		const float scale_factor = 1.0f;
-		DirectX::XMMATRIX C{ DirectX::XMLoadFloat4x4(&coordinate_system_transforms[1])
-			* DirectX::XMMatrixScaling(scale_factor,scale_factor,scale_factor) };
-
-		DirectX::XMMATRIX S4 = { DirectX::XMMatrixScaling(object_scale.x, object_scale.y, object_scale.z) };
-		DirectX::XMMATRIX R4 = { DirectX::XMMatrixRotationRollPitchYaw(object_rot.x, object_rot.y, object_rot.z) };
-		DirectX::XMMATRIX T4 = { DirectX::XMMatrixTranslation(object_pos.x, object_pos.y, object_pos.z) };
-
-		DirectX::XMStoreFloat4x4(&world4,/*C * */S4 * R4 * T4);
-
-		DirectX::XMMATRIX S1 = { DirectX::XMMatrixScaling(0.001f,0.001f,0.001f) };
-		DirectX::XMMATRIX R1 = { DirectX::XMMatrixRotationRollPitchYaw(0,0,0) };
-		DirectX::XMMATRIX T1 = { DirectX::XMMatrixTranslation(object_pos.x + 10, object_pos.y, object_pos.z) };
-
-		DirectX::XMStoreFloat4x4(&world1, C* S1* R1* T1);
-	}
-
-	//アニメーション更新
-	int clip_index{ 0 };
-	int frame_index{ 0 };
-	static float animation_tick{ 0 };
-
-	static std::vector<gltf_model::node> animated_nodes{ gltf_models->nodes };
-	//static float time{ 0 };
-	//gltf_models->animate(0/*animation index*/, time += elapsedTime, animated_nodes);
-	//if (gltf_models->animations.at(0/*animation index*/).duration < time)
+	////	出力先をGBufferに変更
 	//{
-	//	time = 0; // Repeat playback
+	//	/*ID3D11RenderTargetView* render_targets[GB_Max] =
+	//	{
+	//		g_buffer_render_target_view[GB_BaseColor].Get(),
+	//		g_buffer_render_target_view[GB_Emissive].Get(),
+	//		g_buffer_render_target_view[GB_Normal].Get(),
+	//		g_buffer_render_target_view[GB_Parameters].Get(),
+	//		g_buffer_render_target_view[GB_Depth].Get(),
+	//	};
+	//	FLOAT clear_color[]{ 0.f, 0.f, 0.f, .0f };
+	//	for (int i = GB_BaseColor; i < GB_Max; ++i)
+	//	{
+	//		if (i == GB_Depth) {
+	//			clear_color[0] = 1.f;
+	//		}
+	//		else {
+	//			clear_color[0] = 0.f;
+	//		}
+	//		dc->ClearRenderTargetView(render_targets[i], clear_color);
+	//	}
+	//	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	//	dc->OMSetRenderTargets(GB_Max, render_targets, dsv);*/
+	//	g_buffer->Begin(dsv);
 	//}
-	{
-
-		/*animation& animation{ skinned_meshes->animation_clips.at(clip_index) };
-		frame_index = static_cast<int>(animation_tick * animation.sampling_rate);
-		if (frame_index > animation.sequence.size() - 1)
-		{
-			frame_index = 0;
-			animation_tick = 0;
-		}
-		else
-		{
-			animation_tick += elapsedTime;
-		}
-		animation::keyframe& keyframe{ animation.sequence.at(frame_index) };*/
-
-		//static float time{ 0 };
-		//gltf_models->animate(0/*animation index*/, time += elapsedTime, animated_nodes);
-		//if (gltf_models->animations.at(0/*animation index*/).duration < time)
-		//{
-		//	time = 0; // Repeat playback
-		//}
-	}
-	//skinned_meshes->render(Graphics::Instance().Get_device_context(), world4, { 1,1,1,1 }, &keyframe);
-
-	//gltf_models->render(graphics.Get_device_context(), world4, animated_nodes);
-	//gltf_models->render_bounding_box(graphics.Get_device_context(), world4, rc.view, rc.projection, { 1,0,0,1 });
-
-
-	{
-		skymap->Render(dc, rc);
-	}
-
-	/*ComponentTransform* transform = &world.getRegister().getComponent<ComponentTransform>(e);
-	model->_worldTransform = transform->world_transform;
-	model->UpdateTransform(transform->world_transform);*/
-
-	//model->_worldTransform = world4;
-    //model->UpdateTransform(world4);
-
-	/*shader->Begin(dc, rc,model.get(), "main");
-	shader->Draw(dc, model.get(), modelAlpha);
-    shader->End(dc);*/
-
-	world.render();
-
-	//	出力先をシーンに変更
-	{
-		/*dc->ClearRenderTargetView(rtv, color);
-		dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-		dc->OMSetRenderTargets(1, &rtv, dsv);*/
-
-		g_buffer->End(dsv, render_resource_context->render_target_view.Get(), color);
-	}
-
-	framebuffers[0]->clear(dc, 0.4f, 0.4f, 0.4f);
-	framebuffers[0]->activate(dc);
+	//
 
 
 
-	{
-		/*dc->PSSetShader(deferred_rendering_indirect_pixel_shader.Get(), nullptr, 0);
-		deferred_rendering_sprite->render(dc, 0, 0, graphics.Get_screen_width(), graphics.Get_screen_height());*/
-		g_buffer->Render();
-	}
-
-
-
-
-	//// 2D描画
+	//DirectX::XMFLOAT4X4 world1;
+	//DirectX::XMFLOAT4X4 world4;
 	//{
-	//	sprite_batches[0]->begin(graphics.Get_device_context(), 0);
-	//	sprite_batches[0]->render(graphics.Get_device_context(),
-	//		{ 0,0 }, { graphics.Get_screen_width(), graphics.Get_screen_height() }, { 1,1,1,1 }, 0, { 0,0 }, { 1600,900 });
-	//	sprite_batches[0]->end(graphics.Get_device_context());
+	//	const DirectX::XMFLOAT4X4 coordinate_system_transforms[]{
+	//		{
+	//			-1,0,0,0,
+	//			0,1,0,0,
+	//			0,0,1,0,
+	//			0,0,0,1
+	//		},	//0:RHS Y-UP
+	//		{
+	//			1,0,0,0,
+	//			0,1,0,0,
+	//			0,0,1,0,
+	//			0,0,0,1
+	//		},	//1:LHS Y-UP
+	//		{
+	//			-1,0,0,0,
+	//			0,0,-1,0,
+	//			0,1,0,0,
+	//			0,0,0,1
+	//		},	//2:RHS Z-UP
+	//		{
+	//			1,0,0,0,
+	//			0,0,1,0,
+	//			0,1,0,0,
+	//			0,0,0,1
+	//		},	//3:LHS Z-UP
+	//	};
 
+	//	const float scale_factor = 1.0f;
+	//	DirectX::XMMATRIX C{ DirectX::XMLoadFloat4x4(&coordinate_system_transforms[1])
+	//		* DirectX::XMMatrixScaling(scale_factor,scale_factor,scale_factor) };
+
+	//	DirectX::XMMATRIX S4 = { DirectX::XMMatrixScaling(object_scale.x, object_scale.y, object_scale.z) };
+	//	DirectX::XMMATRIX R4 = { DirectX::XMMatrixRotationRollPitchYaw(object_rot.x, object_rot.y, object_rot.z) };
+	//	DirectX::XMMATRIX T4 = { DirectX::XMMatrixTranslation(object_pos.x, object_pos.y, object_pos.z) };
+
+	//	DirectX::XMStoreFloat4x4(&world4,/*C * */S4 * R4 * T4);
+
+	//	DirectX::XMMATRIX S1 = { DirectX::XMMatrixScaling(0.001f,0.001f,0.001f) };
+	//	DirectX::XMMATRIX R1 = { DirectX::XMMatrixRotationRollPitchYaw(0,0,0) };
+	//	DirectX::XMMATRIX T1 = { DirectX::XMMatrixTranslation(object_pos.x + 10, object_pos.y, object_pos.z) };
+
+	//	DirectX::XMStoreFloat4x4(&world1, C* S1* R1* T1);
 	//}
-	framebuffers[0]->deactivate(dc);
 
-	ID3D11ShaderResourceView* srv = graphics.Get_render_target_resource_view();
+	////アニメーション更新
+	//int clip_index{ 0 };
+	//int frame_index{ 0 };
+	//static float animation_tick{ 0 };
+
+	//static std::vector<gltf_model::node> animated_nodes{ gltf_models->nodes };
+	////static float time{ 0 };
+	////gltf_models->animate(0/*animation index*/, time += elapsedTime, animated_nodes);
+	////if (gltf_models->animations.at(0/*animation index*/).duration < time)
+	////{
+	////	time = 0; // Repeat playback
+	////}
+	//{
+
+	//	/*animation& animation{ skinned_meshes->animation_clips.at(clip_index) };
+	//	frame_index = static_cast<int>(animation_tick * animation.sampling_rate);
+	//	if (frame_index > animation.sequence.size() - 1)
+	//	{
+	//		frame_index = 0;
+	//		animation_tick = 0;
+	//	}
+	//	else
+	//	{
+	//		animation_tick += elapsedTime;
+	//	}
+	//	animation::keyframe& keyframe{ animation.sequence.at(frame_index) };*/
+
+	//	//static float time{ 0 };
+	//	//gltf_models->animate(0/*animation index*/, time += elapsedTime, animated_nodes);
+	//	//if (gltf_models->animations.at(0/*animation index*/).duration < time)
+	//	//{
+	//	//	time = 0; // Repeat playback
+	//	//}
+	//}
+	////skinned_meshes->render(Graphics::Instance().Get_device_context(), world4, { 1,1,1,1 }, &keyframe);
+
+	////gltf_models->render(graphics.Get_device_context(), world4, animated_nodes);
+	////gltf_models->render_bounding_box(graphics.Get_device_context(), world4, rc.view, rc.projection, { 1,0,0,1 });
 
 
-	/*framebuffers[1]->clear(dc);
-	framebuffers[1]->activate(dc);
-	dc->OMSetDepthStencilState(GState.GetDepthStencilState(DEPTH_STATE::ZT_OFF_ZW_OFF).Get(), 0);
-	dc->RSSetState(GState.GetRasterizerState(RASTER_STATE::CULL_NONE).Get());
-	dc->OMSetBlendState(GState.GetBlendState(BLEND_STATE::ALPHA).Get(), nullptr, 0xFFFFFFFF);
-	bit_block_transfer->blit(dc,
-		framebuffers[0]->shader_resource_view[0].GetAddressOf(), 0, 1, pixel_shaders[0].Get());
-	framebuffers[1]->deactivate(dc);
+	//{
+	//	skymap->Render(dc, rc);
+	//}
 
-	dc->OMSetDepthStencilState(GState.GetDepthStencilState(DEPTH_STATE::ZT_OFF_ZW_OFF).Get(), 0);
-	dc->RSSetState(GState.GetRasterizerState(RASTER_STATE::CULL_NONE).Get());
+	///*ComponentTransform* transform = &world.getRegister().getComponent<ComponentTransform>(e);
+	//model->_worldTransform = transform->world_transform;
+	//model->UpdateTransform(transform->world_transform);*/
 
-	ID3D11ShaderResourceView* shader_resource_views[2] =
-	{ framebuffers[0]->shader_resource_view[0].Get(), framebuffers[1]->shader_resource_view[0].Get()};
-	bit_block_transfer->blit(dc, shader_resource_views, 0, 2, pixel_shaders[1].Get());*/
+	////model->_worldTransform = world4;
+ //   //model->UpdateTransform(world4);
 
-	bloomer->make(dc, framebuffers[0]->shader_resource_view[0].Get());
+	///*shader->Begin(dc, rc,model.get(), "main");
+	//shader->Draw(dc, model.get(), modelAlpha);
+ //   shader->End(dc);*/
 
-	dc->OMSetDepthStencilState(GState.GetDepthStencilState(DEPTH_STATE::ZT_OFF_ZW_OFF).Get(), 0);
-	dc->RSSetState(GState.GetRasterizerState(RASTER_STATE::CULL_NONE).Get());
-	dc->OMSetBlendState(GState.GetBlendState(BLEND_STATE::ALPHA).Get(), nullptr, 0xFFFFFFFF);
+	//world.render();
 
-	ID3D11ShaderResourceView* shader_resource_views[2] =
-	{
-		framebuffers[0]->shader_resource_view[0].Get(),
-		bloomer->shader_resource_view()
-	};
+	////	出力先をシーンに変更
+	//{
+	//	/*dc->ClearRenderTargetView(rtv, color);
+	//	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	//	dc->OMSetRenderTargets(1, &rtv, dsv);*/
 
-    bit_block_transfer->blit(dc, shader_resource_views, 0, 2, pixel_shaders[1].Get());
+	//	g_buffer->End(dsv, render_resource_context->render_target_view.Get(), color);
+	//}
+
+	//framebuffers[0]->clear(dc, 0.4f, 0.4f, 0.4f);
+	//framebuffers[0]->activate(dc);
 
 
-	font->Begin(graphics.Get_device_context());
-	font->Draw(0, 100, L"あああ");
-	font->End(graphics.Get_device_context());
 
-	g_buffer->FinalDraw(render_resource_context->shader_resource_view);
+	//{
+	//	/*dc->PSSetShader(deferred_rendering_indirect_pixel_shader.Get(), nullptr, 0);
+	//	deferred_rendering_sprite->render(dc, 0, 0, graphics.Get_screen_width(), graphics.Get_screen_height());*/
+	//	g_buffer->Render();
+	//}
+
+
+
+
+	////// 2D描画
+	////{
+	////	sprite_batches[0]->begin(graphics.Get_device_context(), 0);
+	////	sprite_batches[0]->render(graphics.Get_device_context(),
+	////		{ 0,0 }, { graphics.Get_screen_width(), graphics.Get_screen_height() }, { 1,1,1,1 }, 0, { 0,0 }, { 1600,900 });
+	////	sprite_batches[0]->end(graphics.Get_device_context());
+
+	////}
+	//framebuffers[0]->deactivate(dc);
+
+	//ID3D11ShaderResourceView* srv = graphics.Get_render_target_resource_view();
+
+
+	///*framebuffers[1]->clear(dc);
+	//framebuffers[1]->activate(dc);
+	//dc->OMSetDepthStencilState(GState.GetDepthStencilState(DEPTH_STATE::ZT_OFF_ZW_OFF).Get(), 0);
+	//dc->RSSetState(GState.GetRasterizerState(RASTER_STATE::CULL_NONE).Get());
+	//dc->OMSetBlendState(GState.GetBlendState(BLEND_STATE::ALPHA).Get(), nullptr, 0xFFFFFFFF);
+	//bit_block_transfer->blit(dc,
+	//	framebuffers[0]->shader_resource_view[0].GetAddressOf(), 0, 1, pixel_shaders[0].Get());
+	//framebuffers[1]->deactivate(dc);
+
+	//dc->OMSetDepthStencilState(GState.GetDepthStencilState(DEPTH_STATE::ZT_OFF_ZW_OFF).Get(), 0);
+	//dc->RSSetState(GState.GetRasterizerState(RASTER_STATE::CULL_NONE).Get());
+
+	//ID3D11ShaderResourceView* shader_resource_views[2] =
+	//{ framebuffers[0]->shader_resource_view[0].Get(), framebuffers[1]->shader_resource_view[0].Get()};
+	//bit_block_transfer->blit(dc, shader_resource_views, 0, 2, pixel_shaders[1].Get());*/
+
+	//bloomer->make(dc, framebuffers[0]->shader_resource_view[0].Get());
+
+	//dc->OMSetDepthStencilState(GState.GetDepthStencilState(DEPTH_STATE::ZT_OFF_ZW_OFF).Get(), 0);
+	//dc->RSSetState(GState.GetRasterizerState(RASTER_STATE::CULL_NONE).Get());
+	//dc->OMSetBlendState(GState.GetBlendState(BLEND_STATE::ALPHA).Get(), nullptr, 0xFFFFFFFF);
+
+	//ID3D11ShaderResourceView* shader_resource_views[2] =
+	//{
+	//	framebuffers[0]->shader_resource_view[0].Get(),
+	//	bloomer->shader_resource_view()
+	//};
+
+ //   bit_block_transfer->blit(dc, shader_resource_views, 0, 2, pixel_shaders[1].Get());
+
+
+	//font->Begin(graphics.Get_device_context());
+	//font->Draw(0, 100, L"あああ");
+	//font->End(graphics.Get_device_context());
+
+	//g_buffer->FinalDraw(render_resource_context->shader_resource_view);
 }
 
 void SceneTest::DrawGUI()
@@ -534,11 +537,17 @@ void SceneTest::DrawGUI()
 		ImGui::SliderFloat3("objRot", &object_rot.x, -DirectX::XM_2PI, DirectX::XM_2PI, "%.1f");
 		ImGui::SliderFloat3("objScale", &object_scale.x, 0.1f, 10.0f, "%.1f");
 		ImGui::SliderFloat4("light", &directional_light.x, -20.0f, 20.0f, "%.1f");
-		ImGui::SliderFloat("gaussian_sigma", { &gaussian_sigma }, 0.0f, 10.0f);
+		if (auto scene = world.getRegister().getEntityByName("Scene"); scene != INVALID_ENTITY)
+		{
+			auto bloom = world.getRegister().getComponent<ComponentBloom>(scene);
+            ImGui::SliderFloat("bloom_intensity", &bloom.bloom_intensity, 0.0f, 10.0f);
+            ImGui::SliderFloat("extraction", &bloom.bloom_extraction_threshold, 0.0f, 5.0f);
+		}
+		/*ImGui::SliderFloat("gaussian_sigma", { &gaussian_sigma }, 0.0f, 10.0f);
 		ImGui::SliderFloat("bloom_intensity", { &bloomer->bloom_intensity }, 0.0f, 10.0f);
 		ImGui::SliderFloat("extraction", &bloomer->bloom_extraction_threshold, 0.0f, 5.0f);
 		ImGui::SliderFloat("extraction_end", &extraction_threshold_end, 0.0f, 5.0f, "%.1f");
-		ImGui::SliderFloat("exposure", &exposure, 0.0f, 10.0f, "%.1f");
+		ImGui::SliderFloat("exposure", &exposure, 0.0f, 10.0f, "%.1f");*/
 		ImGui::SliderFloat("alpha", &modelAlpha, 0.0f, 1.0f, "%.1f");
 		ImGui::SliderFloat("animeTimer", &animeTimer, 0.0f, 10.0f, "%.1f");
 		if (world.getRegister().hasComponent<ComponentMaterial>(e))

@@ -205,6 +205,19 @@ void GraphicsState::Initialize(ID3D11Device* device)
 		rasterizer_desc.AntialiasedLineEnable = TRUE;
 		hr = device->CreateRasterizerState(&rasterizer_desc, rasterizer_states[static_cast<size_t>(RASTER_STATE::WIREFRAME_CULL_NONE)].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+		rasterizer_desc.FillMode = D3D11_FILL_SOLID;
+		rasterizer_desc.CullMode = D3D11_CULL_BACK;
+		rasterizer_desc.FrontCounterClockwise = FALSE;
+		rasterizer_desc.DepthBias = 0;
+		rasterizer_desc.DepthBiasClamp = 0;
+		rasterizer_desc.SlopeScaledDepthBias = 0;
+		rasterizer_desc.DepthClipEnable = TRUE;
+		rasterizer_desc.ScissorEnable = FALSE;
+		rasterizer_desc.MultisampleEnable = FALSE;
+		rasterizer_desc.AntialiasedLineEnable = FALSE;
+		hr = device->CreateRasterizerState(&rasterizer_desc, rasterizer_states[static_cast<size_t>(RASTER_STATE::NONE_CCW_SOLID)].GetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	}
 }
 

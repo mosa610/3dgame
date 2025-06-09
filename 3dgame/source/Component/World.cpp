@@ -13,6 +13,9 @@
 #include "..//Graphics/GbufferRenderPass.h"
 #include "..//Graphics/DeferredLightingPass.h"
 #include "..//Graphics/BloomExtractPass.h"
+#include "..//Graphics/BloomPass.h"
+#include "..//Graphics/BloomCombinePass.h"
+#include "..//Graphics/FinalDrawPass.h"
 
 #include "..//Graphics/texture.h"
 #include "..//Graphics/Sprite.h"
@@ -204,4 +207,7 @@ inline void World::setupRenderPasses()
     render_graph.addPass<GbufferRenderPass>("Gbuffer", GbufferRenderPass{ this });
     render_graph.addPass<DeferredLightingPass>("DeferredLighting", DeferredLightingPass{ this });
     render_graph.addPass<BloomExtractPass>("BloomExtract", BloomExtractPass {this});
+    render_graph.addPass<BloomPass>("Bloom");
+    render_graph.addPass<BloomCombinePass>("BloomCombine");
+    render_graph.addPass<FinalDrawPass>("FianlDraw");
 }

@@ -6,7 +6,7 @@
 enum class SAMPLER_STATE { POINT, LINEAR, ANISOTROPIC, LINEAR_BORDER_BLACK/*UNIT.32*/, LINEAR_BORDER_WHITE/*UNIT.32*/,ALL, End };
 enum class DEPTH_STATE { ZT_ON_ZW_ON, ZT_ON_ZW_OFF, ZT_OFF_ZW_ON, ZT_OFF_ZW_OFF, End };
 enum class BLEND_STATE { NONE, ALPHA, ADD, MULTIPLY, End };
-enum class RASTER_STATE { SOLID, WIREFRAME, CULL_NONE, WIREFRAME_CULL_NONE, End };
+enum class RASTER_STATE { SOLID, WIREFRAME, CULL_NONE, WIREFRAME_CULL_NONE,NONE_CCW_SOLID, End };
 
 class GraphicsState
 {
@@ -40,7 +40,7 @@ public:
 
     Microsoft::WRL::ComPtr<ID3D11BlendState> blend_states[4];
 
-    Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizer_states[4];
+    Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizer_states[5];
 
 public:
     Microsoft::WRL::ComPtr<ID3D11SamplerState> GetSamplerState(SAMPLER_STATE state)
