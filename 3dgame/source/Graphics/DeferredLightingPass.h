@@ -2,7 +2,7 @@
 #include "RenderGraph.h"
 #include "Sprite.h"
 #include "..//Component/World.h"
-#include "../Component/"
+#include "../Component/ComponentLight.h"
 
 class DeferredLightingPass : public RenderPass
 {
@@ -26,7 +26,7 @@ private:
 
     void setCommonResources(ID3D11DeviceContext* ctx, RenderGraphResources& resources);
 
-    void directionalShadowRendering(directi)
+    void directionalShadowRendering(ID3D11DeviceContext* ctx, RenderGraphResources& resources, directional_light_constants& light_data);
 
 private:
     Microsoft::WRL::ComPtr<ID3D11PixelShader> deferred_rendering_emissive_pixel_shader;

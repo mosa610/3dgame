@@ -3,6 +3,11 @@
 #include "shader.h"
 #include "..//Component/ComponentIBL.h"
 
+CONST LONG SHADOWMAP_WIDTH{ 1024 };
+CONST LONG SHADOWMAP_HEIGHT{ 1024 };
+CONST float SHADOWMAP_DRAWRECT{ 50 };
+
+
 DeferredLightingPass::DeferredLightingPass(World* w) : world(w)
 {
 }
@@ -147,4 +152,34 @@ void DeferredLightingPass::setCommonResources(ID3D11DeviceContext* ctx, RenderGr
     ctx->PSSetShaderResources(GBufferSRVIndex, ARRAYSIZE(shader_resource_views), shader_resource_views);
 
     deferred_rendering_sprite->setShaderResourceView(resources.getSRV(albedo));
+}
+
+void DeferredLightingPass::directionalShadowRendering(ID3D11DeviceContext* ctx, RenderGraphResources& resources, directional_light_constants& light_data)
+{
+    ID3D11DepthStencilView* dsv = resources.getDSV(shadow_map);
+    ctx->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH, 1.0f, 0);
+    ctx->OMSetRenderTargets(0, nullptr, dsv);
+
+    D3D11_VIEWPORT* viewport = resources.getViewport(shadow_map);
+    viewport->TopLeftX = 0.0f;
+    viewport->TopLeftY = 0.0f;
+    viewport->Width = SHADOWMAP_WIDTH;
+    viewport->Height = SHADOWMAP_HEIGHT;
+    viewport->MinDepth = 0.0f;
+    viewport->MaxDepth = 1.0f;
+    ctx->RSSetViewports(1, resources.getViewport(shadow_map));
+
+    // ライトの位置から見た視線行列を生成
+    DirectX::XMVECTOR LightPosition = DirectX::XMLoadFloat4(&light_data.directional_light.direction);
+    LightPosition = DirectX::XMVectorScale(LightPosition, -50);
+    DirectX::XMMATRIX V = DirectX::XMMatrixLookAtLH(LightPosition,
+        DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f),
+        DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
+
+    // シャドウマップに描画したい範囲の射影行列を生成
+    DirectX::XMMATRIX P = DirectX::XMMatrixOrthographicLH(SHADOWMAP_DRAWRECT, SHADOWMAP_DRAWRECT, 0.1f, 200.0f);
+    // ライトビュー行列を保存
+    DirectX::XMStoreFloat4x4(&light_data.light_view_projection, V * P);
+
+
 }
