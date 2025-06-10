@@ -21,6 +21,10 @@ void DeferredLightingPass::setup(RenderGraphBuilder& builder)
     builder.declareRead(parameter);
     builder.declareRead(depth);
 
+    shadow_map = builder.createRenderTarget("ShadowMapD", ResourceType::DepthStencil, DXGI_FORMAT_R32_FLOAT);
+
+    builder.declareWrite(shadow_map);
+
     deferred_lighting = builder.createRenderTarget("DeferredLighting", ResourceType::RenderTarget, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
     builder.declareWrite(deferred_lighting);

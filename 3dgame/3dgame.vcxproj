@@ -54,6 +54,7 @@
     <ClCompile Include="source\Graphics\RenderGraph.cpp" />
     <ClCompile Include="source\Graphics\SceneRenderPass.cpp" />
     <ClCompile Include="source\Graphics\shader.cpp" />
+    <ClCompile Include="source\Graphics\ShadowPass.cpp" />
     <ClCompile Include="source\Graphics\skinned_mesh.cpp" />
     <ClCompile Include="source\Graphics\Skymap.cpp" />
     <ClCompile Include="source\Graphics\Sprite.cpp" />
@@ -126,6 +127,7 @@
     <ClInclude Include="source\Graphics\SceneRenderPass.h" />
     <ClInclude Include="source\Graphics\SerializeTemplate.h" />
     <ClInclude Include="source\Graphics\shader.h" />
+    <ClInclude Include="source\Graphics\ShadowPass.h" />
     <ClInclude Include="source\Graphics\skinned_mesh.h" />
     <ClInclude Include="source\Graphics\Skymap.h" />
     <ClInclude Include="source\Graphics\Sprite.h" />

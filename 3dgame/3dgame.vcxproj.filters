@@ -240,6 +240,9 @@
     <ClCompile Include="source\Graphics\FinalDrawPass.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="source\Graphics\ShadowPass.cpp">
+      <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Framework.h">
@@ -468,6 +471,9 @@
       <Filter>Source\Graphics\RenderGraph</Filter>
     </ClInclude>
     <ClInclude Include="source\Graphics\FinalDrawPass.h">
+      <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Graphics\ShadowPass.h">
       <Filter>Source\Graphics\RenderGraph</Filter>
     </ClInclude>
   </ItemGroup>
