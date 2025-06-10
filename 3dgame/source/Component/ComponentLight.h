@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "..//Graphics/LightData.h"
 #include <vector>
+#include <wrl.h>
+#include <d3d11.h>
 
 struct directional_light_constants
 {
@@ -15,4 +17,5 @@ struct directional_light_constants
 struct ComponentLight
 {
     std::vector<directional_light_constants> directional_lights;
+    Microsoft::WRL::ComPtr<ID3D11Buffer> shadow_buffer;
 };

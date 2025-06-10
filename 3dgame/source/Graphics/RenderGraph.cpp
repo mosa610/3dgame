@@ -33,6 +33,9 @@ ResourceHandle RenderGraphResources::create(const ResourceCreateInfo& info) {
     case ResourceType::DepthStencil:
         desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
         break;
+    case ResourceType::DepthStencilSRV:
+        desc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+        break;
     case ResourceType::UnorderedAccess:
         desc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
         break;
@@ -61,6 +64,28 @@ ResourceHandle RenderGraphResources::create(const ResourceCreateInfo& info) {
         hr = device->CreateDepthStencilView(res.texture.Get(), nullptr, &res.dsv);
         if (FAILED(hr)) {
             throw std::runtime_error("Failed to create DSV for resource: " + info.name);
+        }
+    }
+    else if (info.type == ResourceType::DepthStencilSRV) {
+        D3D11_DEPTH_STENCIL_VIEW_DESC depth_stencil_view_desc{};
+        depth_stencil_view_desc.Format = DXGI_FORMAT_D32_FLOAT;
+        depth_stencil_view_desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+        depth_stencil_view_desc.Texture2D.MipSlice = 0;
+
+        hr = device->CreateDepthStencilView(res.texture.Get(), &depth_stencil_view_desc, &res.dsv);
+        if (FAILED(hr)) {
+            throw std::runtime_error("Failed to create DSV for resource: " + info.name);
+        }
+
+        D3D11_SHADER_RESOURCE_VIEW_DESC shader_resource_view_desc{};
+        shader_resource_view_desc.Format = DXGI_FORMAT_R32_FLOAT;
+        shader_resource_view_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+        shader_resource_view_desc.Texture2D.MostDetailedMip = 0;
+        shader_resource_view_desc.Texture2D.MipLevels = 1;
+
+        hr = device->CreateShaderResourceView(res.texture.Get(), &shader_resource_view_desc, &res.srv);
+        if (FAILED(hr)) {
+            throw std::runtime_error("Failed to create SRV for resource: " + info.name);
         }
     }
     else if (info.type == ResourceType::UnorderedAccess) {

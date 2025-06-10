@@ -1,6 +1,6 @@
 #include "SystemSkymap.h"
 #include "..//Graphics/Graphics.h"
-#include "..//Graphics/PipeLineState.h"
+#include "..//Graphics/PipelineManager.h"
 #include "ComponentIBL.h"
 
 void SystemSkymap::Initialize(Register& reg)
@@ -24,13 +24,26 @@ void SystemSkymap::render(Register& reg)
         };
 
         PipelineStateDesc desc;
-        desc.id = 1;
+        desc.name = "SkyBox"; // 識別用の名前に変更（数値IDは廃止）
+
         desc.vs_path = ".//Data//Shader//sky_box_vs.cso";
         desc.ps_path = ".//Data//Shader//sky_box_gbuffer_ps.cso";
-        PipelineManager::instance().addPipelineState(Graphics::Instance().Get_device(), desc, input_element_desc, _countof(input_element_desc));
 
-        // Pipeline Set
-        PipelineManager::instance().setPipelineState(1, Graphics::Instance().Get_device_context());
+        // 必要に応じて、ステートやトポロジを明示的に指定（任意）
+        desc.topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+        desc.blend = BLEND_STATE::NONE;
+        desc.depth = DEPTH_STATE::ZT_OFF_ZW_OFF; // スカイボックスは奥行き書き込みしないことが多いため例
+        desc.raster = RASTER_STATE::CULL_NONE;
+        desc.sampler = SAMPLER_STATE::ALL;
+
+        // 入力レイアウトがある場合はセット
+        desc.input_layout_desc.assign(std::begin(input_element_desc), std::end(input_element_desc));
+
+        // Pipeline 登録
+        PipelineManager::Instance().Add(desc, Graphics::Instance().Get_device());
+
+        // Pipeline 使用
+        PipelineManager::Instance().BindByName("SkyBox", Graphics::Instance().Get_device_context());
     }
     ID3D11DeviceContext* dc = Graphics::Instance().Get_device_context();
     // draw

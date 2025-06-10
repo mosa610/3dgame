@@ -14,6 +14,7 @@
 enum class ResourceType {
     RenderTarget,
     DepthStencil,
+    DepthStencilSRV,
     UnorderedAccess
 };
 

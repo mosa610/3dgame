@@ -65,11 +65,11 @@ void ModelRenderer::Begin(ID3D11DeviceContext* dc, const RenderContext& rc, Mode
         }
     }
     {
-        // シェーダーセット
-        dc->VSSetShader(pipeline_state->second.vertex_shader.Get(), nullptr, 0);
-        dc->PSSetShader(pipeline_state->second.pixel_shader.Get(), nullptr, 0);
-        dc->IASetInputLayout(pipeline_state->second.input_layout.Get());
-        dc->IASetPrimitiveTopology(pipeline_state->second.primitive_toporogy);
+        //// シェーダーセット
+        //dc->VSSetShader(pipeline_state->second.vertex_shader.Get(), nullptr, 0);
+        //dc->PSSetShader(pipeline_state->second.pixel_shader.Get(), nullptr, 0);
+        //dc->IASetInputLayout(pipeline_state->second.input_layout.Get());
+        //dc->IASetPrimitiveTopology(pipeline_state->second.primitive_toporogy);
     }
 
 

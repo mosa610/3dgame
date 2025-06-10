@@ -13,6 +13,7 @@
 #include "Component/ComponentIBL.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentBloom.h"
+#include "Component/ComponentScene.h"
 
 #include "Component/System.h"
 #include "Component/SystemSkymap.h"
@@ -109,8 +110,9 @@ void SceneTest::Initialize()
 	w = world.getRegister().createEntity();
     world.getRegister().addComponent(w, ComponentTransform{ {23,1,1} });
 
-	auto sky = world.getRegister().createEntity("Scene");
-    world.getRegister().addComponent(sky, ComponentIBL{});
+	auto scene = world.getRegister().createEntity("Scene");
+	world.getRegister().addComponent(scene, ComponentScene{ "SceneTest", this });
+    world.getRegister().addComponent(scene, ComponentIBL{});
 
 	//world.addSystem<SystemGbufferRendering>();
     world.addSystem<SystemSkymap>();

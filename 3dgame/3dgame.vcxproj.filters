@@ -189,7 +189,7 @@
     <ClCompile Include="source\imgui\backends\imgui_impl_win32.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="source\Graphics\PipeLineState.cpp">
+    <ClCompile Include="source\Graphics\PipelineManager.cpp">
       <Filter>Source\Graphics\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="source\Component\SystemModel.cpp">
@@ -326,7 +326,7 @@
     <ClInclude Include="source\Graphics\sprite_bach.h">
       <Filter>Source\Graphics\Sprite</Filter>
     </ClInclude>
-    <ClInclude Include="source\Graphics\PipeLineState.h">
+    <ClInclude Include="source\Graphics\PipelineManager.h">
       <Filter>Source\Graphics\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="source\CameraController.h">
@@ -478,6 +478,12 @@
     </ClInclude>
     <ClInclude Include="source\Graphics\ShadowPass.h">
       <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\ComponentSceneConstants.h">
+      <Filter>Source\EntityComponentSystem\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\ComponentScene.h">
+      <Filter>Source\EntityComponentSystem\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

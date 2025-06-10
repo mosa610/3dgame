@@ -5,6 +5,8 @@
 #include "ComponentBone.h"
 #include "ComponentMaterial.h"
 #include "ComponentIBL.h"
+#include "ComponentScene.h"
+#include "ComponentLight.h"
 
 #include "..//Graphics/Graphics.h"
 #include "..//Graphics/RenderResourceContext.h"
@@ -199,6 +201,27 @@ inline void World::registerComponentCallback() {
         load_texture_from_file(device, c_ibl.lut_ggx_file_name, c_ibl.lut_ggx_shader_resource_view.GetAddressOf(), &texture2d_desc);
 
         c_ibl.skymap_sprite = std::make_unique<Sprite>(device, c_ibl.specular_pmrem_shader_resource_view.Get());
+        });
+
+    // ComponentScene に対するコールバック
+    reg.setOnComponentAdded<ComponentScene>([](Register& reg, Entity e, ComponentScene& c_scene) {
+
+        });
+
+    reg.setOnComponentAdded<ComponentLight>([](Register& reg, Entity e, ComponentLight& c_light) {
+        if (!c_light.shadow_buffer)
+        {
+            D3D11_BUFFER_DESC buffer_desc{};
+            buffer_desc.Usage = D3D11_USAGE_DEFAULT;
+            buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+            buffer_desc.CPUAccessFlags = 0;
+            buffer_desc.MiscFlags = 0;
+            buffer_desc.StructureByteStride = 0;
+            buffer_desc.ByteWidth = sizeof(gbuffer_scene_constants);
+            ID3D11Device* device = Graphics::Instance().Get_device();
+            HRESULT hr = device->CreateBuffer(&buffer_desc, nullptr, c_light.shadow_buffer.GetAddressOf());
+            _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+        }
         });
 }
 inline void World::setupRenderPasses()

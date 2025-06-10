@@ -6,7 +6,7 @@
 #include <wrl.h>
 #include <string>
 #include "ModelResource.h"
-#include "PipeLineState.h"
+#include "PipelineManager.h"
 
 class Model
 {
@@ -127,11 +127,11 @@ public:
 
     DirectX::XMFLOAT4X4                                 _worldTransform;
 
-    PipeLineState                                       state;
+    PipelineManager                                       state;
 
     std::unordered_map<int, std::vector<Bone>>      _bones;
 
     static constexpr const char* DefaultShaderName = "gltf_default_shader";
     static constexpr const char* DefaultInstancingShaderName = "gltf_instancing_default_shader";
-    std::unordered_map<std::string, PipeLineState> pipeline_states;
+    std::unordered_map<std::string, PipelineManager> pipeline_states;
 };

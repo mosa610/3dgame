@@ -49,7 +49,7 @@
     <ClCompile Include="source\Graphics\Model.cpp" />
     <ClCompile Include="source\Graphics\ModelRenderer.cpp" />
     <ClCompile Include="source\Graphics\ModelResource.cpp" />
-    <ClCompile Include="source\Graphics\PipeLineState.cpp" />
+    <ClCompile Include="source\Graphics\PipelineManager.cpp" />
     <ClCompile Include="source\Graphics\PostEffectPass.cpp" />
     <ClCompile Include="source\Graphics\RenderGraph.cpp" />
     <ClCompile Include="source\Graphics\SceneRenderPass.cpp" />
@@ -84,6 +84,8 @@
     <ClInclude Include="source\Component\ComponentModel.h" />
     <ClInclude Include="source\Component\ComponentNode.h" />
     <ClInclude Include="source\Component\ComponentPool.h" />
+    <ClInclude Include="source\Component\ComponentScene.h" />
+    <ClInclude Include="source\Component\ComponentSceneConstants.h" />
     <ClInclude Include="source\Component\ComponentSkymap.h" />
     <ClInclude Include="source\Component\ComponentTransform.h" />
     <ClInclude Include="source\Component\Entity.h" />
@@ -120,7 +122,7 @@
     <ClInclude Include="source\Graphics\Model.h" />
     <ClInclude Include="source\Graphics\ModelResource.h" />
     <ClInclude Include="source\Graphics\ModelRenderer.h" />
-    <ClInclude Include="source\Graphics\PipeLineState.h" />
+    <ClInclude Include="source\Graphics\PipelineManager.h" />
     <ClInclude Include="source\Graphics\PostEffectPass.h" />
     <ClInclude Include="source\Graphics\RenderGraph.h" />
     <ClInclude Include="source\Graphics\RenderResourceContext.h" />

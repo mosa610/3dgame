@@ -1,7 +1,12 @@
 #include "DeferredLightingPass.h"
 #include "Graphics.h"
 #include "shader.h"
+#include "..//Component/ComponentScene.h"
 #include "..//Component/ComponentIBL.h"
+#include "..//Component/SystemModel.h"
+#include "render_context.h"
+#include "..//Mouse.h"
+#include "..//Camera.h"
 
 CONST LONG SHADOWMAP_WIDTH{ 1024 };
 CONST LONG SHADOWMAP_HEIGHT{ 1024 };
@@ -26,7 +31,7 @@ void DeferredLightingPass::setup(RenderGraphBuilder& builder)
     builder.declareRead(parameter);
     builder.declareRead(depth);
 
-    shadow_map = builder.createRenderTarget("ShadowMapD", ResourceType::DepthStencil, DXGI_FORMAT_R32_FLOAT);
+    shadow_map = builder.createRenderTarget("ShadowMap", ResourceType::DepthStencilSRV, DXGI_FORMAT_R32_TYPELESS);
 
     builder.declareWrite(shadow_map);
 
@@ -104,6 +109,8 @@ void DeferredLightingPass::execute(ID3D11DeviceContext* ctx, RenderGraphResource
         ctx->PSSetShader(deferred_rendering_emissive_pixel_shader.Get(), nullptr, 0);
         deferred_rendering_sprite->render(ctx, 0, 0, Graphics::Instance().Get_screen_width(), Graphics::Instance().Get_screen_height());
     }
+
+
 }
 
 void DeferredLightingPass::debug(RenderGraphResources& resources)
@@ -181,5 +188,41 @@ void DeferredLightingPass::directionalShadowRendering(ID3D11DeviceContext* ctx, 
     // ライトビュー行列を保存
     DirectX::XMStoreFloat4x4(&light_data.light_view_projection, V * P);
 
+    // 定数バッファの更新
+    if(auto e_scene = world->getRegister().getEntityByName("Scene"); e_scene != INVALID_ENTITY)
+    {
+        // 0番はメッシュ側で更新している
+        if(world->getRegister().hasComponent<ComponentScene>(e_scene) && world->getRegister().hasComponent<ComponentLight>(e_scene))
+        {
+            auto& c_scene = world->getRegister().getComponent<ComponentScene>(e_scene);
+            auto& c_light = world->getRegister().getComponent<ComponentLight>(e_scene);
 
+            gbuffer_scene_constants scene{};
+
+            DirectX::XMFLOAT2 cursor_position = Mouse::GetInstance().GetCursorPosition();
+            scene.options.x = static_cast<float>(cursor_position.x);
+            scene.options.y = static_cast<float>(cursor_position.y);
+            scene.options.z = c_scene.timer;
+            scene.options.w = false;
+            DirectX::XMFLOAT3 camera_position = Camera::Instance().GetPosition();
+            scene.camera_position.x = camera_position.x;
+            scene.camera_position.y = camera_position.y;
+            scene.camera_position.z = camera_position.z;
+            scene.camera_position.w = 1;
+            DirectX::XMStoreFloat4x4(&scene.view_transform, V);
+            DirectX::XMStoreFloat4x4(&scene.projection_transform, P);
+            scene.view_projection_transform = light_data.light_view_projection;
+            DirectX::XMStoreFloat4x4(&scene.inverse_view_transform, DirectX::XMMatrixInverse(nullptr, V));
+            DirectX::XMStoreFloat4x4(&scene.inverse_projection_transform, DirectX::XMMatrixInverse(nullptr, P));
+            DirectX::XMStoreFloat4x4(&scene.inverse_view_projection_transform, DirectX::XMMatrixInverse(nullptr, V * P));
+
+            ctx->UpdateSubresource(c_light.shadow_buffer.Get(), 0, 0, &scene, 0, 0);
+            ctx->VSSetConstantBuffers(1, 1, c_light.shadow_buffer.GetAddressOf());
+            ctx->PSSetConstantBuffers(1, 1, c_light.shadow_buffer.GetAddressOf());
+        }
+    }
+    GraphicsState::GetInstance().SetBlendState(ctx, BLEND_STATE::ALPHA);
+    GraphicsState::GetInstance().SetDepthStencilState(ctx, DEPTH_STATE::ZT_ON_ZW_ON);
+
+    world->getSystem<SystemModel>()->render(world->getRegister());
 }
