@@ -93,47 +93,6 @@ void SceneTest::Initialize()
 
 	skymap = std::make_unique<Skymap>(graphics.Get_device());
 
-	//// makeGBuffer
-	//{
-	//	D3D11_TEXTURE2D_DESC texture2d_desc{};
-	//	texture2d_desc.Width = Graphics::Instance().Get_screen_width();
-	//	texture2d_desc.Height = Graphics::Instance().Get_screen_height();
-	//	texture2d_desc.MipLevels = 1;
-	//	texture2d_desc.ArraySize = 1;
-	//	texture2d_desc.SampleDesc.Count = 1;
-	//	texture2d_desc.SampleDesc.Quality = 0;
-	//	texture2d_desc.Usage = D3D11_USAGE_DEFAULT;
-	//	texture2d_desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-	//	texture2d_desc.CPUAccessFlags = 0;
-	//	texture2d_desc.MiscFlags = 0;
-
-	//	DXGI_FORMAT formats[] =
-	//	{
-	//		DXGI_FORMAT_R8G8B8A8_UNORM,
-	//		DXGI_FORMAT_R8G8B8A8_UNORM,
-	//		DXGI_FORMAT_R32G32B32A32_FLOAT,
-	//		DXGI_FORMAT_R8G8B8A8_UNORM,
-	//		DXGI_FORMAT_R32_FLOAT,
-	//	};
-	//	for (int i = GB_BaseColor; i < GB_Max; ++i)
-	//	{
-	//		texture2d_desc.Format = formats[i];
-
-	//		Microsoft::WRL::ComPtr<ID3D11Texture2D> color_buffer{};
-	//		hr = device->CreateTexture2D(&texture2d_desc, NULL, color_buffer.GetAddressOf());
-	//		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-	//		//	レンダーターゲットビュー生成
-	//		hr = device->CreateRenderTargetView(color_buffer.Get(), NULL, g_buffer_render_target_view[i].GetAddressOf());
-	//		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-	//		//	シェーダーリソースビュー生成
-	//		hr = device->CreateShaderResourceView(color_buffer.Get(), NULL, g_buffer_shader_resource_view[i].GetAddressOf());
-	//		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-	//	}
-	//}
-	
-	/*create_ps_from_cso(graphics.Get_device(), ".//Data//Shader//deferred_rendering_emissive_ps.cso", deferred_rendering_emissive_pixel_shader.GetAddressOf());
-	create_ps_from_cso(graphics.Get_device(), ".//Data//Shader//deferred_rendering_indirect_ps.cso", deferred_rendering_indirect_pixel_shader.GetAddressOf());
-	create_ps_from_cso(graphics.Get_device(), ".//Data//Shader//deferred_rendering_directional_ps.cso", deferred_rendering_directional_pixel_shader.GetAddressOf());*/
 
 	g_buffer = std::make_unique<GBuffer>(GetSceneShaderResourceView());
 
@@ -539,7 +498,7 @@ void SceneTest::DrawGUI()
 		ImGui::SliderFloat4("light", &directional_light.x, -20.0f, 20.0f, "%.1f");
 		if (auto scene = world.getRegister().getEntityByName("Scene"); scene != INVALID_ENTITY)
 		{
-			auto bloom = world.getRegister().getComponent<ComponentBloom>(scene);
+			auto& bloom = world.getRegister().getComponent<ComponentBloom>(scene);
             ImGui::SliderFloat("bloom_intensity", &bloom.bloom_intensity, 0.0f, 10.0f);
             ImGui::SliderFloat("extraction", &bloom.bloom_extraction_threshold, 0.0f, 5.0f);
 		}
@@ -576,64 +535,6 @@ void SceneTest::DrawGUI()
 	ImGui::End();
 
 	ImGui::PopStyleVar(2);
-
-	//ImGui::Begin("ImGUI");
-	//ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-	//if (ImGui::TreeNode("test02")) {
-	//	ImGui::SliderFloat3("objPos", &object_pos.x, -10.0f, 10.0f, "%.1f");
-	//	ImGui::SliderFloat3("objRot", &object_rot.x, -DirectX::XM_2PI, DirectX::XM_2PI, "%.1f");
-	//	ImGui::SliderFloat3("objScale", &object_scale.x, 0.1f, 10.0f, "%.1f");
-	//	ImGui::SliderFloat4("light", &directional_light.x, -20.0f, 20.0f, "%.1f");
-	//	ImGui::SliderFloat("gaussian_sigma", { &gaussian_sigma }, 0.0f, 10.0f);
-	//	ImGui::SliderFloat("bloom_intensity", { &bloomer->bloom_intensity }, 0.0f, 10.0f);
-	//	ImGui::SliderFloat("extraction", &bloomer->bloom_extraction_threshold, 0.0f, 5.0f);
-	//	ImGui::SliderFloat("extraction_end", &extraction_threshold_end, 0.0f, 5.0f, "%.1f");
-	//	ImGui::SliderFloat("exposure", &exposure, 0.0f, 10.0f, "%.1f");
-	//	ImGui::SliderFloat("alpha", &modelAlpha, 0.0f, 1.0f, "%.1f");
-	//	ImGui::SliderFloat("animeTimer", &animeTimer, 0.0f, 10.0f, "%.1f");
-	//	ImGui::NewLine();
-	//	ImGui::Text("scene");
-	//	//ImGui::Image(scene_shader_resource_view.Get(),{ 256, 144 }, { 0, 0 }, { 1, 1 }, { 1, 1, 1, 1 });
-	//	ImGui::Image((ImTextureID)scene_shader_resource_view.Get(), ImVec2(256, 144), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 1, 1));
-	//	ImGui::Text("framebuffer");
-	//	//ImGui::Image(framebuffers[1]->shader_resource_view->Get(), { 256, 144 }, { 0, 0 }, { 1, 1 }, { 1, 1, 1, 1 });
-	//	ImGui::Image((ImTextureID)framebuffers[1]->shader_resource_view->Get(), ImVec2(256, 144), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 1, 1));
-
-	//	ImGui::TreePop();
-	//}
-	//if (ImGui::TreeNode("Camera"))
-	//{
-	//	ImGui::Text("near : %.2f", Camera::Instance().GetNearClipDistance());
- //       ImGui::Text("far : %.2f", Camera::Instance().GetFarClipDistance());
-	//	DirectX::XMFLOAT3 pos = Camera::Instance().GetPosition();
-	//	DirectX::XMFLOAT3 focus = Camera::Instance().GetFocus();
-	//	ImGui::SliderFloat3("pos", &pos.x, -10.0f, 10.0f, "%.1f");
-	//	ImGui::SliderFloat3("focus", &focus.x, -10.0f, 10.0f, "%.1f");
-
-	//	ImGui::TreePop();
-	//}
-	//if (ImGui::TreeNode("Component"))
-	//{
-	//	ComponentTransform* transform = &world.getRegister().getComponent<ComponentTransform>(e);
-	//	ImGui::SliderFloat3("position", &transform->position.x, -10.0f, 10.0f, "%.1f");
-	//	ImGui::SliderFloat3("rotation", &transform->rotation.x, -DirectX::XM_2PI, DirectX::XM_2PI, "%.1f");
- //       ImGui::SliderFloat3("scale", &transform->scale.x, 0.0f, 10.0f, "%.1f");
-	//	ImGui::TreePop();
-	//	ComponentNode* node = &world.getRegister().getComponent<ComponentNode>(e);
-	//	for (auto& n : node->nodes)
-	//	{
-	//		if (n.parent == nullptr)
-	//		{
-	//			ModelNodeTreeEditor::Draw(&n);
-	//		}
-	//	}
-	//}
-
-	//g_buffer->DrawGUI();
-
-	//model->DrawGUI();
-
-	//ImGui::End();
 }
 
 void SceneTest::ResetShaderResource()
