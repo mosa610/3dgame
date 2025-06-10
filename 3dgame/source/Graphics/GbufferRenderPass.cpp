@@ -35,7 +35,27 @@ void GbufferRenderPass::execute(ID3D11DeviceContext* ctx, RenderGraphResources& 
 {
     begin(ctx, resources);
     world->getSystem<SystemSkymap>()->render(world->getRegister());
+
+    PipelineStateDesc desc;
+    desc.name = "GBuffer"; // 名前で管理
+    desc.vs_path = ".//Data//Shader//gltf_model_gbuffer_vs.cso";
+    desc.ps_path = ".//Data//Shader//gltf_model_gbuffer_ps.cso";
+
+    // 必要ならばオプションの設定も追加できます
+    desc.topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    desc.blend = BLEND_STATE::NONE;
+    desc.depth = DEPTH_STATE::ZT_ON_ZW_ON;
+    desc.raster = RASTER_STATE::CULL_NONE;
+    desc.sampler = SAMPLER_STATE::ALL;
+
+    // Pipeline を追加
+    PipelineManager::Instance().Add(desc, Graphics::Instance().Get_device());
+
+    // Pipeline をバインド
+    PipelineManager::Instance().BindByName("GBuffer", ctx);
+
     world->getSystem<SystemModel>()->render(world->getRegister());
+
     end(ctx, resources);
 }
 
