@@ -5,6 +5,7 @@
 #include "Graphics/render_context.h"
 #include "Graphics/Graphics.h"
 #include "Graphics/RenderResourceContext.h"
+#include "Component/Entity.h"
 
 //ÉVÅ[Éì
 class Scene
@@ -92,6 +93,8 @@ public:
     Microsoft::WRL::ComPtr < ID3D11RenderTargetView> GetSceneRenderTargetView() { return render_resource_context->render_target_view; }
 
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetSceneShaderResourceView() { return render_resource_context->shader_resource_view; }
+
+    Microsoft::WRL::ComPtr<ID3D11Buffer> getSceneConstantBuffer() { return scene_constant_buffer; }
 protected:
 
     float   timer = 0.0f;
@@ -104,7 +107,8 @@ protected:
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> scene_shader_resource_view;
 
     std::unique_ptr<RenderResourceContext> render_resource_context;
+
+    Entity  scene_entity;
 private:
     bool    ready = false;
-
 };

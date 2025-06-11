@@ -237,10 +237,10 @@
     <ClCompile Include="source\Graphics\BloomCombinePass.cpp">
       <Filter>Source\Graphics\RenderGraph</Filter>
     </ClCompile>
-    <ClCompile Include="source\Graphics\FinalDrawPass.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="source\Graphics\ShadowPass.cpp">
+      <Filter>Source\Graphics\RenderGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\FinalDrawPass.cpp">
       <Filter>Source\Graphics\RenderGraph</Filter>
     </ClCompile>
   </ItemGroup>

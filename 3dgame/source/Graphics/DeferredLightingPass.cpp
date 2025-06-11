@@ -54,6 +54,21 @@ void DeferredLightingPass::setup(RenderGraphBuilder& builder)
     create_ps_from_cso(device, ".//Data//Shader//sprite_ps.cso", sprite_pixel_shader.GetAddressOf());
 
     deferred_rendering_sprite = std::make_unique<Sprite>(device, sprite_shader_resource_view.Get());
+
+    PipelineStateDesc desc;
+    desc.name = "ShadowMap"; // 名前で管理
+    desc.vs_path = ".//Data//Shader//gltf_model_shadow_caster_vs.cso";
+    //desc.ps_path = ".//Data//Shader//gltf_model_gbuffer_ps.cso";
+
+    // 必要ならばオプションの設定も追加できます
+    desc.topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    desc.blend = BLEND_STATE::NONE;
+    desc.depth = DEPTH_STATE::ZT_ON_ZW_ON;
+    desc.raster = RASTER_STATE::CULL_NONE;
+    desc.sampler = SAMPLER_STATE::ALL;
+
+    // Pipeline を追加
+    PipelineManager::Instance().Add(desc, Graphics::Instance().Get_device());
 }
 
 void DeferredLightingPass::execute(ID3D11DeviceContext* ctx, RenderGraphResources& resources)
@@ -110,7 +125,13 @@ void DeferredLightingPass::execute(ID3D11DeviceContext* ctx, RenderGraphResource
         deferred_rendering_sprite->render(ctx, 0, 0, Graphics::Instance().Get_screen_width(), Graphics::Instance().Get_screen_height());
     }
 
-
+    for(auto e : world->getRegister().view<ComponentLight>())
+    {
+        for (auto& light : world->getRegister().getComponent<ComponentLight>(e).directional_lights)
+        {
+            directionalShadowRendering(ctx, resources, light);
+        }
+    }
 }
 
 void DeferredLightingPass::debug(RenderGraphResources& resources)
@@ -224,5 +245,17 @@ void DeferredLightingPass::directionalShadowRendering(ID3D11DeviceContext* ctx, 
     GraphicsState::GetInstance().SetBlendState(ctx, BLEND_STATE::ALPHA);
     GraphicsState::GetInstance().SetDepthStencilState(ctx, DEPTH_STATE::ZT_ON_ZW_ON);
 
+    ctx->VSSetShader(nullptr, nullptr, 0);
+    ctx->PSSetShader(nullptr, nullptr, 0);
+    PipelineManager::Instance().BindByName("ShadowMap", ctx);
+
     world->getSystem<SystemModel>()->render(world->getRegister());
+
+    if (auto scene = world->getRegister().getEntityByName("Scene"); scene != INVALID_ENTITY)
+    {
+        auto& c_scene = world->getRegister().getComponent<ComponentScene>(scene);
+        
+        ctx->VSSetConstantBuffers(1, 1, c_scene.scene->getSceneConstantBuffer().GetAddressOf());
+        ctx->PSSetConstantBuffers(1, 1, c_scene.scene->getSceneConstantBuffer().GetAddressOf());
+    }
 }

@@ -4,6 +4,7 @@
 #include "SceneTest.h"
 #include "Mouse.h"
 #include "imgui/IconsFontAwesome6.h"
+#include <comdef.h>
 
 
 
@@ -92,6 +93,15 @@ void Framework::Render(float elapsedTime)
 	UINT sync_interval{ vsync ? 1U : 0U };
 	UINT flags = (tearing_supported && !fullscreen_mode && !vsync) ? DXGI_PRESENT_ALLOW_TEARING : 0;
 	hr = graphics.Get_swap_chain1()->Present(sync_interval, flags);
+
+	if (FAILED(hr))
+	{
+		HRESULT removed_reason = graphics.Get_device()->GetDeviceRemovedReason();
+		_com_error err(removed_reason);
+		OutputDebugStringW(L"Present failed: ");
+		OutputDebugStringW(err.ErrorMessage());
+	}
+
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
 }

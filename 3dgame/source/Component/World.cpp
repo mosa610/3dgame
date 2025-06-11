@@ -222,6 +222,15 @@ inline void World::registerComponentCallback() {
             HRESULT hr = device->CreateBuffer(&buffer_desc, nullptr, c_light.shadow_buffer.GetAddressOf());
             _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
         }
+
+        directional_light_constants light_data{};
+        light_data.directional_light.direction;
+        light_data.directional_light.color = DirectX::XMFLOAT4(1, 1, 1, 1);
+        light_data.use_shadow = true;
+        light_data.shadow_attenuation = 1.0f;
+        light_data.shadow_bias = 0.01f;
+
+        c_light.directional_lights.push_back(light_data);
         });
 }
 inline void World::setupRenderPasses()

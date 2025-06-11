@@ -14,6 +14,7 @@
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentBloom.h"
 #include "Component/ComponentScene.h"
+#include "Component/ComponentLight.h"
 
 #include "Component/System.h"
 #include "Component/SystemSkymap.h"
@@ -110,9 +111,10 @@ void SceneTest::Initialize()
 	w = world.getRegister().createEntity();
     world.getRegister().addComponent(w, ComponentTransform{ {23,1,1} });
 
-	auto scene = world.getRegister().createEntity("Scene");
-	world.getRegister().addComponent(scene, ComponentScene{ "SceneTest", this });
-    world.getRegister().addComponent(scene, ComponentIBL{});
+	scene_entity = world.getRegister().createEntity("Scene");
+	world.getRegister().addComponent(scene_entity, ComponentScene{ "SceneTest", this });
+    world.getRegister().addComponent(scene_entity, ComponentIBL{});
+	world.getRegister().addComponent(scene_entity, ComponentLight{});
 
 	//world.addSystem<SystemGbufferRendering>();
     world.addSystem<SystemSkymap>();
@@ -229,6 +231,7 @@ void SceneTest::Render(float elapsedTime)
 		DirectX::XMFLOAT3 cp = camera.GetPosition();
 		data.camera_position = DirectX::XMFLOAT4(cp.x, cp.y, cp.z, 0);
 		data.light_direction = rc.lightDirection;*/
+
 
 		LightConstants data_l{};
 		data_l.directional_light.direction = rc.lightDirection;
