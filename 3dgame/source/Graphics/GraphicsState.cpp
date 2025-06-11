@@ -257,11 +257,15 @@ void GraphicsState::SetRasterizerState(ID3D11DeviceContext* dc, RASTER_STATE sta
     dc->RSSetState(rasterizer_states[static_cast<size_t>(state)].Get());
 }
 
-void GraphicsState::SetSamplerState(ID3D11DeviceContext* dc, SAMPLER_STATE state)
+void GraphicsState::SetSamplerState(ID3D11DeviceContext* dc, SAMPLER_STATE state, UINT slot)
 {
 	if (state == SAMPLER_STATE::ALL)
 	{
 		dc->PSSetSamplers(0, static_cast<int>(state), sampler_states->GetAddressOf());
+	}
+	else if(slot != NOT_SLOT)
+	{
+        dc->PSSetSamplers(slot, 1, sampler_states[static_cast<int>(state)].GetAddressOf());
 	}
 	else
 	{

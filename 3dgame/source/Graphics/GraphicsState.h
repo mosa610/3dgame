@@ -8,6 +8,8 @@ enum class DEPTH_STATE { ZT_ON_ZW_ON, ZT_ON_ZW_OFF, ZT_OFF_ZW_ON, ZT_OFF_ZW_OFF,
 enum class BLEND_STATE { NONE, ALPHA, ADD, MULTIPLY, End };
 enum class RASTER_STATE { SOLID, WIREFRAME, CULL_NONE, WIREFRAME_CULL_NONE,NONE_CCW_SOLID, End };
 
+static constexpr UINT NOT_SLOT = INT_MAX;
+
 class GraphicsState
 {
 private:
@@ -25,7 +27,7 @@ public:
 
     void SetRasterizerState(ID3D11DeviceContext* dc, RASTER_STATE state);
 
-    void SetSamplerState(ID3D11DeviceContext* dc, SAMPLER_STATE state);
+    void SetSamplerState(ID3D11DeviceContext* dc, SAMPLER_STATE state, UINT slot = NOT_SLOT);
 
     static GraphicsState& GetInstance()
     {

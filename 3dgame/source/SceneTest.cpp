@@ -496,16 +496,28 @@ void SceneTest::DrawGUI()
 
 	ImGui::Begin("inspector");
 	node_tree.InspectorDraw(world.getRegister());
-	if (ImGui::TreeNode("test02")) {
+	if (ImGui::TreeNode("TestScene")) {
 		ImGui::SliderFloat3("objPos", &object_pos.x, -10.0f, 10.0f, "%.1f");
 		ImGui::SliderFloat3("objRot", &object_rot.x, -DirectX::XM_2PI, DirectX::XM_2PI, "%.1f");
 		ImGui::SliderFloat3("objScale", &object_scale.x, 0.1f, 10.0f, "%.1f");
-		ImGui::SliderFloat4("light", &directional_light.x, -20.0f, 20.0f, "%.1f");
+		//ImGui::SliderFloat4("light", &directional_light.x, -20.0f, 20.0f, "%.1f");
 		if (auto scene = world.getRegister().getEntityByName("Scene"); scene != INVALID_ENTITY)
 		{
 			auto& bloom = world.getRegister().getComponent<ComponentBloom>(scene);
             ImGui::SliderFloat("bloom_intensity", &bloom.bloom_intensity, 0.0f, 10.0f);
             ImGui::SliderFloat("extraction", &bloom.bloom_extraction_threshold, 0.0f, 5.0f);
+			ImGui::NewLine();
+
+			auto& lights = world.getRegister().getComponent<ComponentLight>(scene);
+            for(auto& l : lights.directional_lights)
+            {
+				ImGui::SliderFloat4("directional_light", &l.directional_light.direction.x, -20.0f, 20.0f, "%.1f");
+				ImGui::SliderFloat("shadow_attenuation", &l.shadow_attenuation, 0.0f, 10.0f);
+				ImGui::SliderFloat("shadow_bias", &l.shadow_bias, 0.0f, 5.0f);
+				ImGui::ColorEdit4("directional_light_color", &l.directional_light.color.x);
+
+
+            }
 		}
 		/*ImGui::SliderFloat("gaussian_sigma", { &gaussian_sigma }, 0.0f, 10.0f);
 		ImGui::SliderFloat("bloom_intensity", { &bloomer->bloom_intensity }, 0.0f, 10.0f);
@@ -521,6 +533,7 @@ void SceneTest::DrawGUI()
 			{
                 ImGui::SliderFloat("metallic", &data.pbrMetallicRoughness.metallicFactor, 0.0f, 10.0f, "%.1f");
                 ImGui::SliderFloat("roughness", &data.pbrMetallicRoughness.roughnessFactor, 0.0f, 10.0f, "%.1f");
+				ImGui::NewLine();
 			}
 		}
 		ImGui::NewLine();

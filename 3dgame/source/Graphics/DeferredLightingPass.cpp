@@ -19,27 +19,43 @@ DeferredLightingPass::DeferredLightingPass(World* w) : world(w)
 
 void DeferredLightingPass::setup(RenderGraphBuilder& builder)
 {
-    albedo = builder.createRenderTarget("gbuffer_albedo", ResourceType::RenderTarget);
-    emissive = builder.createRenderTarget("gbuffer_emissive", ResourceType::RenderTarget);
-    normal = builder.createRenderTarget("gbuffer_normal", ResourceType::RenderTarget, DXGI_FORMAT_R32G32B32A32_FLOAT);
-    parameter = builder.createRenderTarget("gbuffer_parameter", ResourceType::RenderTarget);
-    depth = builder.createRenderTarget("gbuffer_depth", ResourceType::RenderTarget, DXGI_FORMAT_R32_FLOAT);
+    // render target
+    {
+        albedo = builder.createRenderTarget("gbuffer_albedo", ResourceType::RenderTarget);
+        emissive = builder.createRenderTarget("gbuffer_emissive", ResourceType::RenderTarget);
+        normal = builder.createRenderTarget("gbuffer_normal", ResourceType::RenderTarget, DXGI_FORMAT_R32G32B32A32_FLOAT);
+        parameter = builder.createRenderTarget("gbuffer_parameter", ResourceType::RenderTarget);
+        depth = builder.createRenderTarget("gbuffer_depth", ResourceType::RenderTarget, DXGI_FORMAT_R32_FLOAT);
 
-    builder.declareRead(albedo);
-    builder.declareRead(emissive);
-    builder.declareRead(normal);
-    builder.declareRead(parameter);
-    builder.declareRead(depth);
+        builder.declareRead(albedo);
+        builder.declareRead(emissive);
+        builder.declareRead(normal);
+        builder.declareRead(parameter);
+        builder.declareRead(depth);
 
-    shadow_map = builder.createRenderTarget("ShadowMap", ResourceType::DepthStencilSRV, DXGI_FORMAT_R32_TYPELESS);
+        shadow_map = builder.createRenderTarget("ShadowMap", ResourceType::DepthStencilSRV, DXGI_FORMAT_R32_TYPELESS);
 
-    builder.declareWrite(shadow_map);
+        builder.declareWrite(shadow_map);
 
-    deferred_lighting = builder.createRenderTarget("DeferredLighting", ResourceType::RenderTarget, DXGI_FORMAT_R32G32B32A32_FLOAT);
+        deferred_lighting = builder.createRenderTarget("DeferredLighting", ResourceType::RenderTarget, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
-    builder.declareWrite(deferred_lighting);
+        builder.declareWrite(deferred_lighting);
+    }
 
     ID3D11Device* device = Graphics::Instance().Get_device();
+    // constant buffer
+    {
+        D3D11_BUFFER_DESC buffer_desc{};
+        buffer_desc.Usage = D3D11_USAGE_DEFAULT;
+        buffer_desc.ByteWidth = sizeof(directional_light_constants);
+        buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        buffer_desc.CPUAccessFlags = 0;
+        buffer_desc.MiscFlags = 0;
+        buffer_desc.StructureByteStride = 0;
+        HRESULT hr = device->CreateBuffer(&buffer_desc, nullptr, directional_light_constants_buffer.GetAddressOf());
+        _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+    }
+
     create_ps_from_cso(device, ".//Data//Shader//deferred_rendering_emissive_ps.cso", deferred_rendering_emissive_pixel_shader.GetAddressOf());
     create_ps_from_cso(device, ".//Data//Shader//deferred_rendering_indirect_ps.cso", deferred_rendering_indirect_pixel_shader.GetAddressOf());
     create_ps_from_cso(device, ".//Data//Shader//deferred_rendering_directional_ps.cso", deferred_rendering_directional_pixel_shader.GetAddressOf());
@@ -125,11 +141,68 @@ void DeferredLightingPass::execute(ID3D11DeviceContext* ctx, RenderGraphResource
         deferred_rendering_sprite->render(ctx, 0, 0, Graphics::Instance().Get_screen_width(), Graphics::Instance().Get_screen_height());
     }
 
+    // 平行光源
     for(auto e : world->getRegister().view<ComponentLight>())
     {
         for (auto& light : world->getRegister().getComponent<ComponentLight>(e).directional_lights)
         {
+            // シャドウマップ作成
             directionalShadowRendering(ctx, resources, light);
+
+            // リソースの状態遷移を確実にするため、一度すべてのリソースをクリア
+            ID3D11RenderTargetView* null_rtv = nullptr;
+            ID3D11DepthStencilView* null_dsv = nullptr;
+            ctx->OMSetRenderTargets(1, &null_rtv, null_dsv);
+
+            // シェーダーリソースも一度クリア
+            ID3D11ShaderResourceView* null_srv = nullptr;
+            ctx->PSSetShaderResources(10, 1, &null_srv);
+
+            // フラッシュして確実に状態変更を適用
+            ctx->Flush();
+
+            {
+                setCommonResources(ctx, resources);
+
+                ctx->UpdateSubresource(directional_light_constants_buffer.Get(), 0, nullptr, &light, 0, 0);
+                ctx->PSSetConstantBuffers(2, 1, directional_light_constants_buffer.GetAddressOf());
+
+                // 今度はSRVを取得して設定
+                ID3D11ShaderResourceView* shadow_map_srv = resources.getSRV(shadow_map);
+                if (shadow_map_srv != nullptr)
+                {
+                    ctx->PSSetShaderResources(10, 1, &shadow_map_srv);
+
+                    //// デバッグ確認
+                    //ID3D11ShaderResourceView* check_srv = nullptr;
+                    //ctx->PSGetShaderResources(10, 1, &check_srv);
+                    //if (check_srv == shadow_map_srv)
+                    //{
+                    //    OutputDebugStringA("Shadow map SRV correctly set\n");
+                    //}
+                    //else
+                    //{
+                    //    OutputDebugStringA("Failed to set shadow map SRV\n");
+                    //}
+                    //if (check_srv) check_srv->Release();
+                }
+
+                GraphicsState::GetInstance().SetSamplerState(ctx, SAMPLER_STATE::LINEAR_BORDER_WHITE, 10);
+            }
+
+            // レンダーターゲットを再設定
+            ID3D11RenderTargetView* rtv = resources.getRTV(deferred_lighting);
+            ctx->RSSetViewports(1, resources.getViewport(deferred_lighting));
+            ctx->OMSetRenderTargets(1, &rtv, nullptr);
+
+            GraphicsState::GetInstance().SetDepthStencilState(ctx, DEPTH_STATE::ZT_OFF_ZW_OFF);
+            GraphicsState::GetInstance().SetBlendState(ctx, BLEND_STATE::ADD);
+            GraphicsState::GetInstance().SetRasterizerState(ctx, RASTER_STATE::CULL_NONE);
+
+            ctx->VSSetShader(sprite_vertex_shader.Get(), nullptr, 0);
+            ctx->IASetInputLayout(sprite_input_layout.Get());
+            ctx->PSSetShader(deferred_rendering_directional_pixel_shader.Get(), nullptr, 0);
+            deferred_rendering_sprite->render(ctx, 0, 0, Graphics::Instance().Get_screen_width(), Graphics::Instance().Get_screen_height());
         }
     }
 }
@@ -144,6 +217,8 @@ void DeferredLightingPass::debug(RenderGraphResources& resources)
         resources.getSRV(parameter),
         resources.getSRV(depth)
     };
+
+    ID3D11ShaderResourceView* shadow_map_srv = resources.getSRV(shadow_map);
 
     if (ImGui::TreeNode("DeferredLightingPass")) {
         static const char* GBufferNames[] = {
@@ -162,6 +237,10 @@ void DeferredLightingPass::debug(RenderGraphResources& resources)
                 ImVec4(1, 1, 1, 1), ImVec4(1, 1, 1, 1));
             ImGui::NewLine();
         }
+        ImGui::Text("shadow_map");
+        ImGui::Image((ImTextureID)shadow_map_srv, ImVec2(256, 144), ImVec2(0, 0), ImVec2(1, 1),
+            ImVec4(1, 1, 1, 1), ImVec4(1, 1, 1, 1));
+
         ImGui::TreePop();
     }
 }
@@ -258,4 +337,6 @@ void DeferredLightingPass::directionalShadowRendering(ID3D11DeviceContext* ctx, 
         ctx->VSSetConstantBuffers(1, 1, c_scene.scene->getSceneConstantBuffer().GetAddressOf());
         ctx->PSSetConstantBuffers(1, 1, c_scene.scene->getSceneConstantBuffer().GetAddressOf());
     }
+
+    ctx->OMSetRenderTargets(0, nullptr, nullptr);
 }

@@ -42,5 +42,7 @@ private:
 
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> sprite_shader_resource_view;
 
+    Microsoft::WRL::ComPtr<ID3D11Buffer> directional_light_constants_buffer;
+
     World* world;
 };
