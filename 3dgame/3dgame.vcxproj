@@ -75,6 +75,7 @@
   <ItemGroup>
     <ClInclude Include="source\Camera.h" />
     <ClInclude Include="source\CameraController.h" />
+    <ClInclude Include="source\CerealTemplate.h" />
     <ClInclude Include="source\Component\ComponentBloom.h" />
     <ClInclude Include="source\Component\ComponentAnimation.h" />
     <ClInclude Include="source\Component\ComponentBone.h" />

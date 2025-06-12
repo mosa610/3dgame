@@ -1,9 +1,6 @@
 #include <filesystem>
 #include <fstream>
-#include <cereal/cereal.hpp>
-#include <cereal/archives/binary.hpp>
-#include <cereal/types/string.hpp>
-#include <cereal/types/vector.hpp>
+#include "..//CerealTemplate.h"
 #include "ModelResource.h"
 #include "..//misc.h"
 #include "GLTFImporter.h"
@@ -24,12 +21,16 @@ const std::vector<D3D11_INPUT_ELEMENT_DESC> ModelResource::InputElementDescs =
     { "BONE_INDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 };
 
+
+
 template<class Archive>
 void ModelResource::Node::serialize(Archive& archive)
 {
     archive(
         CEREAL_NVP(name),
+        CEREAL_NVP(myIndex),
         CEREAL_NVP(parentIndex),
+        CEREAL_NVP(jointIndex),
         CEREAL_NVP(position),
         CEREAL_NVP(rotation),
         CEREAL_NVP(scale)
@@ -111,11 +112,11 @@ void ModelResource::Vertex::serialize(Archive& archive)
 {
     archive(
         CEREAL_NVP(position),
-        CEREAL_NVP(boneWeight),
-        CEREAL_NVP(boneIndex),
-        CEREAL_NVP(texcoord),
         CEREAL_NVP(normal),
-        CEREAL_NVP(tangent)
+        CEREAL_NVP(tangent),
+        CEREAL_NVP(texcoord),
+        CEREAL_NVP(boneIndex),
+        CEREAL_NVP(boneWeight)
     );
 }
 
@@ -135,6 +136,7 @@ void ModelResource::Mesh::serialize(Archive& archive)
         CEREAL_NVP(vertices),
         CEREAL_NVP(indices),
         CEREAL_NVP(bones),
+        CEREAL_NVP(index),
         CEREAL_NVP(nodeIndex),
         CEREAL_NVP(materialIndex)
     );
@@ -207,40 +209,40 @@ void ModelResource::AppendAnimations(const char* filename)
 // シリアライズ
 void ModelResource::Serialize(const char* filename)
 {
-    /*if (std::ofstream ofs(filename, std::ios::binary); ofs.is_open())
+    if (std::ofstream ofs(filename, std::ios::binary); ofs.is_open())
     {
         cereal::BinaryOutputArchive archive(ofs);
 
         try
         {
             archive(
-                CEREAL_NVP(nodes),
-                CEREAL_NVP(materials),
-                CEREAL_NVP(meshes),
-                CEREAL_NVP(animations)
+                CEREAL_NVP(_nodes),
+                CEREAL_NVP(_materials),
+                CEREAL_NVP(_meshes),
+                CEREAL_NVP(_animations)
             );
         }
         catch (...)
         {
             _ASSERT_EXPR_A(false, "Model serialize failed.");
         }
-    }*/
+    }
 }
 
 // デシリアライズ
 void ModelResource::Deserialize(const char* filename)
 {
-    /*if (std::ifstream ifs(filename, std::ios::binary); ifs.is_open())
+    if (std::ifstream ifs(filename, std::ios::binary); ifs.is_open())
     {
         cereal::BinaryInputArchive archive(ifs);
 
         try
         {
             archive(
-                CEREAL_NVP(nodes),
-                CEREAL_NVP(materials),
-                CEREAL_NVP(meshes),
-                CEREAL_NVP(animations)
+                CEREAL_NVP(_nodes),
+                CEREAL_NVP(_materials),
+                CEREAL_NVP(_meshes),
+                CEREAL_NVP(_animations)
             );
         }
         catch (...)
@@ -251,7 +253,7 @@ void ModelResource::Deserialize(const char* filename)
     else
     {
         _ASSERT_EXPR_A(false, "Model File not found.");
-    }*/
+    }
 }
 
 void ModelResource::Load(ID3D11Device* device, const char* filename, float sampleRate)
@@ -274,7 +276,7 @@ void ModelResource::Load(ID3D11Device* device, const char* filename, float sampl
         GLTFImporter importer(filename);
 
         // マテリアルデータ読み取り
-        importer.LoadMaterials(_materials, device);
+        importer.LoadMaterials(_materials, nullptr);
 
         // ノードデータ読み取り
         importer.LoadNodes(_nodes);

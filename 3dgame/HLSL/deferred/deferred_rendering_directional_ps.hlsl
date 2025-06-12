@@ -23,7 +23,7 @@ cbuffer LIGHT_CONSTANT_BUFFER : register(b2)
     int use_shadow; //	影を使用しているかどうか
     float shadow_attenuation; //	影色
     float shadow_bias; //	深度バイアス
-    float shadow_dummy;
+    int shading_model;
     row_major float4x4 light_view_projection; //	ライトの位置から見た射影行列
 };
 
@@ -39,7 +39,7 @@ float4 main(VS_OUT pin) : SV_TARGET
     gbuffer_textures.velocity = gbuffer_velocity;
     gbuffer_textures.state = sampler_states[POINT];
     GBufferData data;
-    data = DecodeGBuffer(gbuffer_textures, pin.texcoord, inverse_view_projection_transform, z_buffer_parameteres);
+    data = DecodeGBuffer(gbuffer_textures, pin.texcoord, inverse_view_projection_transform, z_buffer_parameteres, shading_model);
 
     float3 total_diffuse = (float3) 0, total_specular = (float3) 0;
     if (data.shading_model != shading_model_unlit)

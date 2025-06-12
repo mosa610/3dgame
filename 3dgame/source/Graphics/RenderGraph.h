@@ -136,6 +136,8 @@ public:
     void execute(ID3D11DeviceContext* ctx);
     void reset();  // パスをクリアして再利用可能にする
 
+    void resize(UINT w, UINT h) { resources.resize(w, h); }
+
     void debug();
 
 private:

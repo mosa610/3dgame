@@ -10,7 +10,7 @@ struct directional_light_constants
     int use_shadow{ false }; //影を使うかどうか
     float shadow_attenuation{ 0.0f }; //影の色
     float shadow_bias{ 0.0f }; // 深度バイアス
-    float shadow_dummy;
+    int shading_mode{ 0 };
     DirectX::XMFLOAT4X4 light_view_projection;
 };
 

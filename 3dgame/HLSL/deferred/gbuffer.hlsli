@@ -118,4 +118,31 @@ GBufferData DecodeGBuffer(PSGBufferTextures textures, float2 uv, matrix inverse_
     return ret;
 }
 
+GBufferData DecodeGBuffer(PSGBufferTextures textures, float2 uv, matrix inverse_view_projection_transform, float4 z_buffer_parameteres, int shading_model)
+{
+    //  各テクスチャから情報を取得
+    float4 base_color = textures.base_color.Sample(textures.state, uv);
+    float4 emissive_color = textures.emissive_color.Sample(textures.state, uv);
+    float4 normal = textures.normal.Sample(textures.state, uv);
+    float4 parameter = textures.parameter.Sample(textures.state, uv);
+    float linear_depth = textures.depth.Sample(textures.state, uv);
+    float4 velocity = textures.velocity.Sample(textures.state, uv);
+
+    GBufferData ret = (GBufferData) 0;
+    ret.base_color = base_color.rgb;
+    ret.shading_model = shading_model;
+    ret.emissive_color = emissive_color.rgb;
+    ret.w_normal = normal.rgb;
+    ret.occlusion_factor = parameter.r;
+    ret.roughness = parameter.g;
+    ret.metalness = parameter.b;
+    ret.occlusion_strength = parameter.a;
+    ret.linear_depth = linear_depth;
+    ret.velocity = velocity.xy;
+    float4 position = float4(uv.xy * float2(2.0f, -2.0f) + float2(-1.0f, 1.0f), convert_linear_depth_to_projection_depth(linear_depth, z_buffer_parameteres), 1);
+    position = mul(position, inverse_view_projection_transform);
+    ret.w_position = position.xyz / position.w;
+    return ret;
+}
+
 #endif  //  __GBUFFER_HLSLI__

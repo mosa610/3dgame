@@ -485,6 +485,9 @@
     <ClInclude Include="source\Component\ComponentScene.h">
       <Filter>Source\EntityComponentSystem\Component</Filter>
     </ClInclude>
+    <ClInclude Include="source\CerealTemplate.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\lambert.hlsli">

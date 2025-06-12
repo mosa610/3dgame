@@ -514,9 +514,8 @@ void SceneTest::DrawGUI()
 				ImGui::SliderFloat4("directional_light", &l.directional_light.direction.x, -20.0f, 20.0f, "%.1f");
 				ImGui::SliderFloat("shadow_attenuation", &l.shadow_attenuation, 0.0f, 10.0f);
 				ImGui::SliderFloat("shadow_bias", &l.shadow_bias, 0.0f, 5.0f);
+				ImGui::InputInt("shading_model", &l.shading_mode);
 				ImGui::ColorEdit4("directional_light_color", &l.directional_light.color.x);
-
-
             }
 		}
 		/*ImGui::SliderFloat("gaussian_sigma", { &gaussian_sigma }, 0.0f, 10.0f);
@@ -604,6 +603,8 @@ void SceneTest::RemakeShaderResource(float width, float height)
 		hr = device->CreateShaderResourceView(color_buffer.Get(), NULL, render_resource_context->shader_resource_view.GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	}
+
+	world.getRenderGraph().resize(width, height);
 
 	/*{
 		Camera& camera = Camera::Instance();

@@ -28,7 +28,7 @@ VS_OUT main(VS_IN vin)
 {
     float sigma = vin.tangent.w;
     float4 position = vin.position;
-    if (skin > -1)
+    
     {
         //row_major float4x4 skin_matrix =
         //    vin.weights.x * joint_matrices[vin.joints.x] +
@@ -49,7 +49,7 @@ VS_OUT main(VS_IN vin)
 
     //vin.position.w = 1;
     row_major float4x4 vpt = view_transform * projection_transform;
-    vout.position = mul(position, /*mul(world, view_projection_transform)*/view_projection_transform);
+    vout.position = mul(position,view_projection_transform);
     vout.w_position = position;//mul(vin.position, world);
 
     vout.current_clip_position = vout.position;
