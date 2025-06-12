@@ -103,7 +103,7 @@ void SceneTest::Initialize()
 
 
 	e = world.getRegister().createEntity();
-	world.getRegister().addComponent(e, ComponentModel{ ".\\resources\\gltfobject\\unity-chan_emissivezero.gltf" /*".\\glTF-Sample-Models-main\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf"*/ /*".\\resources\\Manny\\Manny.gltf"*/ });
+	world.getRegister().addComponent(e, ComponentModel{ /*".\\resources\\gltfobject\\unity-chan_emissivezero.gltf"*/ ".\\glTF-Sample-Models-main\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf" /*".\\resources\\Manny\\Manny.gltf"*/ });
 	world.getRegister().addComponent(e, ComponentTransform{ {0,0,0} });
 	//world.getRegister().addComponent(e, ComponentAnimation{});
 
