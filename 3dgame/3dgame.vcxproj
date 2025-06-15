@@ -23,6 +23,7 @@
     <ClCompile Include="source\CameraController.cpp" />
     <ClCompile Include="source\Component\SystemAnimation.cpp" />
     <ClCompile Include="source\Component\SystemGbuffer.cpp" />
+    <ClCompile Include="source\Component\SystemInstancingModel.cpp" />
     <ClCompile Include="source\Component\SystemModel.cpp" />
     <ClCompile Include="source\Component\SystemSkymap.cpp" />
     <ClCompile Include="source\Component\SystemTransform.cpp" />
@@ -80,6 +81,7 @@
     <ClInclude Include="source\Component\ComponentAnimation.h" />
     <ClInclude Include="source\Component\ComponentBone.h" />
     <ClInclude Include="source\Component\ComponentIBL.h" />
+    <ClInclude Include="source\Component\ComponentInstancing.h" />
     <ClInclude Include="source\Component\ComponentLight.h" />
     <ClInclude Include="source\Component\ComponentMaterial.h" />
     <ClInclude Include="source\Component\ComponentModel.h" />
@@ -95,6 +97,7 @@
     <ClInclude Include="source\Component\System.h" />
     <ClInclude Include="source\Component\SystemAnimation.h" />
     <ClInclude Include="source\Component\SystemGbuffer.h" />
+    <ClInclude Include="source\Component\SystemInstancingModel.h" />
     <ClInclude Include="source\Component\SystemLoadModel.h" />
     <ClInclude Include="source\Component\SystemModel.h" />
     <ClInclude Include="source\Component\SystemSkymap.h" />

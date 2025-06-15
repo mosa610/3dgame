@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "..//Scene.h"
+#include "ComponentInstancing.h"
 
 struct ComponentScene
 {
@@ -8,4 +9,6 @@ struct ComponentScene
     std::string scene_name;
     float timer;
     Scene*  scene;
+    std::vector<int> instance_model_count;
+    std::vector<InstanceLocation> deferred_instance_location;
 };

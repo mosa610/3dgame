@@ -243,6 +243,9 @@
     <ClCompile Include="source\Graphics\FinalDrawPass.cpp">
       <Filter>Source\Graphics\RenderGraph</Filter>
     </ClCompile>
+    <ClCompile Include="source\Component\SystemInstancingModel.cpp">
+      <Filter>Source\EntityComponentSystem\System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Framework.h">
@@ -487,6 +490,12 @@
     </ClInclude>
     <ClInclude Include="source\CerealTemplate.h">
       <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\SystemInstancingModel.h">
+      <Filter>Source\EntityComponentSystem\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\ComponentInstancing.h">
+      <Filter>Source\EntityComponentSystem\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
