@@ -12,7 +12,7 @@ public:
 
     void drawDebugGUI(Register& reg) override {}
 private:
-    void begin(Register& reg, ID3D11Device* device, ID3D11DeviceContext* dc);
+    void begin(Entity e, Register& reg, ID3D11Device* device, ID3D11DeviceContext* dc);
     void draw(Register& reg, ID3D11DeviceContext* dc);
     void end(Register& reg, ID3D11DeviceContext* dc);
 

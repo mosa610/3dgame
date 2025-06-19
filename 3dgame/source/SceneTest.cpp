@@ -6,6 +6,7 @@
 #include "Graphics/GraphicsState.h"
 #include "Graphics/ModelRenderer.h"
 #include "Mouse.h"
+
 #include "Component/ComponentModel.h"
 #include "Component/ComponentNode.h"
 #include "Component/ComponentTransform.h"
@@ -15,6 +16,7 @@
 #include "Component/ComponentBloom.h"
 #include "Component/ComponentScene.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentInstancing.h"
 
 #include "Component/System.h"
 #include "Component/SystemSkymap.h"
@@ -22,6 +24,7 @@
 #include "Component/SystemModel.h"
 #include "Component/SystemAnimation.h"
 #include "Component/SystemGbuffer.h"
+#include "Component/SystemInstancingModel.h"
 
 #define IMGUI_ENABLE_DOCKING
 
@@ -103,9 +106,32 @@ void SceneTest::Initialize()
 
 
 	e = world.getRegister().createEntity();
-	world.getRegister().addComponent(e, ComponentModel{ /*".\\resources\\gltfobject\\unity-chan_emissivezero.gltf"*/ ".\\glTF-Sample-Models-main\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf" /*".\\resources\\Manny\\Manny.gltf"*/ });
+	world.getRegister().addComponent(e, ComponentModel{ /*".\\resources\\gltfobject\\unity-chan_emissivezero.gltf"*/ ".\\glTF-Sample-Models-main\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf" /*".\\resources\\GLTFObject\\Manny\\SKM_Manny.gltf"*/ });
 	world.getRegister().addComponent(e, ComponentTransform{ {0,0,0} });
+
+	//auto d = world.getRegister().createEntity();
+	//world.getRegister().addComponent(d, ComponentModel{ /*".\\resources\\gltfobject\\unity-chan_emissivezero.gltf"*/ ".\\glTF-Sample-Models-main\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf" /*".\\resources\\Manny\\Manny.gltf"*/ });
+	//world.getRegister().addComponent(d, ComponentTransform{ {5,0,5} });
+	
+
 	//world.getRegister().addComponent(e, ComponentAnimation{});
+
+	for (int x = 0; x < 5; ++x) {
+		for (int z = 0; z < 5; ++z) {
+			Entity grid_entity = world.getRegister().createEntity();
+			world.getRegister().addComponent(grid_entity, ComponentModel{
+				".\\glTF-Sample-Models-main\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf"
+				});
+			world.getRegister().addComponent(grid_entity, ComponentTransform{
+				{static_cast<float>(x * 3), 0, static_cast<float>(z * 3)}
+				});
+			world.getRegister().addComponent(grid_entity, ComponentInstancing{
+				{}, // instancing_world_matrix_buffer
+				{}, // instancing_previous_world_matrices_buffer
+				0   // model_index = 0（同じモデルタイプ）
+				});
+		}
+	}
 
 
 	w = world.getRegister().createEntity();
@@ -115,10 +141,12 @@ void SceneTest::Initialize()
 	world.getRegister().addComponent(scene_entity, ComponentScene{ "SceneTest", this });
     world.getRegister().addComponent(scene_entity, ComponentIBL{});
 	world.getRegister().addComponent(scene_entity, ComponentLight{});
+	world.getRegister().addComponent(scene_entity, ComponentInstancingScene{});
 
 	//world.addSystem<SystemGbufferRendering>();
     world.addSystem<SystemSkymap>();
 	world.addSystem<SystemModel>();
+    world.addSystem<SystemInstancingModel>();
 	world.addSystem<SystemTransform>();
     world.addSystem<SystemAnimation>();
 
@@ -136,7 +164,6 @@ void SceneTest::Update(float elapsedTime)
 {
 	Scene::SetSceneConstant(1, DirectX::XMFLOAT2(Graphics::Instance().Get_screen_width(), Graphics::Instance().Get_screen_height()), true);
 	timer += elapsedTime;
-
 	// シーン用定数バッファ設定
 
 	/*framebuffers[0]->UpdateWindowSize(Graphics::Instance().Get_device(),
@@ -483,12 +510,15 @@ void SceneTest::DrawGUI()
 			ImGui::SliderFloat3("rotation", &transform->rotation.x, -DirectX::XM_2PI, DirectX::XM_2PI, "%.1f");
 	        ImGui::SliderFloat3("scale", &transform->scale.x, 0.0f, 10.0f, "%.1f");
 			ImGui::TreePop();
-			ComponentNode* node = &world.getRegister().getComponent<ComponentNode>(e);
-			for (auto& n : node->nodes)
+			for(auto& e : world.getRegister().view<ComponentModel>())
 			{
-				if (n.parent == nullptr)
+				ComponentNode* node = &world.getRegister().getComponent<ComponentNode>(e);
+				for (auto& n : node->nodes)
 				{
-					node_tree.HierarchyDraw(e,&n);
+					if (n.parent == nullptr)
+					{
+						node_tree.HierarchyDraw(e, &n);
+					}
 				}
 			}
 		}
@@ -552,6 +582,8 @@ void SceneTest::DrawGUI()
 	ImGui::End();
 
 	ImGui::PopStyleVar(2);
+
+	Graphics::Instance().DebugDraw();
 }
 
 void SceneTest::ResetShaderResource()

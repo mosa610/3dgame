@@ -7,6 +7,7 @@
 #include "ComponentIBL.h"
 #include "ComponentScene.h"
 #include "ComponentLight.h"
+#include "ComponentInstancing.h"
 
 #include "..//Graphics/Graphics.h"
 #include "..//Graphics/RenderResourceContext.h"
@@ -231,6 +232,36 @@ inline void World::registerComponentCallback() {
         light_data.shadow_bias = 0.01f;
 
         c_light.directional_lights.push_back(light_data);
+        });
+
+    // ComponentInstancingScene に対するコールバック
+    reg.setOnComponentAdded<ComponentInstancingScene>([](Register& reg, Entity e, ComponentInstancingScene& c_instancing_scene) {
+        // 最大インスタンス数を設定（例：1000個）
+        const size_t MAX_INSTANCES = 1000;
+
+        ID3D11Device* device = Graphics::Instance().Get_device();
+
+        // ワールド行列用バッファを2つ作成（ダブルバッファリング）
+        for (int i = 0; i < 2; ++i) {
+            D3D11_BUFFER_DESC bufferDesc = {};
+            bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+            bufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4X4) * MAX_INSTANCES;
+            bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+            bufferDesc.CPUAccessFlags = 0;
+            bufferDesc.MiscFlags = 0;
+            bufferDesc.StructureByteStride = 0;
+
+            HRESULT hr = device->CreateBuffer(&bufferDesc, nullptr,
+                c_instancing_scene.world_matrices_buffer[i].GetAddressOf());
+            _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+            if (SUCCEEDED(hr)) {
+                Graphics::Instance().debugLog("Instancing buffer %d created successfully (%u bytes)\n", i, bufferDesc.ByteWidth);
+            }
+            else {
+                Graphics::Instance().debugLog("ERROR: Failed to create instancing buffer %d, HRESULT: 0x%08X\n", i, hr);
+            }
+        }
         });
 }
 inline void World::setupRenderPasses()

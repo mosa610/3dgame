@@ -45,27 +45,33 @@ void Framework::Update(float elapsedTime)
 
 
 #if 1
-	if (GetAsyncKeyState(VK_RETURN) & 1 && GetAsyncKeyState(VK_MENU) & 1)
+	/*if (GetAsyncKeyState(VK_RETURN) & 1 && GetAsyncKeyState(VK_MENU) & 1)
 	{
 		stylize_window(!fullscreen_mode);
-	}
-#endif
-
-
-#ifdef USE_IMGUI
-	graphics.Get_ImGui_renderer()->NewFrame();
+	}*/
 #endif
 
 	SceneManager::Instance().Update(elapsedTime);
 
 #ifdef USE_IMGUI
+	// ImGuiフレームの開始前に状態をチェック
+	ImGuiContext* ctx = ImGui::GetCurrentContext();
+	if (ctx && ctx->WithinFrameScope)
+	{
+		// 前のフレームが完了していない場合は強制終了
+		ImGui::EndFrame();
+		// 注意: ここではImGui::Render()は呼ばない
+	}
+
+	// 新しいフレームを開始
+	graphics.Get_ImGui_renderer()->NewFrame();
+
 	graphics.Get_ImGui_renderer()->DockSpace();
 	ImGui::Begin("ImGUI");
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (ImGui::TreeNode("test01")) {
-		ImGui::Text("framed.x : %d, framed.y : %d",framebuffer_dimensions.cx, framebuffer_dimensions.cy);
+		ImGui::Text("framed.x : %d, framed.y : %d", framebuffer_dimensions.cx, framebuffer_dimensions.cy);
 		ImGui::Text("Screen.x : %f, Screen.y : %f", graphics.Get_screen_width(), graphics.Get_screen_height());
-
 		ImGui::TreePop();
 	}
 	ImGui::End();
@@ -79,14 +85,27 @@ void Framework::Render(float elapsedTime)
 	HRESULT hr{ S_OK };
 	elapsed_time = elapsedTime;
 
+	RECT rc;
+	GetClientRect(hwnd, &rc);
+	bool isMinimized = (rc.right == 0 || rc.bottom == 0) || IsIconic(hwnd);
+
+	if (isMinimized)
+	{
+		return; // 最小化時は描画をスキップ
+	}
+
 	SceneManager::Instance().Render(elapsedTime);
 
 	ID3D11RenderTargetView* rtv = graphics.Get_render_target_view();
 	ID3D11DepthStencilView* dsv = graphics.Get_depth_stencil_view();
 	graphics.Get_device_context()->OMSetRenderTargets(1, &rtv, dsv);
 
-	graphics.Get_ImGui_renderer()->Render(graphics.Get_device_context());
-	SetForegroundWindow(hwnd);
+	ImGuiContext* ctx = ImGui::GetCurrentContext();
+	if (ctx && ctx->WithinFrameScope)
+	{
+		graphics.Get_ImGui_renderer()->Render(graphics.Get_device_context());
+	}
+	//SetForegroundWindow(hwnd);
 
 	//UINT sync_interval{ 0 };
 	//graphics.Get_swap_chain()->Present(sync_interval, 0);
@@ -288,7 +307,7 @@ int Framework::Run()
 {
     MSG msg = {};
 
-
+	bool imgui_frame_started = false;
 
 
 	while (WM_QUIT != msg.message)
@@ -302,8 +321,33 @@ int Framework::Run()
 		{
 			tictoc.tick();
 			calculate_frame_stats();
+
+			RECT rc;
+			GetClientRect(hwnd, &rc);
+
+			bool isMinimized = (rc.right == 0 || rc.bottom == 0) || IsIconic(hwnd);
+
+			if (isMinimized)
+			{
+#ifdef USE_IMGUI
+				// 前回のフレームが開始されている場合は強制終了
+				ImGuiContext* ctx = ImGui::GetCurrentContext();
+				if (ctx && ctx->WithinFrameScope)
+				{
+					ImGui::EndFrame();
+					ImGui::Render(); // データを生成
+				}
+				imgui_frame_started = false;
+#endif
+				// 最小化時はImGuiの処理をスキップし、少し待機
+				Sleep(10);
+				continue;
+			}
+
+			imgui_frame_started = true;
 			Update(tictoc.time_interval());
 			Render(tictoc.time_interval());
+			imgui_frame_started = false;
 		}
 	}
 
@@ -344,6 +388,12 @@ LRESULT Framework::Handle_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpa
 			PostMessage(hwnd, WM_CLOSE, 0, 0);
 		}
 		break;
+	case WM_SYSKEYDOWN:
+		if (wparam == VK_RETURN && (lparam & (1 << 29))) // 29bit目がAltキーのフラグ
+		{
+			stylize_window(!fullscreen_mode);
+		}
+		break;
 	case WM_ENTERSIZEMOVE:
 		tictoc.stop();
 		break;
@@ -355,6 +405,10 @@ LRESULT Framework::Handle_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpa
 #if 1
 		RECT client_rect{};
 		GetClientRect(hwnd, &client_rect);
+
+		if (client_rect.right == 0 || client_rect.bottom == 0)
+			break;
+
 		graphics.UpdateScreenSize(hwnd);
 		on_size_changed(static_cast<UINT64>(client_rect.right - client_rect.left), client_rect.bottom - client_rect.top);
 #endif

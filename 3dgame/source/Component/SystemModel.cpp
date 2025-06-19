@@ -6,6 +6,7 @@
 #include "ComponentMaterial.h"
 #include "ComponentNode.h"
 #include "ComponentTransform.h"
+#include "ComponentInstancing.h"
 
 void SystemModel::Initialize(Register& reg)
 {
@@ -24,103 +25,124 @@ void SystemModel::Initialize(Register& reg)
     }
 }
 
-void SystemModel::begin(Register& reg, ID3D11Device* device, ID3D11DeviceContext* dc)
+void SystemModel::render(Register& reg)
+{
+    ID3D11Device* device = Graphics::Instance().Get_device();
+    ID3D11DeviceContext* dc = Graphics::Instance().Get_device_context();
+    for (Entity e : reg.view<ComponentModel>()) {
+        // begin
+        {
+            begin(e, reg, device, dc);
+        }
+
+        // draw
+        {
+            draw(e, reg, dc);
+        }
+    }
+
+    // end
+    {
+        end(dc);
+    }
+}
+
+void SystemModel::begin(Entity e, Register& reg, ID3D11Device* device, ID3D11DeviceContext* dc)
 {
     // ConstantBuffer Set
-    for (Entity e : reg.view<ComponentModel, ComponentBone>()) {
-        auto& model = reg.getComponent<ComponentModel>(e);
-        auto& bone = reg.getComponent<ComponentBone>(e);
+    auto& model = reg.getComponent<ComponentModel>(e);
+    auto& bone = reg.getComponent<ComponentBone>(e);
 
-        dc->VSSetConstantBuffers(0, 1, model.mesh_constant_buffer.GetAddressOf());
-        dc->PSSetConstantBuffers(0, 1, model.mesh_constant_buffer.GetAddressOf());
-        dc->VSSetConstantBuffers(2, 1, bone.skeleton_constant_buffer.GetAddressOf());
-    }
+    dc->VSSetConstantBuffers(0, 1, model.mesh_constant_buffer.GetAddressOf());
+    dc->PSSetConstantBuffers(0, 1, model.mesh_constant_buffer.GetAddressOf());
+    dc->VSSetConstantBuffers(2, 1, bone.skeleton_constant_buffer.GetAddressOf());
+    
 }
 
-void SystemModel::draw(Register& reg, ID3D11DeviceContext* dc)
+void SystemModel::draw(Entity e, Register& reg, ID3D11DeviceContext* dc)
 {
-    for(Entity e : reg.view<ComponentModel>()) {
-        auto& model = reg.getComponent<ComponentModel>(e);
+    if(reg.hasComponent<ComponentInstancing>(e)) return;
 
-        // Material
-        if (reg.hasComponent<ComponentMaterial>(e)) {
-            auto& c_material = reg.getComponent<ComponentMaterial>(e);
-
-            UpdateStructedBuffer(e, reg, dc);
-            // material_resource Set
-            dc->PSSetShaderResources(0,1, c_material.material_resource_view.GetAddressOf());
-        }
-
-        // Mesh
-        for (const auto& mesh : model.resource->GetMeshes())
-        {
-            const ModelResource::Material& material = model.resource->GetMaterials()[mesh.materialIndex];
-            const ComponentNode& c_node = reg.getComponent<ComponentNode>(e);
-            const Node& node = c_node.nodes[mesh.nodeIndex];
-            // テクスチャ読み込み
-            ID3D11ShaderResourceView* nullShaderResourceView{};
-            std::vector<ID3D11ShaderResourceView*> shaderResourceViews = {
-                material.baseMap.Get(),
-                material.metalnessRoughnessMap.Get(),
-                material.normalMap.Get(),
-                material.emissiveMap.Get(),
-                material.occlusionMap.Get()
-            };
-            dc->PSSetShaderResources(1, static_cast<UINT>(shaderResourceViews.size()), shaderResourceViews.data());
-
-            // 頂点バッファ設定
-            UINT stride = sizeof(ModelResource::Vertex);
-            UINT offset = 0;
-            dc->IASetVertexBuffers(0, 1, mesh.vertexBuffer.GetAddressOf(), &stride, &offset);
-            dc->IASetIndexBuffer(mesh.indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-            // bone
-            if (reg.hasComponent<ComponentBone>(e)) {
-                auto& bone = reg.getComponent<ComponentBone>(e);
-
-                // スケルトン用定数バッファ更新
-                SkeletonCB skeletonCB{};
-                auto& bones = bone.bones.at(mesh.index);
-                if (bones.size() > 0)
+    auto& model = reg.getComponent<ComponentModel>(e);
+    
+    // Material
+    if (reg.hasComponent<ComponentMaterial>(e)) {
+        auto& c_material = reg.getComponent<ComponentMaterial>(e);
+    
+        UpdateStructedBuffer(e, reg, dc);
+        // material_resource Set
+        dc->PSSetShaderResources(0,1, c_material.material_resource_view.GetAddressOf());
+    }
+    
+    // Mesh
+    for (const auto& mesh : model.resource->GetMeshes())
+    {
+        const ModelResource::Material& material = model.resource->GetMaterials()[mesh.materialIndex];
+        const ComponentNode& c_node = reg.getComponent<ComponentNode>(e);
+        const Node& node = c_node.nodes[mesh.nodeIndex];
+        // テクスチャ読み込み
+        ID3D11ShaderResourceView* nullShaderResourceView{};
+        std::vector<ID3D11ShaderResourceView*> shaderResourceViews = {
+            material.baseMap.Get(),
+            material.metalnessRoughnessMap.Get(),
+            material.normalMap.Get(),
+            material.emissiveMap.Get(),
+            material.occlusionMap.Get()
+        };
+        dc->PSSetShaderResources(1, static_cast<UINT>(shaderResourceViews.size()), shaderResourceViews.data());
+    
+        // 頂点バッファ設定
+        UINT stride = sizeof(ModelResource::Vertex);
+        UINT offset = 0;
+        dc->IASetVertexBuffers(0, 1, mesh.vertexBuffer.GetAddressOf(), &stride, &offset);
+        dc->IASetIndexBuffer(mesh.indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+    
+        // bone
+        if (reg.hasComponent<ComponentBone>(e)) {
+            auto& bone = reg.getComponent<ComponentBone>(e);
+    
+            // スケルトン用定数バッファ更新
+            SkeletonCB skeletonCB{};
+            auto& bones = bone.bones.at(mesh.index);
+            if (bones.size() > 0)
+            {
+                for (size_t i = 0; i < bones.size(); ++i)
                 {
-                    for (size_t i = 0; i < bones.size(); ++i)
-                    {
-                        // bone行列
-                        auto& bone = bones.at(i);
-                        DirectX::XMMATRIX WorldTransform = XMLoadFloat4x4(&bone.node->worldTransform);
-                        DirectX::XMMATRIX OffsetTransfoarm = XMLoadFloat4x4(&bone.offsetTransform);
-                        DirectX::XMMATRIX BoneTransform = OffsetTransfoarm * WorldTransform;
-                        XMStoreFloat4x4(&skeletonCB.boneTransforms[i], BoneTransform);
-                    }
+                    // bone行列
+                    auto& bone = bones.at(i);
+                    DirectX::XMMATRIX WorldTransform = XMLoadFloat4x4(&bone.node->worldTransform);
+                    DirectX::XMMATRIX OffsetTransfoarm = XMLoadFloat4x4(&bone.offsetTransform);
+                    DirectX::XMMATRIX BoneTransform = OffsetTransfoarm * WorldTransform;
+                    XMStoreFloat4x4(&skeletonCB.boneTransforms[i], BoneTransform);
                 }
-                else
-                {
-                    int index = mesh.node->myIndex;
-                    skeletonCB.boneTransforms[0] =c_node.nodes[index].worldTransform;
-                }
-                bone.skeleton_constant_buffer._data = skeletonCB;
-                bone.skeleton_constant_buffer.Update();
-
             }
-
-            auto& transform = reg.getComponent<ComponentTransform>(e);
-            DirectX::XMMATRIX   World = XMLoadFloat4x4(&node.globalTransform) * XMLoadFloat4x4(&transform.world_transform);
-            DirectX::XMFLOAT4X4 world;
-            DirectX::XMStoreFloat4x4(&world, World);
-            model.mesh_constant_buffer._data.previous_world = model.mesh_constant_buffer._data.world;
-            model.mesh_constant_buffer._data.world = world;
-            model.mesh_constant_buffer._data.materialIndex = mesh.materialIndex;
-            model.mesh_constant_buffer._data.skin = node.jointIndex;
-            model.mesh_constant_buffer._data.adjustalpha = 1.0f;
-            model.mesh_constant_buffer.Update();
-
-            // 描画
-            dc->DrawIndexed(static_cast<UINT>(mesh.indices.size()), 0, 0);
+            else
+            {
+                int index = mesh.node->myIndex;
+                skeletonCB.boneTransforms[0] =c_node.nodes[index].worldTransform;
+            }
+            bone.skeleton_constant_buffer._data = skeletonCB;
+            bone.skeleton_constant_buffer.Update();
+    
         }
+    
+        auto& transform = reg.getComponent<ComponentTransform>(e);
+        DirectX::XMMATRIX   World = XMLoadFloat4x4(&node.globalTransform) * XMLoadFloat4x4(&transform.world_transform);
+        DirectX::XMFLOAT4X4 world;
+        DirectX::XMStoreFloat4x4(&world, World);
+        model.mesh_constant_buffer._data.previous_world = model.mesh_constant_buffer._data.world;
+        model.mesh_constant_buffer._data.world = world;
+        model.mesh_constant_buffer._data.materialIndex = mesh.materialIndex;
+        model.mesh_constant_buffer._data.skin = node.jointIndex;
+        model.mesh_constant_buffer._data.adjustalpha = 1.0f;
+        model.mesh_constant_buffer.Update();
+    
+        // 描画
+        dc->DrawIndexed(static_cast<UINT>(mesh.indices.size()), 0, 0);
     }
 }
 
-void SystemModel::end(Register& reg, ID3D11DeviceContext* dc)
+void SystemModel::end(ID3D11DeviceContext* dc)
 {
     // シェーダー、インプットレイアウトバインド解除
     dc->VSSetShader(nullptr, nullptr, 0);

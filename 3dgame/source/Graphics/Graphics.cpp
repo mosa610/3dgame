@@ -363,9 +363,39 @@ void Graphics::create_swap_chain(IDXGIFactory6* dxgi_factory6,
     immediate_context->RSSetViewports(1, &viewport);
 }
 
-void Graphics::DebugDraw() const
+void Graphics::DebugDraw()
 {
-    Microsoft::WRL::ComPtr<ID3D11Debug> debugDevice;
-    device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(debugDevice.GetAddressOf()));
-    debugDevice->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+    static ImGuiTextFilter filter;
+    static bool autoScroll = true;
+
+    ImGui::Begin("DebugLog");
+
+    // 操作バー
+    if (ImGui::Button("Clear")) {
+        debug_logs.clear();
+    }
+    ImGui::SameLine();
+    ImGui::Checkbox("Auto-scroll", &autoScroll);
+
+    filter.Draw("Filter", 200); // フィルタ入力欄
+
+    ImGui::Separator();
+
+    // ログ表示部分
+    ImGui::BeginChild("LogRegion", ImVec2(0, 0), false, ImGuiWindowFlags_AlwaysVerticalScrollbar);
+
+    for (const auto& log : debug_logs)
+    {
+        if (filter.PassFilter(log.message.c_str())) {
+            ImGui::TextUnformatted(log.message.c_str());
+        }
+    }
+
+    // 自動スクロール
+    if (autoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+        ImGui::SetScrollHereY(1.0f); // 最下部へスクロール
+
+    ImGui::EndChild();
+
+    ImGui::End();
 }

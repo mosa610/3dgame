@@ -6,6 +6,10 @@
 #include <wrl.h>
 #include <mutex>
 #include <dxgi1_6.h>
+#include <chrono>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
 #include "../misc.h"
 #include "ImguiRenderer.h"
 #include "shader.h"
@@ -17,6 +21,18 @@
 #pragma comment(lib,"d2d1.lib")
 #pragma comment(lib,"dwrite.lib")
 #endif
+
+enum class LogLevel {
+	Info,
+	Warning,
+	Error
+};
+
+struct DebugLogEntry {
+	std::string timestamp;
+	std::string message;
+	LogLevel level;
+};
 
 //グラフィックス
 class Graphics
@@ -76,7 +92,40 @@ public:
 	// ImGuiレンダラ取得
 	ImGuiRenderer* Get_ImGui_renderer() const { return imgui_renderer.get(); }
 
-	void DebugDraw() const;
+	template<typename... Args>
+	void debugLog(const char* format, Args... args)
+	{
+		constexpr size_t BUFFER_SIZE = 2048; // 十分なサイズ
+		LogLevel level = LogLevel::Info;
+		char buffer[BUFFER_SIZE];
+
+		int result = std::snprintf(buffer, BUFFER_SIZE, format, args...);
+
+		if (result > 0 && result < BUFFER_SIZE) {
+			debug_logs.push_back({ GetCurrentTimestamp(),std::string(buffer),level });
+		}
+		else {
+			debug_logs.push_back({ GetCurrentTimestamp(),"Format error or buffer overflow",LogLevel::Error });
+		}
+	}
+
+	void DebugDraw();
+private:
+
+	std::string GetCurrentTimestamp()
+	{
+		auto now = std::chrono::system_clock::now();
+		auto t = std::chrono::system_clock::to_time_t(now);
+		std::tm tm;
+#ifdef _WIN32
+		localtime_s(&tm, &t);
+#else
+		localtime_r(&t, &tm);
+#endif
+		std::ostringstream oss;
+		oss << std::put_time(&tm, "%H:%M:%S");
+		return oss.str();
+	}
 
 private:
     static Graphics* instance;
@@ -93,6 +142,7 @@ private:
 
 	//std::unique_ptr<Shader>							shader;
 	std::unique_ptr<ImGuiRenderer>					imgui_renderer;
+	std::vector<DebugLogEntry>						debug_logs;
 
 	float	screen_width;
 	float	screen_height;

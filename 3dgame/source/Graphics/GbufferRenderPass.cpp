@@ -2,6 +2,7 @@
 #include "GraphicsState.h"
 #include "../Component/World.h"
 #include "..//Component/SystemModel.h"
+#include "..//Component/SystemInstancingModel.h"
 #include "..//Component/SystemSkymap.h"
 #include "..//imgui/imgui.h"
 
@@ -29,12 +30,6 @@ void GbufferRenderPass::setup(RenderGraphBuilder& builder)
 
     builder.declareRead(scene);
     builder.declareRead(depthStencil);
-}
-
-void GbufferRenderPass::execute(ID3D11DeviceContext* ctx, RenderGraphResources& resources)
-{
-    begin(ctx, resources);
-    world->getSystem<SystemSkymap>()->render(world->getRegister());
 
     PipelineStateDesc desc;
     desc.name = "GBuffer"; // 名前で管理
@@ -51,10 +46,48 @@ void GbufferRenderPass::execute(ID3D11DeviceContext* ctx, RenderGraphResources& 
     // Pipeline を追加
     PipelineManager::Instance().Add(desc, Graphics::Instance().Get_device());
 
+    D3D11_INPUT_ELEMENT_DESC input_element_desc[]
+    {
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TANGENT",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "JOINTS",   0, DXGI_FORMAT_R32G32B32A32_UINT,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "WEIGHTS",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "WORLD_MATRIX", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 6,  0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+        { "WORLD_MATRIX", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 6, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+        { "WORLD_MATRIX", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 6, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+        { "WORLD_MATRIX", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 6, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+        { "PREVIOUS_WORLD_MATRIX", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 7,  0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+        { "PREVIOUS_WORLD_MATRIX", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 7, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+        { "PREVIOUS_WORLD_MATRIX", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 7, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+        { "PREVIOUS_WORLD_MATRIX", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 7, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+    };
+
+    desc.name = "GBufferInstancing";
+    desc.vs_path = ".//Data//Shader//gltf_model_gbuffer_instancing_vs.cso";
+    for(int i = 0; i < _countof(input_element_desc); i++)
+    {
+        desc.input_layout_desc.push_back(input_element_desc[i]);
+    }
+
+    // Pipeline を追加
+    PipelineManager::Instance().Add(desc, Graphics::Instance().Get_device());
+}
+
+void GbufferRenderPass::execute(ID3D11DeviceContext* ctx, RenderGraphResources& resources)
+{
+    begin(ctx, resources);
+    world->getSystem<SystemSkymap>()->render(world->getRegister());
+
     // Pipeline をバインド
     PipelineManager::Instance().BindByName("GBuffer", ctx);
 
     world->getSystem<SystemModel>()->render(world->getRegister());
+
+    PipelineManager::Instance().BindByName("GBufferInstancing", ctx);
+    
+    world->getSystem<SystemInstancingModel>()->render(world->getRegister());
 
     end(ctx, resources);
 }
